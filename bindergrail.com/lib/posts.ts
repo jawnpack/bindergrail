@@ -2,45 +2,34 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
-const contentDir = path.join(process.cwd(), "content");
+const POSTS_DIR = path.join(process.cwd(), "content/blog");
 
-export interface PostMeta {
+export type PostMeta = {
   slug: string;
   title: string;
   date: string;
   description: string;
   tag: string;
-}
+  canonical?: string;
+};
 
 export function getAllPosts(): PostMeta[] {
-  const files = fs.readdirSync(contentDir).filter((f) => f.endsWith(".mdx"));
-
-  return files
-    .map((file) => {
-      const slug = file.replace(".mdx", "");
-      const raw = fs.readFileSync(path.join(contentDir, file), "utf-8");
+  return fs
+    .readdirSync(POSTS_DIR)
+    .filter((f) => f.endsWith(".mdx"))
+    .map((filename) => {
+      const slug = filename.replace(/\.mdx$/, "");
+      const raw = fs.readFileSync(path.join(POSTS_DIR, filename), "utf-8");
       const { data } = matter(raw);
-      return {
-        slug,
-        title: data.title as string,
-        date: data.date as string,
-        description: data.description as string,
-        tag: data.tag as string,
-      };
+      return { slug, ...(data as Omit<PostMeta, "slug">) };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-export function getPostMeta(slug: string): PostMeta | null {
-  const filePath = path.join(contentDir, `${slug}.mdx`);
-  if (!fs.existsSync(filePath)) return null;
-  const raw = fs.readFileSync(filePath, "utf-8");
-  const { data } = matter(raw);
-  return {
-    slug,
-    title: data.title as string,
-    date: data.date as string,
-    description: data.description as string,
-    tag: data.tag as string,
-  };
+export function getPostBySlug(slug: string) {
+  const filepath = path.join(POSTS_DIR, `${slug}.mdx`);
+  if (!fs.existsSync(filepath)) return null;
+  const raw = fs.readFileSync(filepath, "utf-8");
+  const { data, content } = matter(raw);
+  return { meta: { slug, ...(data as Omit<PostMeta, "slug">) } as PostMeta, content };
 }

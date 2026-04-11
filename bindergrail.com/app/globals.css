@@ -1,18 +1,54 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* ─── Brand color palette ─────────────────────────────────────────── */
+@theme {
+  --color-ink:       #1A1814;
+  --color-cream:     #F5F0E8;
+  --color-amber:     #B07035;
+  --color-dust:      #7A7468;
+  --color-parchment: #E8E4DC;
+  --color-border:    #D8D0C0;
+}
+
+/* ─── Font families (resolved at runtime from next/font variables) ── */
 @theme inline {
-  --color-ink: #2C2A22;
-  --color-amber: #B07035;
-  --color-cream: #F5F0E8;
-  --color-dust: #7A6E5F;
-  --color-cream-dark: #EDE8DF;
-  --font-serif: Georgia, "Times New Roman", serif;
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-serif: var(--font-playfair);
+  --font-sans:  var(--font-dm-sans);
+}
+
+/* ─── Base ────────────────────────────────────────────────────────── */
+html {
+  background-color: #F5F0E8;
+  color: #1A1814;
 }
 
 body {
+  font-family: var(--font-dm-sans), Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.65;
   background-color: #F5F0E8;
-  color: #2C2A22;
-  font-family: Arial, Helvetica, sans-serif;
+  color: #1A1814;
+}
+
+/* ─── Prose overrides for article pages ──────────────────────────── */
+.prose {
+  --tw-prose-body:          #1A1814;
+  --tw-prose-headings:      #1A1814;
+  --tw-prose-links:         #B07035;
+  --tw-prose-bold:          #1A1814;
+  --tw-prose-bullets:       #7A7468;
+  --tw-prose-counters:      #7A7468;
+  --tw-prose-quotes:        #7A7468;
+  --tw-prose-quote-borders: #B07035;
+  --tw-prose-hr:            #D8D0C0;
+  --tw-prose-captions:      #7A7468;
+  --tw-prose-code:          #1A1814;
+  --tw-prose-pre-bg:        #E8E4DC;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-playfair), Georgia, serif;
 }
