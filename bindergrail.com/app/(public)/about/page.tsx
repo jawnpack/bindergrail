@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import GrainOverlay from "@/components/GrainOverlay";
-import SubscribeForm from "@/components/SubscribeForm";
 
 export const metadata: Metadata = {
   title: "About",
@@ -89,13 +88,13 @@ export default function AboutPage() {
             </dl>
           </section>
 
-          <Link
-            href="/#newsletter"
+          <a
+            href="https://commonrare.bindergrail.com"
             className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
             style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
           >
             Subscribe to Common Rare
-          </Link>
+          </a>
         </div>
       </main>
 
@@ -115,7 +114,13 @@ export default function AboutPage() {
           >
             The weekly read for frugal collectors.
           </h2>
-          <SubscribeForm />
+          <a
+            href="https://commonrare.bindergrail.com"
+            className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
+            style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
+          >
+            Subscribe to Common Rare
+          </a>
         </div>
       </section>
     </>

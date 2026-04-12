@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  icons: {
+    icon: "/images/binder_grail_logo.png",
+  },
 };
 
 export default function RootLayout({

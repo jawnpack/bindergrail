@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Nav() {
@@ -10,12 +11,22 @@ export default function Nav() {
     <header style={{ backgroundColor: "#1A1814" }}>
       <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
         {/* Logo */}
-        <Link
-          href="/"
-          className="text-xl font-bold tracking-tight"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#F5F0E8" }}
-        >
-          Binder<span style={{ color: "#B07035" }}>·</span>Grail
+        <Link href="/" className="block" aria-label="Binder Grail home">
+          <Image
+            src="/images/binder_grail_logo.png"
+            alt="Binder Grail"
+            height={36}
+            width={160}
+            priority
+            style={{
+              objectFit: "contain",
+              objectPosition: "left",
+              filter: "brightness(0) invert(1)",
+              opacity: 0.92,
+              height: 36,
+              width: "auto",
+            }}
+          />
         </Link>
 
         {/* Desktop nav */}
@@ -28,7 +39,7 @@ export default function Nav() {
             Posts
           </Link>
           <Link
-            href="/#newsletter"
+            href="/newsletter"
             className="text-sm transition-colors hover:text-white"
             style={{ color: "#7A7468" }}
           >
@@ -41,13 +52,13 @@ export default function Nav() {
           >
             About
           </Link>
-          <Link
-            href="/#newsletter"
+          <a
+            href="https://commonrare.bindergrail.com"
             className="text-sm font-semibold rounded-sm px-4 py-1.5 transition-opacity hover:opacity-80"
             style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
           >
             Subscribe
-          </Link>
+          </a>
         </nav>
 
         {/* Mobile hamburger */}
@@ -80,20 +91,20 @@ export default function Nav() {
           <Link href="/blog" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             Posts
           </Link>
-          <Link href="/#newsletter" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
+          <Link href="/newsletter" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             Newsletter
           </Link>
           <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             About
           </Link>
-          <Link
-            href="/#newsletter"
+          <a
+            href="https://commonrare.bindergrail.com"
             className="text-sm font-semibold rounded-sm px-4 py-2 text-center transition-opacity hover:opacity-80"
             style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
             onClick={() => setOpen(false)}
           >
             Subscribe free
-          </Link>
+          </a>
         </div>
       )}
     </header>

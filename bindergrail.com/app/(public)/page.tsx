@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 import GrainOverlay from "@/components/GrainOverlay";
-import SubscribeForm from "@/components/SubscribeForm";
+
+export const metadata: Metadata = {
+  title: "Binder Grail — Pokémon TCG Tools & Market Analysis for Frugal Collectors",
+  description:
+    "Binder Grail is the home for budget-conscious Pokémon TCG collectors. Market analysis, collecting tools, and the Common Rare newsletter — built to help you collect consciously.",
+  openGraph: {
+    title: "Binder Grail",
+    description: "Pokémon TCG tools and market analysis for frugal collectors.",
+    images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
+  },
+};
 
 function TagPill({ tag }: { tag: string }) {
   const isMarket = tag === "Market";
@@ -41,38 +53,42 @@ export default function HomePage() {
             className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-6"
             style={{ color: "#B07035" }}
           >
-            Pokémon TCG · Market &amp; Collecting
+            Pokémon TCG · For frugal collectors
           </p>
           <h1
             className="text-[42px] md:text-[64px] font-black leading-[1.08] tracking-tight mb-6 max-w-2xl"
             style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#F5F0E8" }}
           >
-            Collect smarter.{" "}
-            <span style={{ fontStyle: "italic", color: "#B07035" }}>
-              Chase your grail.
-            </span>
+            Collect{" "}
+            <span style={{ fontStyle: "italic", color: "#B07035" }}>smarter.</span>
+            <br />
+            Spend less.
+            <br />
+            Chase your grail.
           </h1>
           <p
-            className="text-[15px] leading-relaxed max-w-md mb-10"
+            className="text-[15px] leading-relaxed max-w-[300px] mb-10"
             style={{ color: "#7A7468" }}
           >
-            Honest Pokémon TCG market analysis and frugal collecting strategy — no hype, no filler.
+            Binder Grail is the home for budget-conscious Pokémon TCG collectors.
+            Market analysis, collecting tools, and a weekly newsletter — built to
+            help you collect consciously.
           </p>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap items-center gap-4">
             <Link
-              href="/#newsletter"
+              href="/blog"
               className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
               style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
             >
-              Subscribe free
+              Explore Binder Grail
             </Link>
-            <Link
-              href="/blog"
-              className="rounded-sm px-5 py-2.5 text-sm font-semibold border transition-colors hover:border-white/40"
-              style={{ borderColor: "rgba(255,255,255,0.2)", color: "#F5F0E8" }}
+            <a
+              href="https://commonrare.bindergrail.com"
+              className="text-[13px] hover:underline"
+              style={{ color: "#7A7468" }}
             >
-              Browse posts
-            </Link>
+              Read Common Rare, our newsletter →
+            </a>
           </div>
         </div>
       </section>
@@ -169,11 +185,22 @@ export default function HomePage() {
       <section id="newsletter" className="relative overflow-hidden" style={{ backgroundColor: "#1A1814" }}>
         <GrainOverlay />
         <div className="relative z-10 max-w-5xl mx-auto px-6 py-16 md:py-20">
+          {/* Common Rare logo */}
+          <div className="mb-5">
+            <Image
+              src="/images/common_rare_logo.png"
+              alt="Common Rare"
+              height={60}
+              width={180}
+              style={{ filter: "brightness(0) invert(0.9)", height: 60, width: "auto" }}
+            />
+          </div>
+
           <p
             className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
             style={{ color: "#B07035" }}
           >
-            Common Rare · Free newsletter
+            Common Rare · A Binder Grail newsletter
           </p>
           <h2
             className="text-[28px] md:text-[36px] font-bold leading-tight mb-3 max-w-xl"
@@ -183,11 +210,18 @@ export default function HomePage() {
             <span style={{ fontStyle: "italic", color: "#B07035" }}>frugal</span> collectors.
           </h2>
           <p className="text-[14px] max-w-md mb-7" style={{ color: "#7A7468" }}>
-            Market takes, sealed product strategy, and grading insights — delivered when there's something worth saying.
+            Market moves, restock alerts, and a plain verdict on every new
+            Pokémon TCG product. Free, every week.
           </p>
-          <SubscribeForm />
+          <a
+            href="https://commonrare.bindergrail.com"
+            className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
+            style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
+          >
+            Subscribe to Common Rare
+          </a>
           <p className="mt-4 text-[11px]" style={{ color: "#7A7468" }}>
-            Weekly-ish. No spam. Unsubscribe anytime.
+            Free, every week. Unsubscribe anytime.
           </p>
         </div>
       </section>
