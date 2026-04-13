@@ -119,13 +119,8 @@ const mdxComponents = {
       <img
         src={src}
         alt={alt ?? ""}
-        style={{ width: "100%", height: "auto", display: "block", maxHeight: "480px", objectFit: "cover" }}
+        style={{ width: "100%", height: "auto", display: "block", objectFit: "contain", maxHeight: "none" }}
       />
-      {alt && (
-        <p style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", fontSize: "12px", fontWeight: 300, color: "#7A7468", padding: "8px 12px", margin: 0, background: "#F5F0E8", fontStyle: "italic" }}>
-          {alt}
-        </p>
-      )}
     </div>
   ),
 };

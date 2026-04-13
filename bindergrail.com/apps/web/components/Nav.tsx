@@ -15,17 +15,18 @@ export default function Nav() {
           <Image
             src="/images/binder_grail_logo.png"
             alt="Binder Grail"
-            height={36}
-            width={160}
+            height={48}
+            width={210}
             priority
             style={{
               objectFit: "contain",
               objectPosition: "left",
               filter: "brightness(0) invert(1)",
               opacity: 0.92,
-              height: 36,
+              height: 44,
               width: "auto",
             }}
+            className="md:!h-[48px]"
           />
         </Link>
 
@@ -52,6 +53,32 @@ export default function Nav() {
           >
             About
           </Link>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <a
+              href="/origins"
+              style={{ fontSize: "13px", color: "#7A7468", textDecoration: "none", lineHeight: 1 }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#B07035")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#7A7468")}
+            >
+              Origins
+            </a>
+            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#B07035", marginTop: "2px" }}>
+              Soon
+            </span>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <a
+              href="/pocket-money"
+              style={{ fontSize: "13px", color: "#7A7468", textDecoration: "none", lineHeight: 1 }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#3D5C42")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#7A7468")}
+            >
+              Pocket Money
+            </a>
+            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42", marginTop: "2px" }}>
+              Soon
+            </span>
+          </div>
           <Link
             href="/signup"
             className="text-sm font-semibold rounded-sm px-4 py-1.5 transition-opacity hover:opacity-80"
@@ -97,6 +124,28 @@ export default function Nav() {
           <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             About
           </Link>
+          <a
+            href="/origins"
+            className="text-sm"
+            style={{ color: "#F5F0E8", textDecoration: "none" }}
+            onClick={() => setOpen(false)}
+            onMouseEnter={e => (e.currentTarget.style.color = "#B07035")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#F5F0E8")}
+          >
+            Origins{" "}
+            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#B07035" }}>· Soon</span>
+          </a>
+          <a
+            href="/pocket-money"
+            className="text-sm"
+            style={{ color: "#F5F0E8", textDecoration: "none" }}
+            onClick={() => setOpen(false)}
+            onMouseEnter={e => (e.currentTarget.style.color = "#3D5C42")}
+            onMouseLeave={e => (e.currentTarget.style.color = "#F5F0E8")}
+          >
+            Pocket Money{" "}
+            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42" }}>· Soon</span>
+          </a>
           <Link
             href="/signup"
             className="text-sm font-semibold rounded-sm px-4 py-2 text-center transition-opacity hover:opacity-80"

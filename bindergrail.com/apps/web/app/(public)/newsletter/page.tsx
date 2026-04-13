@@ -52,9 +52,7 @@ export default async function NewsletterPage() {
             one place.
           </h1>
           <p className="text-[15px]" style={{ color: "#7A7468" }}>
-            {count > 0
-              ? `${count} issue${count === 1 ? "" : "s"} of market analysis, buying advice, and restock alerts.`
-              : "Market analysis, buying advice, and restock alerts."}
+            Two issues every week — market analysis, buying advice, and restock alerts.
           </p>
         </div>
       </section>
