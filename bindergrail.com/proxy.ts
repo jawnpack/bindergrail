@@ -39,6 +39,19 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const pathname = request.nextUrl.pathname;
+  const hostname = request.headers.get("host") ?? "";
+
+  // Subdomain routing — rewrite subdomain requests to the correct path
+  if (hostname.startsWith("origins.")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/origins";
+    return NextResponse.rewrite(url);
+  }
+  if (hostname.startsWith("pocketmoney.")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/pocket-money";
+    return NextResponse.rewrite(url);
+  }
 
   // Protect /account and /newsletter/[id] — redirect to /login if not authenticated
   // Note: /newsletter index is public; only sub-routes (individual issues) are protected

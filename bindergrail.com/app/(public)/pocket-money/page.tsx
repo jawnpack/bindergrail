@@ -20,7 +20,7 @@ const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http:
 
 export default function PocketMoneyPage() {
   return (
-    <div style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif" }}>
+    <div style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       {/* ── Nav ────────────────────────────────────────────── */}
       <header style={{ backgroundColor: "#3D5C42" }}>
         <div
@@ -73,12 +73,13 @@ export default function PocketMoneyPage() {
         </div>
       </header>
 
-      {/* ── Hero ───────────────────────────────────────────── */}
+      {/* ── Hero + Sign up ─────────────────────────────────── */}
       <section
         style={{
           backgroundColor: "#3D5C42",
           position: "relative",
           overflow: "hidden",
+          flex: 1,
         }}
       >
         <div
@@ -96,9 +97,9 @@ export default function PocketMoneyPage() {
           style={{
             position: "relative",
             zIndex: 1,
-            maxWidth: 960,
+            maxWidth: 600,
             margin: "0 auto",
-            padding: "72px 24px 80px",
+            padding: "80px 24px 96px",
           }}
         >
           <p
@@ -117,12 +118,11 @@ export default function PocketMoneyPage() {
             style={{
               fontFamily: "var(--font-playfair), Georgia, serif",
               fontWeight: 900,
-              fontSize: "clamp(36px, 6vw, 60px)",
-              lineHeight: 1.08,
+              fontSize: "clamp(40px, 7vw, 68px)",
+              lineHeight: 1.05,
               color: "#F5F0E8",
               letterSpacing: "-0.02em",
-              marginBottom: 20,
-              maxWidth: 560,
+              marginBottom: 24,
             }}
           >
             Collect on a{" "}
@@ -132,243 +132,52 @@ export default function PocketMoneyPage() {
           </h1>
           <p
             style={{
-              fontSize: 13,
+              fontSize: 15,
               fontWeight: 300,
               color: "#6A9470",
-              maxWidth: 300,
               lineHeight: 1.7,
-              marginBottom: 28,
+              marginBottom: 16,
+              maxWidth: 460,
             }}
           >
             Set your monthly limit. Log every purchase. Know exactly where you
             stand before you swipe.
           </p>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 11,
-              fontWeight: 600,
-              color: "#B0D4B8",
-              backgroundColor: "#2A4230",
-              border: "1px solid #4A7052",
-              borderRadius: 20,
-              padding: "5px 14px",
-            }}
-          >
-            <span
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: "50%",
-                backgroundColor: "#B07035",
-                display: "inline-block",
-              }}
-            />
-            Launching soon
-          </span>
-        </div>
-      </section>
 
-      {/* ── App preview ────────────────────────────────────── */}
-      <section style={{ backgroundColor: "#EAF0EB", padding: "56px 24px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <p
-            style={{
-              fontSize: 10,
-              fontWeight: 600,
-              color: "#3D5C42",
-              textTransform: "uppercase",
-              letterSpacing: "0.15em",
-              marginBottom: 20,
-            }}
-          >
-            App preview
-          </p>
-
-          {/* Stat cards */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 12 }}>
-            <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                border: "1px solid #C8D8CA",
-                borderRadius: 8,
-                padding: "16px 18px",
-              }}
-            >
-              <p style={{ fontSize: 11, color: "#6A9470", marginBottom: 6 }}>Spent</p>
-              <p
-                style={{
-                  fontFamily: "var(--font-playfair), Georgia, serif",
-                  fontSize: 24,
-                  fontWeight: 700,
-                  color: "#2C2A22",
-                  lineHeight: 1,
-                  marginBottom: 4,
-                }}
-              >
-                $184
-              </p>
-              <p style={{ fontSize: 11, color: "#6A9470" }}>of $300 budget</p>
-            </div>
-            <div
-              style={{
-                backgroundColor: "#FFFFFF",
-                border: "1px solid #C8D8CA",
-                borderRadius: 8,
-                padding: "16px 18px",
-              }}
-            >
-              <p style={{ fontSize: 11, color: "#6A9470", marginBottom: 6 }}>Remaining</p>
-              <p
-                style={{
-                  fontFamily: "var(--font-playfair), Georgia, serif",
-                  fontSize: 24,
-                  fontWeight: 700,
-                  color: "#3D5C42",
-                  lineHeight: 1,
-                  marginBottom: 4,
-                }}
-              >
-                $116
-              </p>
-              <p style={{ fontSize: 11, color: "#6A9470" }}>this month</p>
-            </div>
-          </div>
-
-          {/* Budget bar card */}
-          <div
-            style={{
-              backgroundColor: "#FFFFFF",
-              border: "1px solid #C8D8CA",
-              borderRadius: 8,
-              padding: "16px 18px",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginBottom: 10,
-              }}
-            >
-              <span style={{ fontSize: 12, color: "#2C2A22", fontWeight: 500 }}>
-                April 2026
-              </span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: "#3D5C42" }}>
-                61%
-              </span>
-            </div>
-            <div
-              style={{
-                height: 8,
-                borderRadius: 4,
-                backgroundColor: "#E8F0E9",
-                overflow: "hidden",
-                marginBottom: 10,
-              }}
-            >
-              <div
-                style={{
-                  height: "100%",
-                  width: "61%",
-                  backgroundColor: "#3D5C42",
-                  borderRadius: 4,
-                }}
-              />
-            </div>
-            <p style={{ fontSize: 11, color: "#6A9470" }}>
-              Packs $80 · Singles $64 · Sealed $40
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Features ───────────────────────────────────────── */}
-      <section
-        style={{
-          backgroundColor: "#F5F0E8",
-          borderTop: "1px solid #D8D0C0",
-          padding: "56px 24px",
-        }}
-      >
-        <div style={{ maxWidth: 640, margin: "0 auto" }}>
-          <p
-            style={{
-              fontSize: 10,
-              fontWeight: 600,
-              color: "#7A7468",
-              textTransform: "uppercase",
-              letterSpacing: "0.15em",
-              marginBottom: 24,
-            }}
-          >
-            What it does
-          </p>
-          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* Feature bullets */}
+          <div style={{ marginBottom: 40 }}>
             {[
               "Monthly budget limit with alert when you're close",
               "Log purchases by category — packs, singles, sealed, grading",
               "Spending history and trends across months",
             ].map((f) => (
-              <div key={f} style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-                <span
-                  style={{
-                    color: "#3D5C42",
-                    fontSize: 18,
-                    lineHeight: 1,
-                    marginTop: 1,
-                    flexShrink: 0,
-                  }}
-                >
-                  ·
-                </span>
-                <p style={{ fontSize: 14, color: "#1A1814", lineHeight: 1.6 }}>{f}</p>
+              <div
+                key={f}
+                style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}
+              >
+                <span style={{ color: "#B07035", fontSize: 16, lineHeight: 1.5, flexShrink: 0 }}>·</span>
+                <span style={{ fontSize: 13, color: "#6A9470", lineHeight: 1.6 }}>{f}</span>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ── Notify ─────────────────────────────────────────── */}
-      <section
-        style={{
-          backgroundColor: "#3D5C42",
-          padding: "56px 24px",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: 0.04,
-            pointerEvents: "none",
-            backgroundImage: GRAIN,
-            backgroundSize: "180px",
-          }}
-        />
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 480, margin: "0 auto" }}>
-          <h2
+          {/* Sign-up form */}
+          <p
             style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              fontWeight: 700,
-              fontSize: "clamp(22px, 4vw, 30px)",
+              fontSize: 13,
+              fontWeight: 600,
               color: "#F5F0E8",
-              marginBottom: 20,
+              marginBottom: 12,
             }}
           >
-            Get notified when it launches.
-          </h2>
+            Get notified at launch
+          </p>
           <WaitlistForm
             app="pocket-money"
             inputBg="#2A4230"
             inputBorder="#4A7052"
           />
-          <p style={{ marginTop: 12, fontSize: 11, color: "#4A7052" }}>
+          <p style={{ marginTop: 10, fontSize: 11, color: "#4A7052" }}>
             No spam. Just a launch notification.
           </p>
         </div>
@@ -377,26 +186,25 @@ export default function PocketMoneyPage() {
       {/* ── Footer ─────────────────────────────────────────── */}
       <footer
         style={{
-          backgroundColor: "#F5F0E8",
-          borderTop: "1px solid #D8D0C0",
-          padding: "16px 24px",
+          backgroundColor: "#2A4230",
+          borderTop: "1px solid #4A7052",
+          padding: "14px 24px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          maxWidth: "100%",
         }}
       >
         <span
           style={{
             fontFamily: "var(--font-playfair), Georgia, serif",
             fontWeight: 700,
-            fontSize: 14,
-            color: "#3D5C42",
+            fontSize: 13,
+            color: "#6A9470",
           }}
         >
           Pocket Money
         </span>
-        <span style={{ fontSize: 11, color: "#7A7468" }}>by Binder Grail</span>
+        <span style={{ fontSize: 11, color: "#4A7052" }}>by Binder Grail</span>
       </footer>
     </div>
   );

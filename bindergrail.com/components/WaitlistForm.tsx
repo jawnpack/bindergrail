@@ -7,6 +7,7 @@ type Props = {
   buttonColor?: string;
   inputBg?: string;
   inputBorder?: string;
+  inputTextColor?: string;
 };
 
 export default function WaitlistForm({
@@ -14,6 +15,7 @@ export default function WaitlistForm({
   buttonColor = "#B07035",
   inputBg = "#2C2920",
   inputBorder = "rgba(255,255,255,0.1)",
+  inputTextColor = "#F5F0E8",
 }: Props) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -58,7 +60,7 @@ export default function WaitlistForm({
           className="flex-1 rounded-sm px-4 py-2.5 text-sm outline-none"
           style={{
             backgroundColor: inputBg,
-            color: "#F5F0E8",
+            color: inputTextColor,
             border: `1px solid ${inputBorder}`,
           }}
         />
