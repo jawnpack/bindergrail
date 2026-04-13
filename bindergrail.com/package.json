@@ -1,40 +1,22 @@
 {
-  "name": "bindergrail.com",
-  "version": "0.1.0",
+  "name": "bindergrail-monorepo",
+  "version": "0.0.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@mdx-js/loader": "^3.1.1",
-    "@mdx-js/react": "^3.1.1",
-    "@next/mdx": "^16.2.3",
-    "@stripe/stripe-js": "^9.1.0",
-    "@supabase/ssr": "^0.10.2",
-    "@supabase/supabase-js": "^2.103.0",
-    "@tailwindcss/typography": "^0.5.19",
-    "@types/mdx": "^2.0.13",
-    "gray-matter": "^4.0.3",
-    "next": "16.2.3",
-    "next-mdx-remote": "^6.0.0",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "remark-frontmatter": "^5.0.0",
-    "sharp": "^0.34.5",
-    "stripe": "^22.0.1"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "dev:web": "turbo dev --filter=web",
+    "dev:pocket-money": "turbo dev --filter=pocket-money"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.3",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
