@@ -8,6 +8,7 @@
 
 import type { Metadata } from "next";
 import WaitlistForm from "@/components/WaitlistForm";
+import OriginsScreenshotStrip from "@/components/OriginsScreenshotStrip";
 
 export const metadata: Metadata = {
   title: "Origins — Pokémon TCG Collection Tracker | Binder Grail",
@@ -190,6 +191,8 @@ export default function OriginsPage() {
           </p>
         </div>
       </section>
+
+      <OriginsScreenshotStrip />
 
       {/* ── Footer ─────────────────────────────────────────── */}
       <footer

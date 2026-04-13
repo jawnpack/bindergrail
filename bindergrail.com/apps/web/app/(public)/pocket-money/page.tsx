@@ -8,6 +8,7 @@
 
 import type { Metadata } from "next";
 import WaitlistForm from "@/components/WaitlistForm";
+import PocketMoneyScreenshotStrip from "@/components/PocketMoneyScreenshotStrip";
 
 export const metadata: Metadata = {
   title: "Pocket Money — Pokémon TCG Budget Tracker | Binder Grail",
@@ -182,6 +183,8 @@ export default function PocketMoneyPage() {
           </p>
         </div>
       </section>
+
+      <PocketMoneyScreenshotStrip />
 
       {/* ── Footer ─────────────────────────────────────────── */}
       <footer

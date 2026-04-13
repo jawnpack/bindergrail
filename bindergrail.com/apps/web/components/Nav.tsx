@@ -30,7 +30,7 @@ export default function Nav() {
           />
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop nav — order: Posts / CR Newsletter / Origins / Pocket Money / About / Sign up */}
         <nav className="hidden md:flex items-center gap-7">
           <Link
             href="/blog"
@@ -39,20 +39,19 @@ export default function Nav() {
           >
             Posts
           </Link>
-          <Link
-            href="/newsletter"
-            className="text-sm transition-colors hover:text-white"
-            style={{ color: "#7A7468" }}
-          >
-            Newsletter
-          </Link>
-          <Link
-            href="/about"
-            className="text-sm transition-colors hover:text-white"
-            style={{ color: "#7A7468" }}
-          >
-            About
-          </Link>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <a
+              href="https://commonrare.bindergrail.com"
+              style={{ fontSize: "13px", color: "#7A7468", textDecoration: "none", lineHeight: 1 }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#F5F0E8")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#7A7468")}
+            >
+              CR Newsletter
+            </a>
+            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#B07035", marginTop: "2px" }}>
+              Subscribe now
+            </span>
+          </div>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
             <a
               href="/origins"
@@ -79,6 +78,13 @@ export default function Nav() {
               Soon
             </span>
           </div>
+          <Link
+            href="/about"
+            className="text-sm transition-colors hover:text-white"
+            style={{ color: "#7A7468" }}
+          >
+            About
+          </Link>
           <Link
             href="/signup"
             className="text-sm font-semibold rounded-sm px-4 py-1.5 transition-opacity hover:opacity-80"
@@ -109,7 +115,7 @@ export default function Nav() {
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile menu — order: Posts / CR Newsletter / Origins / Pocket Money / About / Sign up */}
       {open && (
         <div
           className="md:hidden border-t px-6 py-5 flex flex-col gap-5"
@@ -118,12 +124,21 @@ export default function Nav() {
           <Link href="/blog" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             Posts
           </Link>
-          <Link href="/newsletter" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
-            Newsletter
-          </Link>
-          <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
-            About
-          </Link>
+          <div>
+            <a
+              href="https://commonrare.bindergrail.com"
+              className="text-sm"
+              style={{ color: "#F5F0E8", textDecoration: "none", display: "block" }}
+              onClick={() => setOpen(false)}
+              onMouseEnter={e => (e.currentTarget.style.color = "#F5F0E8")}
+              onMouseLeave={e => (e.currentTarget.style.color = "#F5F0E8")}
+            >
+              CR Newsletter
+            </a>
+            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#B07035", marginTop: "3px", display: "block" }}>
+              Subscribe now
+            </span>
+          </div>
           <a
             href="/origins"
             className="text-sm"
@@ -146,6 +161,9 @@ export default function Nav() {
             Pocket Money{" "}
             <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42" }}>· Soon</span>
           </a>
+          <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
+            About
+          </Link>
           <Link
             href="/signup"
             className="text-sm font-semibold rounded-sm px-4 py-2 text-center transition-opacity hover:opacity-80"
