@@ -113,11 +113,11 @@ export async function getIssue(id: string): Promise<IssueDetail | null> {
   }
 }
 
-// ─── Subscription helpers (existing) ─────────────────────────────────────────
+// ─── Subscription helpers ─────────────────────────────────────────────────────
 
 export async function subscribeToBeehiiv(
   email: string,
-  plan: "free" | "premium" = "free"
+  tag: "free" | "premium" | "premium_waitlist" = "free"
 ): Promise<string | undefined> {
   const res = await fetch(`${BASE}/publications/${PUB}/subscriptions`, {
     method: "POST",
@@ -129,7 +129,7 @@ export async function subscribeToBeehiiv(
       email,
       reactivate_existing: true,
       send_welcome_email: true,
-      tags: [plan],
+      tags: [tag],
     }),
   });
   const data = await res.json();
@@ -138,7 +138,7 @@ export async function subscribeToBeehiiv(
 
 export async function updateBeehiivTag(
   subscriberId: string,
-  plan: "free" | "premium"
+  plan: "free" | "premium" | "premium_waitlist"
 ): Promise<void> {
   await fetch(`${BASE}/publications/${PUB}/subscriptions/${subscriberId}`, {
     method: "PATCH",
@@ -147,5 +147,27 @@ export async function updateBeehiivTag(
       Authorization: `Bearer ${KEY}`,
     },
     body: JSON.stringify({ tags: [plan] }),
+  });
+}
+
+export async function unsubscribeFromBeehiiv(subscriberId: string): Promise<void> {
+  await fetch(`${BASE}/publications/${PUB}/subscriptions/${subscriberId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${KEY}`,
+    },
+    body: JSON.stringify({ status: "inactive" }),
+  });
+}
+
+export async function resubscribeToBeehiiv(subscriberId: string): Promise<void> {
+  await fetch(`${BASE}/publications/${PUB}/subscriptions/${subscriberId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${KEY}`,
+    },
+    body: JSON.stringify({ status: "active" }),
   });
 }

@@ -52,13 +52,13 @@ export default function Nav() {
           >
             About
           </Link>
-          <a
-            href="https://commonrare.bindergrail.com"
+          <Link
+            href="/signup"
             className="text-sm font-semibold rounded-sm px-4 py-1.5 transition-opacity hover:opacity-80"
             style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
           >
-            Subscribe
-          </a>
+            Sign up
+          </Link>
         </nav>
 
         {/* Mobile hamburger */}
@@ -97,14 +97,14 @@ export default function Nav() {
           <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             About
           </Link>
-          <a
-            href="https://commonrare.bindergrail.com"
+          <Link
+            href="/signup"
             className="text-sm font-semibold rounded-sm px-4 py-2 text-center transition-opacity hover:opacity-80"
             style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
             onClick={() => setOpen(false)}
           >
-            Subscribe free
-          </a>
+            Sign up free
+          </Link>
         </div>
       )}
     </header>

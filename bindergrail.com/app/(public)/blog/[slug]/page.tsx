@@ -3,7 +3,7 @@ import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import GrainOverlay from "@/components/GrainOverlay";
-import SubscribeForm from "@/components/SubscribeForm";
+import SignUpForm from "@/components/SignUpForm";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -170,7 +170,6 @@ export default async function BlogPostPage({
 
       {/* CTA strip */}
       <section
-        id="newsletter"
         className="relative overflow-hidden"
         style={{ backgroundColor: "#1A1814" }}
       >
@@ -180,7 +179,7 @@ export default async function BlogPostPage({
             className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
             style={{ color: "#B07035" }}
           >
-            Common Rare · Free newsletter
+            Binder Grail
           </p>
           <h2
             className="text-[24px] font-bold mb-3"
@@ -189,9 +188,9 @@ export default async function BlogPostPage({
             Enjoyed this? Get the next one in your inbox.
           </h2>
           <p className="text-[14px] mb-6" style={{ color: "#7A7468" }}>
-            Market analysis and collecting strategy — weekly-ish, no spam.
+            Create a free account to unlock the full archive and stay in the loop.
           </p>
-          <SubscribeForm />
+          <SignUpForm />
         </div>
       </section>
     </>

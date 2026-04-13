@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function SubscribeForm() {
+export default function SignUpForm() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -56,7 +56,7 @@ export default function SubscribeForm() {
         className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-60 whitespace-nowrap"
         style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
       >
-        {status === "loading" ? "Subscribing…" : "Subscribe — it's free"}
+        {status === "loading" ? "Signing up…" : "Sign up — it's free"}
       </button>
       {status === "error" && (
         <p className="text-xs w-full" style={{ color: "#B07035" }}>
