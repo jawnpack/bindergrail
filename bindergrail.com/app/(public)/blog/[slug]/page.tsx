@@ -114,6 +114,20 @@ const mdxComponents = {
     </blockquote>
   ),
   hr: () => <hr className="my-10" style={{ borderColor: "#D8D0C0" }} />,
+  img: ({ src, alt }: { src?: string; alt?: string }) => (
+    <div style={{ margin: "2rem 0", borderRadius: "8px", overflow: "hidden", border: "1px solid #D8D0C0" }}>
+      <img
+        src={src}
+        alt={alt ?? ""}
+        style={{ width: "100%", height: "auto", display: "block", maxHeight: "480px", objectFit: "cover" }}
+      />
+      {alt && (
+        <p style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", fontSize: "12px", fontWeight: 300, color: "#7A7468", padding: "8px 12px", margin: 0, background: "#F5F0E8", fontStyle: "italic" }}>
+          {alt}
+        </p>
+      )}
+    </div>
+  ),
 };
 
 export default async function BlogPostPage({
