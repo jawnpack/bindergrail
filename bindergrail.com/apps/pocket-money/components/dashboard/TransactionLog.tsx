@@ -1,5 +1,9 @@
 "use client";
 
+import MonthDivider from "@/components/dashboard/MonthDivider";
+import { formatCurrency } from "@/lib/pocket-money/budget";
+import { getTagStyle } from "@/lib/pocket-money/tags";
+
 interface Transaction {
   id: string;
   type: "spend" | "return" | "sale";
@@ -15,34 +19,24 @@ interface TransactionLogProps {
   currency: string;
 }
 
-function formatCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
-
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
   });
 }
 
-function groupByMonth(transactions: Transaction[]): [string, Transaction[]][] {
+function groupByMonth(txs: Transaction[]): [string, Transaction[]][] {
   const groups = new Map<string, Transaction[]>();
-  for (const tx of transactions) {
-    const key = tx.date.slice(0, 7); // "YYYY-MM"
+  for (const tx of txs) {
+    const key = tx.date.slice(0, 7);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key)!.push(tx);
   }
-  // Sort descending
   return Array.from(groups.entries()).sort((a, b) => b[0].localeCompare(a[0]));
 }
 
-function monthLabel(key: string) {
+function monthLabel(key: string): string {
   const [year, month] = key.split("-");
   return new Date(Number(year), Number(month) - 1).toLocaleDateString("en-US", {
     month: "long",
@@ -50,7 +44,14 @@ function monthLabel(key: string) {
   });
 }
 
-const isInflow = (type: Transaction["type"]) => type === "return" || type === "sale";
+const isInflow = (type: Transaction["type"]) =>
+  type === "return" || type === "sale";
+
+const typeLabel: Record<Transaction["type"], string> = {
+  spend: "spend",
+  return: "return",
+  sale: "sale",
+};
 
 export default function TransactionLog({
   transactions,
@@ -58,18 +59,10 @@ export default function TransactionLog({
 }: TransactionLogProps) {
   if (transactions.length === 0) {
     return (
-      <div
-        style={{
-          backgroundColor: "#fff",
-          borderRadius: 12,
-          padding: "24px 16px",
-          textAlign: "center",
-          border: "1px solid var(--pm-gray-border)",
-        }}
-      >
+      <div style={{ padding: "24px 20px" }}>
         <p
           style={{
-            fontSize: 14,
+            fontSize: 13,
             color: "var(--pm-gray-text)",
             fontStyle: "italic",
           }}
@@ -83,90 +76,106 @@ export default function TransactionLog({
   const groups = groupByMonth(transactions);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      {groups.map(([monthKey, txs]) => (
-        <div key={monthKey}>
-          <p
-            style={{
-              fontSize: 12,
-              fontWeight: 500,
-              color: "var(--pm-gray-text)",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-              marginBottom: 8,
-            }}
-          >
-            {monthLabel(monthKey)}
-          </p>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              borderRadius: 12,
-              overflow: "hidden",
-              border: "1px solid var(--pm-gray-border)",
-            }}
-          >
-            {txs.map((tx, i) => {
-              const inflow = isInflow(tx.type);
-              const dotColor = inflow
-                ? "var(--pm-green-mid)"
-                : "var(--pm-red-mid)";
-              const amountColor = inflow
-                ? "var(--pm-green-dark)"
-                : "var(--pm-red-mid)";
+    <div>
+      {groups.map(([key, txs]) => (
+        <div key={key}>
+          <MonthDivider label={monthLabel(key)} />
+          {txs.map((tx) => {
+            const inflow = isInflow(tx.type);
+            const dotColor = inflow ? "var(--pm-green-mid)" : "var(--pm-red-mid)";
+            const amountColor = inflow ? "var(--pm-green-dark)" : "var(--pm-red-dark)";
+            const prefix = inflow ? "+" : "-";
+            const tagStyle = tx.tag ? getTagStyle(tx.tag) : null;
 
-              return (
+            return (
+              <div
+                key={tx.id}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: "9px 20px",
+                  borderBottom: "0.5px solid var(--pm-gray-border)",
+                }}
+              >
+                {/* Dot */}
                 <div
-                  key={tx.id}
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    padding: "11px 14px",
-                    borderTop: i > 0 ? "1px solid var(--pm-gray-border)" : undefined,
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    backgroundColor: dotColor,
+                    flexShrink: 0,
+                    alignSelf: "flex-start",
+                    marginTop: 5,
                   }}
-                >
-                  <div
-                    style={{
-                      width: 8,
-                      height: 8,
-                      borderRadius: "50%",
-                      backgroundColor: dotColor,
-                      flexShrink: 0,
-                    }}
-                  />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p
-                      style={{
-                        fontSize: 14,
-                        color: "var(--pm-ink)",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {tx.name}
-                    </p>
-                    <p style={{ fontSize: 12, color: "var(--pm-gray-text)" }}>
-                      {formatDate(tx.date)}
-                      {tx.tag && ` · ${tx.tag}`}
-                    </p>
-                  </div>
+                />
+
+                {/* Left: name + date + tag */}
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <p
                     style={{
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: amountColor,
-                      flexShrink: 0,
+                      fontSize: 13,
+                      color: "var(--pm-ink)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
                     }}
                   >
-                    {inflow ? "+" : "-"}
+                    {tx.name}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "var(--pm-gray-text)",
+                      marginTop: 1,
+                    }}
+                  >
+                    {formatDate(tx.date)}
+                  </p>
+                  {tagStyle && tx.tag && (
+                    <span
+                      style={{
+                        display: "inline-block",
+                        marginTop: 3,
+                        fontSize: 9,
+                        fontWeight: 500,
+                        padding: "1px 6px",
+                        borderRadius: 4,
+                        backgroundColor: tagStyle.bg,
+                        color: tagStyle.text,
+                      }}
+                    >
+                      {tx.tag}
+                    </span>
+                  )}
+                </div>
+
+                {/* Right: amount + source */}
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <p
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: amountColor,
+                    }}
+                  >
+                    {prefix}
                     {formatCurrency(tx.amount, currency)}
                   </p>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "var(--pm-gray-text)",
+                      marginTop: 1,
+                    }}
+                  >
+                    {typeLabel[tx.type]}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>

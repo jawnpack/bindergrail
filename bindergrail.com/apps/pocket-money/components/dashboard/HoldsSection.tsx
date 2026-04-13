@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import Button from "@/components/ui/Button";
 import AddHoldForm from "@/components/forms/AddHoldForm";
+import { formatCurrency } from "@/lib/pocket-money/budget";
 
 interface Hold {
   id: string;
@@ -22,17 +22,8 @@ interface HoldsSectionProps {
   onToast: (msg: string) => void;
 }
 
-function formatCurrency(amount: number, currency: string) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  }).format(amount);
-}
-
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
+  return new Date(dateStr + "T00:00:00").toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
   });
@@ -75,92 +66,145 @@ export default function HoldsSection({
   }
 
   return (
-    <div style={{ marginBottom: 12 }}>
+    <div
+      style={{
+        padding: "14px 20px",
+        borderBottom: "0.5px solid var(--pm-gray-border)",
+      }}
+    >
+      {/* Header */}
       <div
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginBottom: 8,
+          marginBottom: holds.length > 0 ? 10 : 0,
         }}
       >
-        <p
-          style={{ fontSize: 13, fontWeight: 500, color: "var(--pm-gray-text)" }}
-        >
-          Holds
-        </p>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setShowForm(true)}
-          style={{ fontSize: 13, padding: "4px 8px" }}
-        >
-          + Add hold
-        </Button>
-      </div>
-
-      {holds.length === 0 ? (
-        <div
+        <span
           style={{
-            backgroundColor: "#fff",
-            borderRadius: 12,
-            padding: "14px 16px",
-            border: "1px solid var(--pm-gray-border)",
+            fontSize: 11,
+            fontWeight: 500,
+            color: "var(--pm-gray-text)",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
           }}
         >
-          <p
-            style={{
-              fontSize: 14,
-              color: "var(--pm-gray-text)",
-              fontStyle: "italic",
-            }}
-          >
-            No tall grass ahead.
-          </p>
-        </div>
+          Holds
+        </span>
+        <button
+          onClick={() => setShowForm(true)}
+          style={{
+            backgroundColor: "var(--pm-green-mid)",
+            color: "var(--pm-white)",
+            border: "none",
+            borderRadius: 20,
+            padding: "4px 10px",
+            fontSize: 11,
+            fontWeight: 500,
+            cursor: "pointer",
+          }}
+        >
+          + add hold
+        </button>
+      </div>
+
+      {/* Hold rows */}
+      {holds.length === 0 ? (
+        <p
+          style={{
+            fontSize: 13,
+            color: "var(--pm-gray-text)",
+            fontStyle: "italic",
+            marginTop: 10,
+          }}
+        >
+          No tall grass ahead.
+        </p>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {holds.map((hold) => (
+        <div>
+          {holds.map((hold, i) => (
             <div
               key={hold.id}
               style={{
-                backgroundColor: "var(--pm-amber-light)",
-                border: "1px solid var(--pm-amber-mid)",
-                borderRadius: 12,
-                padding: "12px 14px",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                paddingTop: 11,
+                paddingBottom: 11,
+                borderBottom:
+                  i < holds.length - 1
+                    ? "0.5px solid var(--pm-gray-border)"
+                    : undefined,
                 gap: 12,
               }}
             >
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p
+              {/* Left: dot + name + date */}
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 8, flex: 1, minWidth: 0 }}>
+                <div
                   style={{
-                    fontSize: 14,
+                    width: 7,
+                    height: 7,
+                    borderRadius: "50%",
+                    backgroundColor: "var(--pm-amber-mid)",
+                    flexShrink: 0,
+                    marginTop: 4,
+                  }}
+                />
+                <div style={{ minWidth: 0 }}>
+                  <p
+                    style={{
+                      fontSize: 13,
+                      color: "var(--pm-ink)",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {hold.name}
+                  </p>
+                  <p style={{ fontSize: 10, color: "var(--pm-gray-text)", marginTop: 1 }}>
+                    {formatDate(hold.due_date)}
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: amount + done button */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  flexShrink: 0,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 13,
                     fontWeight: 500,
-                    color: "var(--pm-ink)",
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
+                    color: "var(--pm-amber-dark)",
                   }}
                 >
-                  {hold.name}
-                </p>
-                <p style={{ fontSize: 12, color: "var(--pm-amber-dark)", marginTop: 2 }}>
-                  {formatCurrency(hold.amount, currency)} · due {formatDate(hold.due_date)}
-                  {hold.tag && ` · ${hold.tag}`}
-                </p>
+                  {formatCurrency(hold.amount, currency)}
+                </span>
+                <button
+                  disabled={completing === hold.id}
+                  onClick={() => handleDone(hold)}
+                  style={{
+                    border: "0.5px solid var(--pm-gray-border)",
+                    borderRadius: 6,
+                    padding: "4px 10px",
+                    fontSize: 11,
+                    fontWeight: 400,
+                    backgroundColor: "var(--pm-white)",
+                    color: "var(--pm-gray-text)",
+                    cursor: completing === hold.id ? "not-allowed" : "pointer",
+                    opacity: completing === hold.id ? 0.5 : 1,
+                  }}
+                >
+                  {completing === hold.id ? "..." : "done"}
+                </button>
               </div>
-              <Button
-                variant="secondary"
-                size="sm"
-                disabled={completing === hold.id}
-                onClick={() => handleDone(hold)}
-                style={{ flexShrink: 0, borderColor: "var(--pm-amber-mid)" }}
-              >
-                {completing === hold.id ? "..." : "Done"}
-              </Button>
             </div>
           ))}
         </div>
@@ -171,7 +215,7 @@ export default function HoldsSection({
           userId={userId}
           currency={currency}
           onClose={() => setShowForm(false)}
-          onSuccess={(name) => {
+          onSuccess={() => {
             setShowForm(false);
             onToast("Something's in the tall grass...");
             router.refresh();

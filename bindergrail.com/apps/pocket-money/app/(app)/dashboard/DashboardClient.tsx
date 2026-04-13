@@ -1,12 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
+import Topbar from "@/components/layout/Topbar";
 import BudgetHeader from "@/components/dashboard/BudgetHeader";
-import GrailBanner from "@/components/dashboard/GrailBanner";
+import GrailStrip from "@/components/dashboard/GrailStrip";
 import HoldsSection from "@/components/dashboard/HoldsSection";
 import TransactionLog from "@/components/dashboard/TransactionLog";
 import AddTransactionForm from "@/components/forms/AddTransactionForm";
-import Button from "@/components/ui/Button";
+import AddHoldForm from "@/components/forms/AddHoldForm";
+import Toast from "@/components/forms/Toast";
+import {
+  calcMonthTotals,
+  getBudgetStatus,
+  getStatusCopy,
+  getRemaining,
+  getProgressPercent,
+  getProgressColor,
+} from "@/lib/pocket-money/budget";
 
 interface Transaction {
   id: string;
@@ -36,151 +46,183 @@ interface GrailItem {
 
 interface DashboardClientProps {
   userId: string;
+  displayName: string | null;
   currency: string;
   budget: number;
-  spent: number;
-  inflow: number;
-  transactions: Transaction[];
+  allTransactions: Transaction[];
   holds: Hold[];
   grailItem: GrailItem | null;
+  initialYear: number;
+  initialMonth: number;
 }
 
-function Toast({ message, onDone }: { message: string; onDone: () => void }) {
-  useEffect(() => {
-    const t = setTimeout(onDone, 2500);
-    return () => clearTimeout(t);
-  }, [onDone]);
-
-  return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: 80,
-        left: "50%",
-        transform: "translateX(-50%)",
-        backgroundColor: "var(--pm-ink)",
-        color: "#fff",
-        padding: "10px 20px",
-        borderRadius: 12,
-        fontSize: 14,
-        fontWeight: 500,
-        zIndex: 100,
-        whiteSpace: "nowrap",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
-        animation: "fadeInUp 0.2s ease",
-      }}
-    >
-      {message}
-    </div>
-  );
+function getMonthLabel(year: number, month: number): string {
+  return new Date(year, month - 1).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
 }
 
 export default function DashboardClient({
   userId,
+  displayName,
   currency,
   budget,
-  spent,
-  inflow,
-  transactions,
+  allTransactions,
   holds,
   grailItem,
+  initialYear,
+  initialMonth,
 }: DashboardClientProps) {
+  const [selectedYear, setSelectedYear] = useState(initialYear);
+  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [showAddTx, setShowAddTx] = useState(false);
+  const [showAddHold, setShowAddHold] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
-  function showToast(msg: string) {
-    setToast(msg);
-  }
+  const now = new Date();
+  const nowYear = now.getFullYear();
+  const nowMonth = now.getMonth() + 1;
 
-  function handleTxSuccess(name: string, type: string) {
-    setShowAddTx(false);
-    if (type === "sale") {
-      showToast("Funds added to your Bag.");
+  const canGoForward =
+    selectedYear < nowYear ||
+    (selectedYear === nowYear && selectedMonth < nowMonth);
+
+  function prevMonth() {
+    if (selectedMonth === 1) {
+      setSelectedMonth(12);
+      setSelectedYear((y) => y - 1);
     } else {
-      showToast(`Got ${name}! It was added to your Bag.`);
+      setSelectedMonth((m) => m - 1);
     }
   }
+
+  function nextMonth() {
+    if (!canGoForward) return;
+    if (selectedMonth === 12) {
+      setSelectedMonth(1);
+      setSelectedYear((y) => y + 1);
+    } else {
+      setSelectedMonth((m) => m + 1);
+    }
+  }
+
+  const monthTxs = useMemo(() => {
+    const prefix = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}`;
+    return allTransactions.filter((tx) => tx.date.startsWith(prefix));
+  }, [allTransactions, selectedYear, selectedMonth]);
+
+  const { spent, inflow } = calcMonthTotals(monthTxs);
+  const remaining = getRemaining(budget, spent, inflow);
+  const percent = getProgressPercent(spent, budget);
+  const status = getBudgetStatus(spent, budget);
+  const statusCopy = getStatusCopy(status);
+  const progressColor = getProgressColor(spent, budget);
+  const monthLabel = getMonthLabel(selectedYear, selectedMonth);
+
+  function handleTxSuccess(name: string, type: string, destination?: string) {
+    setShowAddTx(false);
+    if (type === "sale" && destination === "grail_fund") {
+      setToast("Sale proceeds sent to your Grail Fund.");
+    } else if (type === "sale") {
+      setToast("Sale proceeds added to your Bag.");
+    } else if (type === "return") {
+      setToast("Return logged.");
+    } else {
+      setToast(`Got ${name}! Added to your Bag.`);
+    }
+  }
+
+  const logButton = (
+    <button
+      onClick={() => setShowAddTx(true)}
+      style={{
+        width: "100%",
+        backgroundColor: "var(--pm-green-mid)",
+        color: "var(--pm-white)",
+        border: "none",
+        borderRadius: 10,
+        padding: 13,
+        fontSize: 14,
+        fontWeight: 500,
+        cursor: "pointer",
+        fontFamily: "inherit",
+      }}
+    >
+      + log transaction
+    </button>
+  );
 
   return (
     <div
       style={{
         minHeight: "100vh",
         backgroundColor: "var(--pm-gray-bg)",
-        paddingBottom: 88,
       }}
     >
-      {/* Header bar */}
+      {/* Two-column desktop layout */}
       <div
-        style={{
-          backgroundColor: "var(--pm-green-dark)",
-          padding: "16px 20px 12px",
-        }}
+        className="md:flex md:max-w-[900px] md:mx-auto"
+        style={{ minHeight: "100vh" }}
       >
-        <p
+        {/* Left column */}
+        <div
+          className="md:w-[400px] md:flex-shrink-0 md:flex md:flex-col md:border-r"
           style={{
-            fontSize: 11,
-            fontWeight: 500,
-            color: "rgba(255,255,255,0.6)",
-            textTransform: "uppercase",
-            letterSpacing: "0.12em",
-            marginBottom: 2,
+            borderColor: "var(--pm-gray-border)",
+            paddingBottom: 88,
           }}
         >
-          a Binder Grail tool
-        </p>
-        <p
-          style={{
-            fontSize: 20,
-            fontWeight: 500,
-            color: "#fff",
-          }}
-        >
-          Pocket Money
-        </p>
-      </div>
+          <Topbar displayName={displayName} />
 
-      {/* Content */}
-      <div style={{ padding: "16px 16px 0", maxWidth: 520, margin: "0 auto" }}>
-        <BudgetHeader
-          budget={budget}
-          spent={spent}
-          inflow={inflow}
-          currency={currency}
-        />
-
-        {grailItem && (
-          <GrailBanner
-            name={grailItem.name}
-            targetPrice={grailItem.targetPrice}
-            amountSaved={grailItem.amountSaved}
+          <BudgetHeader
+            monthLabel={monthLabel}
+            remaining={remaining}
+            spent={spent}
+            budget={budget}
             currency={currency}
+            statusCopy={statusCopy}
+            percent={percent}
+            progressColor={progressColor}
+            onPrevMonth={prevMonth}
+            onNextMonth={nextMonth}
+            canGoForward={canGoForward}
           />
-        )}
 
-        <HoldsSection
-          holds={holds}
-          currency={currency}
-          userId={userId}
-          onToast={showToast}
-        />
+          {grailItem && (
+            <GrailStrip
+              name={grailItem.name}
+              targetPrice={grailItem.targetPrice}
+              amountSaved={grailItem.amountSaved}
+              currency={currency}
+            />
+          )}
 
-        <div style={{ marginBottom: 12 }}>
-          <p
-            style={{
-              fontSize: 13,
-              fontWeight: 500,
-              color: "var(--pm-gray-text)",
-              marginBottom: 8,
-            }}
+          <HoldsSection
+            holds={holds}
+            currency={currency}
+            userId={userId}
+            onToast={(msg) => setToast(msg)}
+          />
+
+          {/* Desktop log button */}
+          <div
+            className="hidden md:block"
+            style={{ padding: "16px 20px", marginTop: "auto" }}
           >
-            This month
-          </p>
-          <TransactionLog transactions={transactions} currency={currency} />
+            {logButton}
+          </div>
+        </div>
+
+        {/* Right column — full transaction log */}
+        <div className="md:flex-1" style={{ minWidth: 0 }}>
+          <TransactionLog transactions={allTransactions} currency={currency} />
         </div>
       </div>
 
-      {/* Sticky bottom bar */}
+      {/* Mobile sticky bottom bar */}
       <div
+        className="md:hidden"
         style={{
           position: "fixed",
           bottom: 0,
@@ -188,40 +230,38 @@ export default function DashboardClient({
           right: 0,
           padding: "12px 16px 20px",
           backgroundColor: "var(--pm-gray-bg)",
-          borderTop: "1px solid var(--pm-gray-border)",
+          borderTop: "0.5px solid var(--pm-gray-border)",
+          zIndex: 10,
         }}
       >
-        <div style={{ maxWidth: 520, margin: "0 auto" }}>
-          <Button
-            fullWidth
-            size="lg"
-            onClick={() => setShowAddTx(true)}
-            style={{ fontSize: 15 }}
-          >
-            + Log transaction
-          </Button>
-        </div>
+        {logButton}
       </div>
 
-      {/* Add transaction form */}
+      {/* Modals */}
       {showAddTx && (
         <AddTransactionForm
           userId={userId}
           currency={currency}
+          grailItemId={grailItem?.id ?? null}
           onClose={() => setShowAddTx(false)}
           onSuccess={handleTxSuccess}
         />
       )}
 
+      {showAddHold && (
+        <AddHoldForm
+          userId={userId}
+          currency={currency}
+          onClose={() => setShowAddHold(false)}
+          onSuccess={() => {
+            setShowAddHold(false);
+            setToast("Something's in the tall grass...");
+          }}
+        />
+      )}
+
       {/* Toast */}
       {toast && <Toast message={toast} onDone={() => setToast(null)} />}
-
-      <style>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translate(-50%, 8px); }
-          to   { opacity: 1; transform: translate(-50%, 0); }
-        }
-      `}</style>
     </div>
   );
 }

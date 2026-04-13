@@ -2,20 +2,38 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
 import { DEFAULT_TAGS } from "@/lib/pocket-money/tags";
 
 interface AddHoldFormProps {
   userId: string;
   currency: string;
   onClose: () => void;
-  onSuccess: (name: string) => void;
+  onSuccess: () => void;
 }
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "10px 12px",
+  border: "0.5px solid var(--pm-gray-border)",
+  borderRadius: 8,
+  fontSize: 14,
+  color: "var(--pm-ink)",
+  backgroundColor: "var(--pm-white)",
+  outline: "none",
+  fontFamily: "inherit",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 12,
+  fontWeight: 500,
+  color: "var(--pm-ink)",
+  marginBottom: 6,
+};
 
 export default function AddHoldForm({
   userId,
-  currency,
+  currency: _currency,
   onClose,
   onSuccess,
 }: AddHoldFormProps) {
@@ -45,49 +63,35 @@ export default function AddHoldForm({
     });
 
     setLoading(false);
-    onSuccess(name);
+    onSuccess();
   }
-
-  const labelStyle: React.CSSProperties = {
-    fontSize: 13,
-    fontWeight: 500,
-    color: "var(--pm-ink)",
-    display: "block",
-    marginBottom: 6,
-  };
-  const selectStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "10px 14px",
-    borderRadius: 10,
-    border: "1px solid var(--pm-gray-border)",
-    backgroundColor: "#fff",
-    color: "var(--pm-ink)",
-    fontSize: 15,
-    appearance: "none",
-  };
 
   return (
     <div
       style={{
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(0,0,0,0.35)",
+        backgroundColor: "rgba(0,0,0,0.4)",
         zIndex: 50,
         display: "flex",
-        alignItems: "flex-end",
+        alignItems: "center",
         justifyContent: "center",
+        padding: 20,
       }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
         style={{
-          backgroundColor: "var(--pm-gray-bg)",
-          borderRadius: "20px 20px 0 0",
-          padding: "24px 20px 32px",
+          backgroundColor: "var(--pm-white)",
+          borderRadius: 16,
+          padding: 24,
           width: "100%",
-          maxWidth: 520,
+          maxWidth: 420,
+          maxHeight: "90vh",
+          overflowY: "auto",
         }}
       >
+        {/* Header */}
         <div
           style={{
             display: "flex",
@@ -96,59 +100,76 @@ export default function AddHoldForm({
             marginBottom: 20,
           }}
         >
-          <p style={{ fontSize: 17, fontWeight: 500, color: "var(--pm-ink)" }}>
+          <p style={{ fontSize: 15, fontWeight: 500, color: "var(--pm-ink)" }}>
             Add a hold
           </p>
           <button
             onClick={onClose}
             style={{
-              fontSize: 22,
+              fontSize: 20,
               color: "var(--pm-gray-text)",
               background: "none",
               border: "none",
               cursor: "pointer",
               lineHeight: 1,
+              padding: 0,
             }}
           >
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <Input
-            label="What's on hold?"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Pokémon Center ETB"
-            required
-          />
-
-          <Input
-            label="How much?"
-            type="number"
-            inputMode="decimal"
-            min="0"
-            step="0.01"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00"
-            required
-          />
-
-          <Input
-            label="When does it hit?"
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
-          />
-
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: 14 }}
+        >
+          {/* Name */}
           <div>
-            <label style={labelStyle}>Tag (optional)</label>
+            <label style={labelStyle}>What&apos;s on hold?</label>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Pokémon Center ETB"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          {/* Amount */}
+          <div>
+            <label style={labelStyle}>How much?</label>
+            <input
+              type="number"
+              inputMode="decimal"
+              min="0.01"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          {/* Due date */}
+          <div>
+            <label style={labelStyle}>When does it hit?</label>
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+              required
+              style={inputStyle}
+            />
+          </div>
+
+          {/* Tag */}
+          <div>
+            <label style={labelStyle}>Tag</label>
             <select
               value={tag}
               onChange={(e) => setTag(e.target.value)}
-              style={selectStyle}
+              style={{ ...inputStyle, appearance: "none" }}
             >
               <option value="">No tag</option>
               {DEFAULT_TAGS.map((t) => (
@@ -159,16 +180,38 @@ export default function AddHoldForm({
             </select>
           </div>
 
-          <Input
-            label="Note (optional)"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Any notes..."
-          />
+          {/* Note */}
+          <div>
+            <label style={labelStyle}>Note</label>
+            <input
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Optional..."
+              style={inputStyle}
+            />
+          </div>
 
-          <Button type="submit" fullWidth disabled={loading} style={{ marginTop: 4, backgroundColor: "var(--pm-amber-mid)" }}>
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: "100%",
+              backgroundColor: "var(--pm-green-mid)",
+              color: "var(--pm-white)",
+              border: "none",
+              borderRadius: 10,
+              padding: 13,
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.6 : 1,
+              fontFamily: "inherit",
+              marginTop: 2,
+            }}
+          >
             {loading ? "Adding..." : "Add hold"}
-          </Button>
+          </button>
         </form>
       </div>
     </div>

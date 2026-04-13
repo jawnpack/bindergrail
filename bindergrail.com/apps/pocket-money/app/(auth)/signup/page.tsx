@@ -3,35 +3,67 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
+
+export const dynamic = "force-dynamic";
 
 type Step = 1 | 2 | 3;
 
-const CURRENCIES = ["USD", "GBP", "EUR", "JPY", "KRW", "CAD", "AUD"];
+const CURRENCIES: { code: string; label: string }[] = [
+  { code: "USD", label: "USD — US Dollar" },
+  { code: "GBP", label: "GBP — British Pound" },
+  { code: "EUR", label: "EUR — Euro" },
+  { code: "JPY", label: "JPY — Japanese Yen" },
+  { code: "KRW", label: "KRW — South Korean Won" },
+  { code: "CAD", label: "CAD — Canadian Dollar" },
+  { code: "AUD", label: "AUD — Australian Dollar" },
+];
 
 const CURRENCY_SYMBOLS: Record<string, string> = {
   USD: "$", GBP: "£", EUR: "€", JPY: "¥",
   KRW: "₩", CAD: "CA$", AUD: "A$",
 };
 
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "10px 12px",
+  border: "0.5px solid var(--pm-gray-border)",
+  borderRadius: 8,
+  fontSize: 14,
+  color: "var(--pm-ink)",
+  backgroundColor: "var(--pm-white)",
+  outline: "none",
+  fontFamily: "inherit",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 12,
+  fontWeight: 500,
+  color: "var(--pm-ink)",
+  marginBottom: 6,
+};
+
 function StepDots({ current }: { current: Step }) {
   return (
-    <div style={{ display: "flex", gap: 6, justifyContent: "center", marginBottom: 28 }}>
+    <div
+      style={{
+        display: "flex",
+        gap: 6,
+        justifyContent: "center",
+        marginBottom: 28,
+        alignItems: "center",
+      }}
+    >
       {([1, 2, 3] as Step[]).map((s) => (
         <div
           key={s}
           style={{
-            width: 8,
-            height: 8,
-            borderRadius: "50%",
+            height: 6,
+            width: s === current ? 18 : 6,
+            borderRadius: 99,
             backgroundColor:
-              s === current
-                ? "var(--pm-green-mid)"
-                : s < current
-                ? "var(--pm-green-light)"
-                : "var(--pm-gray-border)",
-            transition: "background-color 0.2s",
+              s === current ? "var(--pm-green-mid)" : "var(--pm-gray-border)",
+            transition: "all 0.2s",
           }}
         />
       ))}
@@ -47,17 +79,13 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Step 1 state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [currency, setCurrency] = useState("USD");
-
-  // Step 2 state
   const [budget, setBudget] = useState("");
 
-  // Step 1 submit
-  async function handleAccountSubmit(e: React.FormEvent) {
+  async function handleStep1(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -80,16 +108,14 @@ export default function SignupPage() {
     if (data.user) {
       await supabase
         .from("users")
-        .upsert({ id: data.user.id, email, display_name: displayName })
-        .eq("id", data.user.id);
+        .upsert({ id: data.user.id, email, display_name: displayName, currency });
     }
 
     setLoading(false);
     setStep(2);
   }
 
-  // Step 2 submit
-  async function handleBudgetSubmit(e: React.FormEvent) {
+  async function handleStep2(e: React.FormEvent) {
     e.preventDefault();
     if (!budget) return;
     setError("");
@@ -114,248 +140,367 @@ export default function SignupPage() {
     setStep(3);
   }
 
-  const cardStyle: React.CSSProperties = {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: "28px 24px",
-    boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
-  };
-
   return (
     <div
       style={{
         minHeight: "100vh",
         display: "flex",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "center",
-        padding: "24px 16px",
-        backgroundColor: "var(--pm-gray-bg)",
+        padding: "48px 24px 32px",
+        backgroundColor: "var(--pm-white)",
       }}
     >
       <div style={{ width: "100%", maxWidth: 400 }}>
         <StepDots current={step} />
 
-        {/* ── Step 1 ── */}
+        {/* ── STEP 1 ── */}
         {step === 1 && (
           <>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <h1
-                style={{ fontSize: 28, fontWeight: 500, color: "var(--pm-ink)", marginBottom: 6 }}
-              >
-                Welcome, Trainer.
-              </h1>
-              <p style={{ fontSize: 14, color: "var(--pm-gray-text)" }}>
-                Create your Pocket Money account.
-              </p>
-            </div>
-            <div style={cardStyle}>
-              <form
-                onSubmit={handleAccountSubmit}
-                style={{ display: "flex", flexDirection: "column", gap: 16 }}
-              >
-                <Input
-                  label="Display name"
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                color: "var(--pm-green-mid)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                marginBottom: 10,
+              }}
+            >
+              Step 1 of 3
+            </p>
+            <h1
+              style={{
+                fontSize: 22,
+                fontWeight: 500,
+                color: "var(--pm-ink)",
+                marginBottom: 6,
+              }}
+            >
+              Welcome, Trainer.
+            </h1>
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--pm-gray-text)",
+                lineHeight: 1.5,
+                marginBottom: 28,
+              }}
+            >
+              Create your account to start tracking your Pokémon TCG budget.
+            </p>
+
+            <form
+              onSubmit={handleStep1}
+              style={{ display: "flex", flexDirection: "column", gap: 16 }}
+            >
+              <div>
+                <label style={labelStyle}>Display name</label>
+                <input
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Ash Ketchum"
                   required
+                  style={inputStyle}
                 />
-                <Input
-                  label="Email"
+              </div>
+              <div>
+                <label style={labelStyle}>Email</label>
+                <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
                   required
+                  style={inputStyle}
                 />
-                <Input
-                  label="Password"
+              </div>
+              <div>
+                <label style={labelStyle}>Password</label>
+                <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Min. 8 characters"
                   minLength={8}
                   required
+                  style={inputStyle}
                 />
-                <div>
-                  <label
-                    style={{
-                      fontSize: 13,
-                      fontWeight: 500,
-                      color: "var(--pm-ink)",
-                      display: "block",
-                      marginBottom: 6,
-                    }}
-                  >
-                    Currency
-                  </label>
-                  <select
-                    value={currency}
-                    onChange={(e) => setCurrency(e.target.value)}
-                    style={{
-                      width: "100%",
-                      padding: "10px 14px",
-                      borderRadius: 10,
-                      border: "1px solid var(--pm-gray-border)",
-                      backgroundColor: "#fff",
-                      color: "var(--pm-ink)",
-                      fontSize: 15,
-                      appearance: "none",
-                    }}
-                  >
-                    {CURRENCIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c} ({CURRENCY_SYMBOLS[c]})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {error && (
-                  <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
-                )}
-                <Button type="submit" fullWidth disabled={loading} style={{ marginTop: 4 }}>
-                  {loading ? "Creating account..." : "Continue"}
-                </Button>
-              </form>
-            </div>
-            <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "var(--pm-gray-text)" }}>
+              </div>
+              <div>
+                <label style={labelStyle}>Currency</label>
+                <select
+                  value={currency}
+                  onChange={(e) => setCurrency(e.target.value)}
+                  style={{ ...inputStyle, appearance: "none" }}
+                >
+                  {CURRENCIES.map((c) => (
+                    <option key={c.code} value={c.code}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {error && (
+                <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: "100%",
+                  backgroundColor: "var(--pm-green-mid)",
+                  color: "var(--pm-white)",
+                  border: "none",
+                  borderRadius: 10,
+                  padding: 13,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.6 : 1,
+                  fontFamily: "inherit",
+                  marginTop: 4,
+                }}
+              >
+                {loading ? "Creating account..." : "Continue"}
+              </button>
+            </form>
+
+            <p
+              style={{
+                textAlign: "center",
+                marginTop: 20,
+                fontSize: 13,
+                color: "var(--pm-gray-text)",
+              }}
+            >
               Already have an account?{" "}
-              <a href="/login" style={{ color: "var(--pm-green-dark)", fontWeight: 500 }}>
+              <a
+                href="/login"
+                style={{ color: "var(--pm-green-dark)", fontWeight: 500 }}
+              >
                 Sign in
               </a>
             </p>
           </>
         )}
 
-        {/* ── Step 2 ── */}
+        {/* ── STEP 2 ── */}
         {step === 2 && (
           <>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <h1
-                style={{ fontSize: 26, fontWeight: 500, color: "var(--pm-ink)", marginBottom: 6 }}
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                color: "var(--pm-green-mid)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                marginBottom: 10,
+              }}
+            >
+              Step 2 of 3
+            </p>
+            <h1
+              style={{
+                fontSize: 22,
+                fontWeight: 500,
+                color: "var(--pm-ink)",
+                marginBottom: 6,
+              }}
+            >
+              What&apos;s your monthly hobby budget?
+            </h1>
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--pm-gray-text)",
+                lineHeight: 1.5,
+                marginBottom: 28,
+              }}
+            >
+              You can change this any time in settings.
+            </p>
+
+            <form
+              onSubmit={handleStep2}
+              style={{ display: "flex", flexDirection: "column", gap: 16 }}
+            >
+              <div style={{ position: "relative" }}>
+                <span
+                  style={{
+                    position: "absolute",
+                    left: 16,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontSize: 28,
+                    fontWeight: 500,
+                    color: "var(--pm-gray-border)",
+                    pointerEvents: "none",
+                    lineHeight: 1,
+                  }}
+                >
+                  {CURRENCY_SYMBOLS[currency] ?? currency}
+                </span>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  min="1"
+                  step="1"
+                  value={budget}
+                  onChange={(e) => setBudget(e.target.value)}
+                  placeholder="200"
+                  required
+                  style={{
+                    width: "100%",
+                    backgroundColor: "var(--pm-gray-bg)",
+                    border: "0.5px solid var(--pm-gray-border)",
+                    borderRadius: 10,
+                    fontSize: 28,
+                    fontWeight: 500,
+                    color: "var(--pm-ink)",
+                    padding: "16px 16px 16px 36px",
+                    outline: "none",
+                    fontFamily: "inherit",
+                  }}
+                />
+              </div>
+
+              <p
+                style={{
+                  fontSize: 11,
+                  color: "var(--pm-gray-text)",
+                  fontStyle: "italic",
+                  marginTop: -8,
+                }}
               >
-                What&apos;s your monthly hobby budget?
-              </h1>
-              <p style={{ fontSize: 14, color: "var(--pm-gray-text)" }}>
-                You can change this any time.
+                This is your monthly envelope — your hobby money, your rules.
               </p>
-            </div>
-            <div style={cardStyle}>
-              <form
-                onSubmit={handleBudgetSubmit}
-                style={{ display: "flex", flexDirection: "column", gap: 16 }}
+
+              {error && (
+                <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>
+                  {error}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  width: "100%",
+                  backgroundColor: "var(--pm-green-mid)",
+                  color: "var(--pm-white)",
+                  border: "none",
+                  borderRadius: 10,
+                  padding: 13,
+                  fontSize: 14,
+                  fontWeight: 500,
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading ? 0.6 : 1,
+                  fontFamily: "inherit",
+                  marginTop: 4,
+                }}
               >
-                <div style={{ position: "relative" }}>
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: 14,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      fontSize: 20,
-                      color: "var(--pm-gray-text)",
-                      pointerEvents: "none",
-                    }}
-                  >
-                    {CURRENCY_SYMBOLS[currency] ?? currency}
-                  </span>
-                  <input
-                    type="number"
-                    inputMode="decimal"
-                    min="1"
-                    step="1"
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
-                    placeholder="200"
-                    required
-                    style={{
-                      width: "100%",
-                      padding: "18px 14px 18px 36px",
-                      borderRadius: 12,
-                      border: "1px solid var(--pm-gray-border)",
-                      backgroundColor: "#fff",
-                      fontSize: 28,
-                      fontWeight: 500,
-                      color: "var(--pm-ink)",
-                      outline: "none",
-                    }}
-                  />
-                </div>
-                {error && (
-                  <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
-                )}
-                <Button type="submit" fullWidth disabled={loading} style={{ marginTop: 4 }}>
-                  {loading ? "Saving..." : "Set my budget"}
-                </Button>
-              </form>
-            </div>
+                {loading ? "Saving..." : "Set my budget"}
+              </button>
+            </form>
           </>
         )}
 
-        {/* ── Step 3 ── */}
+        {/* ── STEP 3 ── */}
         {step === 3 && (
           <>
-            <div style={{ textAlign: "center", marginBottom: 24 }}>
-              <h1
-                style={{ fontSize: 26, fontWeight: 500, color: "var(--pm-ink)", marginBottom: 6 }}
-              >
-                Here&apos;s your Pocket Money.
-              </h1>
-            </div>
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 500,
+                color: "var(--pm-green-mid)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                marginBottom: 10,
+              }}
+            >
+              Step 3 of 3
+            </p>
+            <h1
+              style={{
+                fontSize: 22,
+                fontWeight: 500,
+                color: "var(--pm-ink)",
+                marginBottom: 28,
+              }}
+            >
+              Here&apos;s your Pocket Money.
+            </h1>
 
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 gap: 10,
-                marginBottom: 24,
+                marginBottom: 28,
               }}
             >
               {[
                 {
                   title: "Track your spend",
-                  desc: "Log every purchase. Know your number.",
+                  body: "Log every purchase. Know your number.",
                 },
                 {
                   title: "Work toward your grail",
-                  desc: "Set a goal. Every sale gets you closer.",
+                  body: "Set a goal. Every sale gets you closer.",
                 },
                 {
                   title: "Log your sales",
-                  desc: "Flip something? Put it back in the Bag.",
+                  body: "Flip something? Put it back in the Bag.",
                 },
-              ].map(({ title, desc }) => (
+              ].map(({ title, body }) => (
                 <div
                   key={title}
                   style={{
-                    backgroundColor: "#fff",
-                    borderRadius: 14,
-                    padding: "16px 18px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                    backgroundColor: "var(--pm-white)",
+                    border: "0.5px solid var(--pm-gray-border)",
+                    borderRadius: 10,
+                    padding: "14px 16px",
                   }}
                 >
                   <p
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: 500,
                       color: "var(--pm-ink)",
-                      marginBottom: 4,
+                      marginBottom: 3,
                     }}
                   >
                     {title}
                   </p>
-                  <p style={{ fontSize: 13, color: "var(--pm-gray-text)" }}>{desc}</p>
+                  <p style={{ fontSize: 12, color: "var(--pm-gray-text)" }}>
+                    {body}
+                  </p>
                 </div>
               ))}
             </div>
 
-            <Button
-              fullWidth
+            <button
               onClick={() => router.push("/dashboard")}
-              style={{ fontSize: 16 }}
+              style={{
+                width: "100%",
+                backgroundColor: "var(--pm-green-mid)",
+                color: "var(--pm-white)",
+                border: "none",
+                borderRadius: 10,
+                padding: 13,
+                fontSize: 14,
+                fontWeight: 500,
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
             >
               Let&apos;s go
-            </Button>
+            </button>
           </>
         )}
       </div>

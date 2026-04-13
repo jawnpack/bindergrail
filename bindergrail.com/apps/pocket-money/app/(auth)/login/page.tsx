@@ -3,9 +3,28 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import Button from "@/components/ui/Button";
-import Input from "@/components/ui/Input";
-import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  padding: "10px 12px",
+  border: "0.5px solid var(--pm-gray-border)",
+  borderRadius: 8,
+  fontSize: 14,
+  color: "var(--pm-ink)",
+  backgroundColor: "var(--pm-white)",
+  outline: "none",
+  fontFamily: "inherit",
+};
+
+const labelStyle: React.CSSProperties = {
+  display: "block",
+  fontSize: 12,
+  fontWeight: 500,
+  color: "var(--pm-ink)",
+  marginBottom: 6,
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,82 +69,104 @@ export default function LoginPage() {
         style={{
           width: "100%",
           maxWidth: 400,
+          backgroundColor: "var(--pm-white)",
+          border: "0.5px solid var(--pm-gray-border)",
+          borderRadius: 16,
+          padding: "32px 24px",
         }}
       >
-        <div style={{ marginBottom: 32, textAlign: "center" }}>
+        {/* Wordmark */}
+        <div style={{ textAlign: "center", marginBottom: 24 }}>
           <p
             style={{
-              fontSize: 11,
+              fontSize: 20,
               fontWeight: 500,
-              color: "var(--pm-green-mid)",
-              textTransform: "uppercase",
-              letterSpacing: "0.14em",
-              marginBottom: 8,
+              letterSpacing: "0.04em",
+              marginBottom: 16,
             }}
           >
-            a Binder Grail tool
+            <span style={{ color: "var(--pm-ink)" }}>pocket </span>
+            <span style={{ color: "var(--pm-green-mid)" }}>money</span>
           </p>
-          <h1
+          <p
             style={{
-              fontSize: 28,
+              fontSize: 16,
               fontWeight: 500,
               color: "var(--pm-ink)",
-              marginBottom: 6,
             }}
           >
-            Pocket Money
-          </h1>
-          <p style={{ fontSize: 14, color: "var(--pm-gray-text)" }}>
-            Sign in to your account
+            Sign in to Pocket Money
           </p>
         </div>
 
-        <div
-          style={{
-            backgroundColor: "#fff",
-            borderRadius: 16,
-            padding: "28px 24px",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
-          }}
+        <form
+          onSubmit={handleSubmit}
+          style={{ display: "flex", flexDirection: "column", gap: 14 }}
         >
-          <form
-            onSubmit={handleSubmit}
-            style={{ display: "flex", flexDirection: "column", gap: 16 }}
-          >
-            <Input
-              label="Email"
+          <div>
+            <label style={labelStyle}>Email</label>
+            <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               required
+              style={inputStyle}
             />
-            <Input
-              label="Password"
+          </div>
+
+          <div>
+            <label style={labelStyle}>Password</label>
+            <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
+              style={inputStyle}
             />
+          </div>
 
-            {error && (
-              <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
-            )}
+          {error && (
+            <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
+          )}
 
-            <Button type="submit" fullWidth disabled={loading} style={{ marginTop: 4 }}>
-              {loading ? "Signing in..." : "Sign in"}
-            </Button>
-          </form>
-        </div>
+          <button
+            type="submit"
+            disabled={loading}
+            style={{
+              width: "100%",
+              backgroundColor: "var(--pm-green-mid)",
+              color: "var(--pm-white)",
+              border: "none",
+              borderRadius: 10,
+              padding: 13,
+              fontSize: 14,
+              fontWeight: 500,
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.6 : 1,
+              fontFamily: "inherit",
+              marginTop: 4,
+            }}
+          >
+            {loading ? "Signing in..." : "Sign in"}
+          </button>
+        </form>
 
-        <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "var(--pm-gray-text)" }}>
-          No account?{" "}
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: 20,
+            fontSize: 13,
+            color: "var(--pm-gray-text)",
+          }}
+        >
+          Don&apos;t have an account?{" "}
           <a
             href="/signup"
             style={{ color: "var(--pm-green-dark)", fontWeight: 500 }}
           >
-            Create one
+            Sign up
           </a>
         </p>
       </div>

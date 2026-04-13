@@ -2,28 +2,35 @@
 @import "tailwindcss";
 
 :root {
-  --pm-green-light: #EAF3DE;
-  --pm-green-mid: #639922;
-  --pm-green-dark: #3B6D11;
-  --pm-green-text: #27500A;
-  --pm-red-light: #FCEBEB;
-  --pm-red-mid: #E24B4A;
-  --pm-red-dark: #A32D2D;
-  --pm-amber-light: #FAEEDA;
-  --pm-amber-mid: #EF9F27;
-  --pm-amber-dark: #854F0B;
+  --pm-ink: #2C2C2A;
+  --pm-ink-light: #444441;
   --pm-gray-bg: #F1EFE8;
   --pm-gray-border: #D3D1C7;
   --pm-gray-text: #888780;
-  --pm-ink: #2C2C2A;
+  --pm-white: #ffffff;
+
+  --pm-green-lightest: #EAF3DE;
+  --pm-green-light: #C0DD97;
+  --pm-green-mid: #639922;
+  --pm-green-dark: #3B6D11;
+  --pm-green-text: #27500A;
+
+  --pm-red-light: #FCEBEB;
+  --pm-red-mid: #E24B4A;
+  --pm-red-dark: #A32D2D;
+
+  --pm-amber-light: #FAEEDA;
+  --pm-amber-mid: #EF9F27;
+  --pm-amber-dark: #854F0B;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-html,
-body {
+html, body {
   height: 100%;
 }
 
@@ -31,6 +38,16 @@ body {
   background-color: var(--pm-gray-bg);
   color: var(--pm-ink);
   font-family: "Inter", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
 }
