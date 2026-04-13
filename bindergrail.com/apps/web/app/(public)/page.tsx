@@ -4,18 +4,6 @@ import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 import GrainOverlay from "@/components/GrainOverlay";
 
-const APPS = [
-  {
-    name: "Origins",
-    desc: "Track every card you own. Log condition, price, and grading status.",
-    href: "/origins",
-  },
-  {
-    name: "Pocket Money",
-    desc: "Monthly spend tracker. Set a limit, log purchases, stay on budget.",
-    href: "/pocket-money",
-  },
-];
 
 export const metadata: Metadata = {
   title: "Binder Grail — Pokémon TCG Tools & Market Analysis for Frugal Collectors",
@@ -197,46 +185,96 @@ export default function HomePage() {
       {/* ── Apps coming soon ─────────────────────────────────────── */}
       <section className="py-14 md:py-16" style={{ backgroundColor: "#F5F0E8", borderTop: "1px solid #D8D0C0" }}>
         <div className="max-w-5xl mx-auto px-6">
-          <div className="flex items-baseline justify-between mb-8">
+          <div className="mb-8">
             <h2
               className="text-[22px] font-bold"
               style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
             >
               Tools
             </h2>
-            <span className="text-[12px]" style={{ color: "#7A7468" }}>Coming soon</span>
           </div>
-          <div className="grid sm:grid-cols-2 gap-4">
-            {APPS.map((app) => (
-              <Link
-                key={app.name}
-                href={app.href}
-                className="block rounded-sm border p-6 transition-shadow hover:shadow-sm"
-                style={{
-                  borderColor: "#D8D0C0",
-                  backgroundColor: "#FDFAF5",
-                  opacity: 0.85,
-                }}
-              >
-                <div className="flex items-center gap-2 mb-2">
+          <div className="flex flex-col gap-4">
+            {/* Origins card */}
+            <Link
+              href="/origins"
+              className="block rounded-sm transition-shadow hover:shadow-sm"
+              style={{
+                backgroundColor: "#E8E4DC",
+                border: "1px solid #C8C0B0",
+                borderLeft: "4px solid #B07035",
+              }}
+            >
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-1">
                   <span
-                    className="text-[15px] font-bold"
-                    style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
+                    className="text-[20px] font-bold"
+                    style={{ fontFamily: "var(--font-playfair), Georgia, serif", fontStyle: "italic", color: "#2C2A22" }}
                   >
-                    {app.name}
+                    Origins
                   </span>
                   <span
                     className="text-[9px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded-sm"
-                    style={{ backgroundColor: "#E8E4DC", color: "#7A7468" }}
+                    style={{ backgroundColor: "#D8D0C0", color: "#7A6E5F" }}
                   >
                     Soon
                   </span>
                 </div>
-                <p className="text-[13px] leading-relaxed" style={{ color: "#7A7468" }}>
-                  {app.desc}
+                <p
+                  className="text-[11px] font-semibold uppercase tracking-widest mb-3"
+                  style={{ color: "#7A6E5F" }}
+                >
+                  a Binder Grail app
                 </p>
-              </Link>
-            ))}
+                <div className="mb-3" style={{ borderTop: "1px solid #C8C0B0" }} />
+                <p className="text-[13px] leading-relaxed mb-3" style={{ color: "#2C2A22" }}>
+                  Track every card you own. Log condition, price paid, and grading status — so you always know what&apos;s in your binder and what it&apos;s worth.
+                </p>
+                <span className="text-[13px] font-semibold" style={{ color: "#B07035" }}>
+                  Learn more →
+                </span>
+              </div>
+            </Link>
+
+            {/* Pocket Money card */}
+            <Link
+              href="/pocket-money"
+              className="block rounded-sm transition-shadow hover:shadow-sm"
+              style={{
+                backgroundColor: "#EAF0EB",
+                border: "1px solid #C8D8CA",
+                borderLeft: "4px solid #3D5C42",
+              }}
+            >
+              <div className="p-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <span
+                    className="text-[20px] font-bold"
+                    style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", color: "#2A4230" }}
+                  >
+                    Pocket Money
+                  </span>
+                  <span
+                    className="text-[9px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded-sm"
+                    style={{ backgroundColor: "#C8D8CA", color: "#3D5C42" }}
+                  >
+                    Soon
+                  </span>
+                </div>
+                <p
+                  className="text-[11px] font-semibold uppercase tracking-widest mb-3"
+                  style={{ color: "#6A9470" }}
+                >
+                  a Binder Grail app
+                </p>
+                <div className="mb-3" style={{ borderTop: "1px solid #C8D8CA" }} />
+                <p className="text-[13px] leading-relaxed mb-3" style={{ color: "#2A4230" }}>
+                  Set a monthly Pokémon budget, log every purchase, and track holds so you never blow past your limit. Built for collectors who take spending seriously.
+                </p>
+                <span className="text-[13px] font-semibold" style={{ color: "#3D5C42" }}>
+                  Learn more →
+                </span>
+              </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -250,9 +288,9 @@ export default function HomePage() {
             <Image
               src="/images/common_rare_logo.png"
               alt="Common Rare"
-              height={60}
-              width={180}
-              style={{ filter: "brightness(0) invert(0.9)", height: 60, width: "auto" }}
+              height={80}
+              width={240}
+              style={{ filter: "brightness(0) invert(0.9)", height: 80, width: "auto" }}
             />
           </div>
 
