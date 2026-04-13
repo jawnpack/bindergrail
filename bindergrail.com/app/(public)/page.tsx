@@ -4,6 +4,19 @@ import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 import GrainOverlay from "@/components/GrainOverlay";
 
+const APPS = [
+  {
+    name: "Origins",
+    desc: "Track every card you own. Log condition, price, and grading status.",
+    href: "/origins",
+  },
+  {
+    name: "Pocket Money",
+    desc: "Monthly spend tracker. Set a limit, log purchases, stay on budget.",
+    href: "/pocket-money",
+  },
+];
+
 export const metadata: Metadata = {
   title: "Binder Grail — Pokémon TCG Tools & Market Analysis for Frugal Collectors",
   description:
@@ -176,6 +189,53 @@ export default function HomePage() {
                   </Link>
                 </div>
               </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Apps coming soon ─────────────────────────────────────── */}
+      <section className="py-14 md:py-16" style={{ backgroundColor: "#F5F0E8", borderTop: "1px solid #D8D0C0" }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="flex items-baseline justify-between mb-8">
+            <h2
+              className="text-[22px] font-bold"
+              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
+            >
+              Tools
+            </h2>
+            <span className="text-[12px]" style={{ color: "#7A7468" }}>Coming soon</span>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-4">
+            {APPS.map((app) => (
+              <Link
+                key={app.name}
+                href={app.href}
+                className="block rounded-sm border p-6 transition-shadow hover:shadow-sm"
+                style={{
+                  borderColor: "#D8D0C0",
+                  backgroundColor: "#FDFAF5",
+                  opacity: 0.85,
+                }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span
+                    className="text-[15px] font-bold"
+                    style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
+                  >
+                    {app.name}
+                  </span>
+                  <span
+                    className="text-[9px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded-sm"
+                    style={{ backgroundColor: "#E8E4DC", color: "#7A7468" }}
+                  >
+                    Soon
+                  </span>
+                </div>
+                <p className="text-[13px] leading-relaxed" style={{ color: "#7A7468" }}>
+                  {app.desc}
+                </p>
+              </Link>
             ))}
           </div>
         </div>

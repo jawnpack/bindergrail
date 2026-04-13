@@ -117,7 +117,7 @@ export async function getIssue(id: string): Promise<IssueDetail | null> {
 
 export async function subscribeToBeehiiv(
   email: string,
-  tag: "free" | "premium" | "premium_waitlist" = "free"
+  tag: string = "free"
 ): Promise<string | undefined> {
   const res = await fetch(`${BASE}/publications/${PUB}/subscriptions`, {
     method: "POST",

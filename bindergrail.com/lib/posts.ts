@@ -11,6 +11,7 @@ export type PostMeta = {
   description: string;
   tag: string;
   canonical?: string;
+  image?: string; // path to hero image e.g. /images/blog/filename.jpg
 };
 
 export function getAllPosts(): PostMeta[] {

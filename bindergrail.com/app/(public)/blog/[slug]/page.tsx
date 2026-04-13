@@ -1,9 +1,11 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import GrainOverlay from "@/components/GrainOverlay";
 import SignUpForm from "@/components/SignUpForm";
+import ArticleHero from "@/components/ArticleHero";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -32,16 +34,9 @@ export async function generateMetadata({
       description: meta.description,
       type: "article",
       publishedTime: meta.date,
+      images: [{ url: "/og-default.png", width: 1200, height: 630 }],
     },
   };
-}
-
-function formatDate(d: string) {
-  return new Date(d).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
 }
 
 function TagPill({ tag }: { tag: string }) {
@@ -145,21 +140,35 @@ export default async function BlogPostPage({
             ← All posts
           </Link>
 
-          {/* Article header */}
-          <header className="mb-10">
-            <div className="flex items-center gap-3 mb-4">
-              <TagPill tag={meta.tag} />
-              <time className="text-[11px]" style={{ color: "#7A7468" }}>
-                {formatDate(meta.date)}
-              </time>
-            </div>
-            <h1
-              className="text-[32px] md:text-[40px] font-black leading-tight tracking-tight"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
+          {/* Article hero — replaces plain title */}
+          <ArticleHero
+            title={meta.title}
+            tag={meta.tag as "Market" | "Advice" | "News"}
+            date={new Date(meta.date).toLocaleDateString("en-US", {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            })}
+          />
+
+          {/* Optional hero image from frontmatter */}
+          {meta.image && (
+            <div
+              style={{
+                marginBottom: "2rem",
+                borderRadius: "8px",
+                overflow: "hidden",
+              }}
             >
-              {meta.title}
-            </h1>
-          </header>
+              <Image
+                src={meta.image}
+                alt={meta.title}
+                width={680}
+                height={340}
+                style={{ width: "100%", height: "auto", objectFit: "cover" }}
+              />
+            </div>
+          )}
 
           {/* MDX body */}
           <article>
