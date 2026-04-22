@@ -46,6 +46,13 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${dmSans.variable} h-full`}
     >
+      <head>
+        <script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="D346lQG5GYH5qgTyOGDJ0g"
+          async
+        />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
