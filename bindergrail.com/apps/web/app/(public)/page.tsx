@@ -286,11 +286,11 @@ export default function HomePage() {
           {/* Common Rare logo */}
           <div className="mb-5">
             <Image
-              src="/images/common_rare_logo.png"
+              src="/images/common_rare_logo-2-removebg-preview.png"
               alt="Common Rare"
               height={80}
               width={240}
-              style={{ filter: "brightness(0) invert(0.9)", height: 80, width: "auto" }}
+              style={{ filter: "brightness(0) invert(1)", height: 80, width: "auto" }}
             />
           </div>
 
