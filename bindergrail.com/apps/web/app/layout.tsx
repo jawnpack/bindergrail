@@ -29,10 +29,14 @@ export const metadata: Metadata = {
     siteName: "Binder Grail",
     type: "website",
     locale: "en_US",
-    images: [{ url: "/og-default.png", width: 1200, height: 630 }],
+    images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@bindergrail",
+  },
+  alternates: {
+    canonical: "https://bindergrail.com",
   },
 };
 
@@ -53,7 +57,22 @@ export default function RootLayout({
           async
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "Binder Grail",
+              url: "https://bindergrail.com",
+              description:
+                "Practical Pokémon TCG market analysis, sealed product strategy, and honest buying advice for casual collectors.",
+            }),
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

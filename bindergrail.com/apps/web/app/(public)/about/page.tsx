@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import GrainOverlay from "@/components/GrainOverlay";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About Binder Grail",
   description:
-    "A Pokémon TCG platform for collectors who have a life outside of buying and selling cards.",
+    "A Pokémon TCG platform for collectors who have a life outside of buying and selling cards. Built by a collector, for collectors.",
+  alternates: { canonical: "https://bindergrail.com/about" },
+  openGraph: {
+    title: "About Binder Grail",
+    description:
+      "A Pokémon TCG platform for collectors who have a life outside of buying and selling cards.",
+    url: "https://bindergrail.com/about",
+    images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function AboutPage() {

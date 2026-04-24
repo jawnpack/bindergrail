@@ -15,6 +15,15 @@ export const metadata: Metadata = {
   description:
     "Track every card you own. Search the full Pokémon TCG database, log condition and price paid, and see your collection value at a glance. Coming soon from Binder Grail.",
   robots: { index: true, follow: true },
+  alternates: { canonical: "https://bindergrail.com/origins" },
+  openGraph: {
+    title: "Origins — Pokémon TCG Collection Tracker",
+    description:
+      "Track every card you own. Search the full Pokémon TCG database, log condition and price paid, and see your collection value at a glance.",
+    url: "https://bindergrail.com/origins",
+    images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;

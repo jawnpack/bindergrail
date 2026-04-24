@@ -13,9 +13,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: "https://bindergrail.com",              lastModified: new Date(), priority: 1.0 },
     { url: "https://bindergrail.com/blog",          lastModified: new Date(), priority: 0.9 },
-    { url: "https://bindergrail.com/about",         lastModified: new Date(), priority: 0.6 },
+    { url: "https://bindergrail.com/upgrade",       lastModified: new Date(), priority: 0.8 },
     { url: "https://bindergrail.com/origins",       lastModified: new Date(), priority: 0.7 },
     { url: "https://bindergrail.com/pocket-money",  lastModified: new Date(), priority: 0.7 },
+    { url: "https://bindergrail.com/about",         lastModified: new Date(), priority: 0.6 },
+    { url: "https://bindergrail.com/newsletter",    lastModified: new Date(), priority: 0.4 },
     ...postEntries,
   ];
 }

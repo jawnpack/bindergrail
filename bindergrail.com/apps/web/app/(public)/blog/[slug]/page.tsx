@@ -34,8 +34,9 @@ export async function generateMetadata({
       description: meta.description,
       type: "article",
       publishedTime: meta.date,
-      images: [{ url: "/og-default.png", width: 1200, height: 630 }],
+      images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
     },
+    twitter: { card: "summary_large_image" },
   };
 }
 
@@ -118,7 +119,7 @@ const mdxComponents = {
     <div style={{ margin: "2rem 0", borderRadius: "8px", overflow: "hidden", border: "1px solid #D8D0C0" }}>
       <img
         src={src}
-        alt={alt ?? ""}
+        alt={alt || "Pokémon TCG blog image"}
         style={{ width: "100%", height: "auto", display: "block", objectFit: "contain", maxHeight: "none" }}
       />
     </div>
@@ -136,8 +137,34 @@ export default async function BlogPostPage({
 
   const { meta, content } = post;
 
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: meta.title,
+      description: meta.description,
+      datePublished: meta.date,
+      author: { "@type": "Person", name: "Jon Paek" },
+      publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
+      url: `https://bindergrail.com/blog/${slug}`,
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://bindergrail.com" },
+        { "@type": "ListItem", position: 2, name: "Blog", item: "https://bindergrail.com/blog" },
+        { "@type": "ListItem", position: 3, name: meta.title, item: `https://bindergrail.com/blog/${slug}` },
+      ],
+    },
+  ];
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
         <div className="max-w-[680px] mx-auto px-6">
           {/* Back link */}
