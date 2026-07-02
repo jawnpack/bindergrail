@@ -31,6 +31,17 @@ export interface GrailItemRow {
   target_price: number | null;
 }
 
+export interface WishlistItemRow {
+  id: string;
+  name: string;
+  target_price: number | null;
+  note: string | null;
+  url: string | null;
+  tag: string | null;
+  is_grail: boolean;
+  status: "active" | "acquired";
+}
+
 export interface GrailFundRow {
   amount_saved: number;
 }
@@ -146,6 +157,20 @@ export async function getActiveGrail(
     item: item as GrailItemRow,
     fund: fund ? (fund as GrailFundRow) : null,
   };
+}
+
+export async function getWishlistItems(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: SupabaseClient<any>,
+  userId: string
+): Promise<WishlistItemRow[]> {
+  const { data } = await supabase
+    .from("pm_wishlist_items")
+    .select("id, name, target_price, note, url, tag, is_grail, status")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+
+  return (data ?? []) as WishlistItemRow[];
 }
 
 export async function getUserProfile(

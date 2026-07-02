@@ -127,6 +127,8 @@ export type Database = {
           name: string
           target_price: number | null
           note: string | null
+          url: string | null
+          tag: string | null
           is_grail: boolean
           status: 'active' | 'acquired'
           created_at: string
@@ -137,6 +139,8 @@ export type Database = {
           name: string
           target_price?: number | null
           note?: string | null
+          url?: string | null
+          tag?: string | null
           is_grail?: boolean
           status?: 'active' | 'acquired'
         }
@@ -144,6 +148,8 @@ export type Database = {
           name?: string
           target_price?: number | null
           note?: string | null
+          url?: string | null
+          tag?: string | null
           is_grail?: boolean
           status?: 'active' | 'acquired'
         }
