@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-
-export const dynamic = "force-dynamic";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -34,6 +32,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    // Auth callback redirects here with ?error=auth when a confirmation
+    // or magic link fails — surface it instead of a blank form.
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("error") === "auth") {
+      setError(
+        "That sign-in link didn't work. Try signing in with your password."
+      );
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

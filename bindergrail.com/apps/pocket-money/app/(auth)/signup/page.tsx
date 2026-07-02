@@ -4,8 +4,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export const dynamic = "force-dynamic";
-
 type Step = 1 | 2 | 3;
 
 const CURRENCIES: { code: string; label: string }[] = [
@@ -84,6 +82,7 @@ export default function SignupPage() {
   const [displayName, setDisplayName] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [budget, setBudget] = useState("");
+  const [confirmEmailNotice, setConfirmEmailNotice] = useState(false);
 
   async function handleStep1(e: React.FormEvent) {
     e.preventDefault();
@@ -105,10 +104,24 @@ export default function SignupPage() {
       return;
     }
 
+    // Email confirmation enabled: no session yet, so the profile/budget
+    // writes would fail against RLS. Ask the user to confirm first.
+    if (!data.session) {
+      setLoading(false);
+      setConfirmEmailNotice(true);
+      return;
+    }
+
     if (data.user) {
-      await supabase
+      const { error: profileError } = await supabase
         .from("users")
         .upsert({ id: data.user.id, email, display_name: displayName, currency });
+
+      if (profileError) {
+        setError("Account created, but the profile didn't save. Try signing in.");
+        setLoading(false);
+        return;
+      }
     }
 
     setLoading(false);
@@ -125,18 +138,32 @@ export default function SignupPage() {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (user) {
-      const now = new Date();
-      await supabase.from("pm_monthly_budgets").insert({
+    if (!user) {
+      setError(
+        "Your session expired. Sign in and set your budget from the dashboard."
+      );
+      setLoading(false);
+      return;
+    }
+
+    const now = new Date();
+    const { error: budgetError } = await supabase
+      .from("pm_monthly_budgets")
+      .insert({
         user_id: user.id,
         year: now.getFullYear(),
         month: now.getMonth() + 1,
         budget_amount: parseFloat(budget),
         currency,
       });
-    }
 
     setLoading(false);
+
+    if (budgetError) {
+      setError("Couldn't save your budget. Try again.");
+      return;
+    }
+
     setStep(3);
   }
 
@@ -154,8 +181,46 @@ export default function SignupPage() {
       <div style={{ width: "100%", maxWidth: 400 }}>
         <StepDots current={step} />
 
+        {/* ── Confirm-email notice ── */}
+        {step === 1 && confirmEmailNotice && (
+          <div style={{ textAlign: "center", paddingTop: 24 }}>
+            <h1
+              style={{
+                fontSize: 22,
+                fontWeight: 500,
+                color: "var(--pm-ink)",
+                marginBottom: 10,
+              }}
+            >
+              Check your email
+            </h1>
+            <p
+              style={{
+                fontSize: 13,
+                color: "var(--pm-gray-text)",
+                lineHeight: 1.6,
+                marginBottom: 20,
+              }}
+            >
+              We sent a confirmation link to <strong>{email}</strong>. Click it
+              to activate your account, then sign in to finish setting up your
+              budget.
+            </p>
+            <a
+              href="/login"
+              style={{
+                fontSize: 13,
+                fontWeight: 500,
+                color: "var(--pm-green-dark)",
+              }}
+            >
+              Go to sign in
+            </a>
+          </div>
+        )}
+
         {/* ── STEP 1 ── */}
-        {step === 1 && (
+        {step === 1 && !confirmEmailNotice && (
           <>
             <p
               style={{
