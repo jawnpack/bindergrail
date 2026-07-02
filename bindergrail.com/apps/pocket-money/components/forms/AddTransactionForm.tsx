@@ -35,7 +35,7 @@ const labelStyle: React.CSSProperties = {
 
 export default function AddTransactionForm({
   userId,
-  currency,
+  currency: _currency,
   grailItemId,
   onClose,
   onSuccess,

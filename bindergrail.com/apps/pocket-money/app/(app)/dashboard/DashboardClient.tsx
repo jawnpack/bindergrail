@@ -9,7 +9,6 @@ import GrailStrip from "@/components/dashboard/GrailStrip";
 import HoldsSection from "@/components/dashboard/HoldsSection";
 import TransactionLog from "@/components/dashboard/TransactionLog";
 import AddTransactionForm from "@/components/forms/AddTransactionForm";
-import AddHoldForm from "@/components/forms/AddHoldForm";
 import EditBudgetForm from "@/components/forms/EditBudgetForm";
 import Toast from "@/components/forms/Toast";
 import {
@@ -89,7 +88,6 @@ export default function DashboardClient({
   const [selectedYear, setSelectedYear] = useState(initialYear);
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [showAddTx, setShowAddTx] = useState(false);
-  const [showAddHold, setShowAddHold] = useState(false);
   const [showEditBudget, setShowEditBudget] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -269,18 +267,6 @@ export default function DashboardClient({
           grailItemId={grailItem?.id ?? null}
           onClose={() => setShowAddTx(false)}
           onSuccess={handleTxSuccess}
-        />
-      )}
-
-      {showAddHold && (
-        <AddHoldForm
-          userId={userId}
-          currency={currency}
-          onClose={() => setShowAddHold(false)}
-          onSuccess={() => {
-            setShowAddHold(false);
-            setToast("Something's in the tall grass...");
-          }}
         />
       )}
 

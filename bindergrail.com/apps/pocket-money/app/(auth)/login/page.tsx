@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const inputStyle: React.CSSProperties = {
@@ -24,25 +24,21 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 6,
 };
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  // Auth callback redirects here with ?error=auth when a confirmation
+  // or magic link fails — surface it instead of a blank form.
+  const [error, setError] = useState(
+    searchParams.get("error") === "auth"
+      ? "That sign-in link didn't work. Try signing in with your password."
+      : ""
+  );
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    // Auth callback redirects here with ?error=auth when a confirmation
-    // or magic link fails — surface it instead of a blank form.
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("error") === "auth") {
-      setError(
-        "That sign-in link didn't work. Try signing in with your password."
-      );
-    }
-  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -180,5 +176,13 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
   );
 }
