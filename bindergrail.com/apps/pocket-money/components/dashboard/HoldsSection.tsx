@@ -44,12 +44,18 @@ export default function HoldsSection({
     setCompleting(hold.id);
     const today = new Date().toISOString().split("T")[0];
 
-    await supabase
+    const { error: holdError } = await supabase
       .from("pm_holds")
       .update({ status: "done" })
       .eq("id", hold.id);
 
-    await supabase.from("pm_transactions").insert({
+    if (holdError) {
+      setCompleting(null);
+      onToast("Something went wrong. Try again.");
+      return;
+    }
+
+    const { error: txError } = await supabase.from("pm_transactions").insert({
       user_id: userId,
       type: "spend",
       name: hold.name,
@@ -61,6 +67,13 @@ export default function HoldsSection({
     });
 
     setCompleting(null);
+
+    if (txError) {
+      onToast("Hold cleared, but the spend didn't log. Add it manually.");
+      router.refresh();
+      return;
+    }
+
     onToast(`Got ${hold.name}! It was added to your Bag.`);
     router.refresh();
   }

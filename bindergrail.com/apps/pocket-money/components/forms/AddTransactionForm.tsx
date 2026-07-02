@@ -48,6 +48,7 @@ export default function AddTransactionForm({
   const [tag, setTag] = useState("");
   const [note, setNote] = useState("");
   const [destination, setDestination] = useState<"budget" | "grail_fund">("budget");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const supabase = createClient();
@@ -56,21 +57,30 @@ export default function AddTransactionForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name || !amount || !date) return;
+    setError("");
     setLoading(true);
 
-    await supabase.from("pm_transactions").insert({
-      user_id: userId,
-      type,
-      name,
-      amount: parseFloat(amount),
-      date,
-      tag: tag || null,
-      note: note || null,
-      destination: type === "sale" ? destination : null,
-    });
+    const { error: insertError } = await supabase
+      .from("pm_transactions")
+      .insert({
+        user_id: userId,
+        type,
+        name,
+        amount: parseFloat(amount),
+        date,
+        tag: tag || null,
+        note: note || null,
+        destination: type === "sale" ? destination : null,
+      });
+
+    if (insertError) {
+      setLoading(false);
+      setError("Couldn't log that. Try again.");
+      return;
+    }
 
     if (type === "sale" && destination === "grail_fund" && grailItemId) {
-      const { data: existing } = await supabase
+      const { data: existing, error: fundReadError } = await supabase
         .from("pm_grail_fund")
         .select("amount_saved")
         .eq("user_id", userId)
@@ -79,11 +89,22 @@ export default function AddTransactionForm({
 
       const currentSaved = existing ? Number((existing as { amount_saved: number }).amount_saved) : 0;
 
-      await supabase.from("pm_grail_fund").upsert({
-        user_id: userId,
-        wishlist_item_id: grailItemId,
-        amount_saved: currentSaved + parseFloat(amount),
-      });
+      const { error: fundWriteError } = fundReadError
+        ? { error: fundReadError }
+        : await supabase.from("pm_grail_fund").upsert({
+            user_id: userId,
+            wishlist_item_id: grailItemId,
+            amount_saved: currentSaved + parseFloat(amount),
+          });
+
+      if (fundWriteError) {
+        setLoading(false);
+        setError(
+          "Sale was logged, but the grail fund didn't update. Check the wishlist."
+        );
+        router.refresh();
+        return;
+      }
     }
 
     setLoading(false);
@@ -302,6 +323,10 @@ export default function AddTransactionForm({
               style={inputStyle}
             />
           </div>
+
+          {error && (
+            <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
+          )}
 
           {/* Submit */}
           <button

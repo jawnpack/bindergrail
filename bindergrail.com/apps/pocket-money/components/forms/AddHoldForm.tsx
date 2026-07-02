@@ -43,6 +43,7 @@ export default function AddHoldForm({
   const [dueDate, setDueDate] = useState(today);
   const [tag, setTag] = useState("");
   const [note, setNote] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const supabase = createClient();
@@ -50,9 +51,10 @@ export default function AddHoldForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!name || !amount || !dueDate) return;
+    setError("");
     setLoading(true);
 
-    await supabase.from("pm_holds").insert({
+    const { error: insertError } = await supabase.from("pm_holds").insert({
       user_id: userId,
       name,
       amount: parseFloat(amount),
@@ -63,6 +65,12 @@ export default function AddHoldForm({
     });
 
     setLoading(false);
+
+    if (insertError) {
+      setError("Couldn't add that hold. Try again.");
+      return;
+    }
+
     onSuccess();
   }
 
@@ -190,6 +198,10 @@ export default function AddHoldForm({
               style={inputStyle}
             />
           </div>
+
+          {error && (
+            <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
+          )}
 
           {/* Submit */}
           <button
