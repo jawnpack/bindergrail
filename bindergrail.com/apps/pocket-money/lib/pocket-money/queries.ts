@@ -21,6 +21,7 @@ export interface TransactionRow {
   date: string;
   tag: string | null;
   note: string | null;
+  destination: "budget" | "grail_fund" | null;
 }
 
 export interface HoldRow {
@@ -125,7 +126,7 @@ export async function getMonthTransactions(
   const monthStr = String(month).padStart(2, "0");
   const { data } = await supabase
     .from("pm_transactions")
-    .select("id, type, name, amount, date, tag, note")
+    .select("id, type, name, amount, date, tag, note, destination")
     .eq("user_id", userId)
     .gte("date", `${year}-${monthStr}-01`)
     .lt("date", month === 12 ? `${year + 1}-01-01` : `${year}-${String(month + 1).padStart(2, "0")}-01`)
@@ -141,7 +142,7 @@ export async function getAllTransactions(
 ): Promise<TransactionRow[]> {
   const { data } = await supabase
     .from("pm_transactions")
-    .select("id, type, name, amount, date, tag, note")
+    .select("id, type, name, amount, date, tag, note, destination")
     .eq("user_id", userId)
     .order("date", { ascending: false });
 

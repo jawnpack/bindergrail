@@ -12,6 +12,7 @@ interface Transaction {
   date: string;
   tag: string | null;
   note: string | null;
+  destination?: "budget" | "grail_fund" | null;
 }
 
 interface TransactionLogProps {
@@ -170,7 +171,9 @@ export default function TransactionLog({
                       marginTop: 1,
                     }}
                   >
-                    {typeLabel[tx.type]}
+                    {tx.type === "sale" && tx.destination === "grail_fund"
+                      ? "sale → grail"
+                      : typeLabel[tx.type]}
                   </p>
                 </div>
               </div>

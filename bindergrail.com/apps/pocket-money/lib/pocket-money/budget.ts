@@ -44,12 +44,24 @@ export function formatCurrency(
   }).format(amount);
 }
 
-export function calcMonthTotals(transactions: Array<{ type: string; amount: number }>) {
+export function calcMonthTotals(
+  transactions: Array<{
+    type: string;
+    amount: number;
+    destination?: string | null;
+  }>
+) {
   let spent = 0;
   let inflow = 0;
   for (const t of transactions) {
-    if (t.type === "spend") spent += Number(t.amount);
-    else inflow += Number(t.amount);
+    if (t.type === "spend") {
+      spent += Number(t.amount);
+    } else if (t.type === "sale" && t.destination === "grail_fund") {
+      // Sale proceeds routed to the grail fund live there, not in the
+      // month's budget envelope.
+    } else {
+      inflow += Number(t.amount);
+    }
   }
   return { spent, inflow };
 }

@@ -29,6 +29,7 @@ interface Transaction {
   date: string;
   tag: string | null;
   note: string | null;
+  destination: "budget" | "grail_fund" | null;
 }
 
 interface Hold {
