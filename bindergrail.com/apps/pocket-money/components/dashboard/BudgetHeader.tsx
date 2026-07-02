@@ -14,6 +14,7 @@ interface BudgetHeaderProps {
   onPrevMonth: () => void;
   onNextMonth: () => void;
   canGoForward: boolean;
+  onEditBudget: () => void;
 }
 
 export default function BudgetHeader({
@@ -28,6 +29,7 @@ export default function BudgetHeader({
   onPrevMonth,
   onNextMonth,
   canGoForward,
+  onEditBudget,
 }: BudgetHeaderProps) {
   const remainingColor =
     remaining < 0
@@ -207,6 +209,23 @@ export default function BudgetHeader({
       >
         <span style={{ fontSize: 11, color: "var(--pm-gray-text)" }}>
           {formatCurrency(spent, currency)} of {formatCurrency(budget, currency)} budget
+          {" · "}
+          <button
+            onClick={onEditBudget}
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              fontSize: 11,
+              fontWeight: 500,
+              color: "var(--pm-green-dark)",
+              cursor: "pointer",
+              fontFamily: "inherit",
+              textDecoration: "underline",
+            }}
+          >
+            edit
+          </button>
         </span>
         <span style={{ fontSize: 11, color: "var(--pm-gray-text)" }}>
           {Math.round(percent)}% used

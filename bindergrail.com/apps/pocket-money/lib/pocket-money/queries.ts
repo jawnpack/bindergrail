@@ -6,6 +6,13 @@ export interface BudgetRow {
   currency: string;
 }
 
+export interface MonthlyBudgetRow {
+  year: number;
+  month: number;
+  budget_amount: number;
+  currency: string;
+}
+
 export interface TransactionRow {
   id: string;
   type: "spend" | "return" | "sale";
@@ -68,19 +75,44 @@ export async function getOrCreateMonthlyBudget(
 
   if (data) return data as BudgetRow;
 
+  // New month: carry forward the most recent budget instead of starting at 0
+  const { data: previous } = await supabase
+    .from("pm_monthly_budgets")
+    .select("budget_amount, currency")
+    .eq("user_id", userId)
+    .order("year", { ascending: false })
+    .order("month", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const carried = previous as { budget_amount: number; currency: string } | null;
+
   const { data: newRow } = await supabase
     .from("pm_monthly_budgets")
     .insert({
       user_id: userId,
       year,
       month,
-      budget_amount: 0,
-      currency: "USD",
+      budget_amount: carried?.budget_amount ?? 0,
+      currency: carried?.currency ?? "USD",
     })
     .select("id, budget_amount, currency")
     .single();
 
   return (newRow as BudgetRow) ?? { id: "", budget_amount: 0, currency: "USD" };
+}
+
+export async function getAllBudgets(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: SupabaseClient<any>,
+  userId: string
+): Promise<MonthlyBudgetRow[]> {
+  const { data } = await supabase
+    .from("pm_monthly_budgets")
+    .select("year, month, budget_amount, currency")
+    .eq("user_id", userId);
+
+  return (data ?? []) as MonthlyBudgetRow[];
 }
 
 export async function getMonthTransactions(

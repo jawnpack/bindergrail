@@ -2,6 +2,7 @@ import { createServerClient } from "@/lib/supabase/server";
 import {
   getUserProfile,
   getOrCreateMonthlyBudget,
+  getAllBudgets,
   getAllTransactions,
   getPendingHolds,
   getActiveGrail,
@@ -23,20 +24,30 @@ export default async function DashboardPage() {
   const initialYear = now.getFullYear();
   const initialMonth = now.getMonth() + 1;
 
-  const [profile, budget, allTransactions, holds, grail] = await Promise.all([
-    getUserProfile(supabase, user.id),
-    getOrCreateMonthlyBudget(supabase, user.id, initialYear, initialMonth),
-    getAllTransactions(supabase, user.id),
-    getPendingHolds(supabase, user.id),
-    getActiveGrail(supabase, user.id),
-  ]);
+  // Ensure the current month has a budget row (carries forward the last
+  // month's amount) before fetching the full history.
+  const currentBudget = await getOrCreateMonthlyBudget(
+    supabase,
+    user.id,
+    initialYear,
+    initialMonth
+  );
+
+  const [profile, allBudgets, allTransactions, holds, grail] =
+    await Promise.all([
+      getUserProfile(supabase, user.id),
+      getAllBudgets(supabase, user.id),
+      getAllTransactions(supabase, user.id),
+      getPendingHolds(supabase, user.id),
+      getActiveGrail(supabase, user.id),
+    ]);
 
   return (
     <DashboardClient
       userId={user.id}
       displayName={profile.display_name}
-      currency={budget.currency}
-      budget={budget.budget_amount}
+      currency={currentBudget.currency}
+      allBudgets={allBudgets}
       allTransactions={allTransactions}
       holds={holds}
       grailItem={

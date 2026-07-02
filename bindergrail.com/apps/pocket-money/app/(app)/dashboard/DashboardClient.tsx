@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Topbar from "@/components/layout/Topbar";
 import BudgetHeader from "@/components/dashboard/BudgetHeader";
 import GrailStrip from "@/components/dashboard/GrailStrip";
@@ -9,6 +10,7 @@ import HoldsSection from "@/components/dashboard/HoldsSection";
 import TransactionLog from "@/components/dashboard/TransactionLog";
 import AddTransactionForm from "@/components/forms/AddTransactionForm";
 import AddHoldForm from "@/components/forms/AddHoldForm";
+import EditBudgetForm from "@/components/forms/EditBudgetForm";
 import Toast from "@/components/forms/Toast";
 import {
   calcMonthTotals,
@@ -45,11 +47,18 @@ interface GrailItem {
   amountSaved: number;
 }
 
+interface MonthlyBudget {
+  year: number;
+  month: number;
+  budget_amount: number;
+  currency: string;
+}
+
 interface DashboardClientProps {
   userId: string;
   displayName: string | null;
   currency: string;
-  budget: number;
+  allBudgets: MonthlyBudget[];
   allTransactions: Transaction[];
   holds: Hold[];
   grailItem: GrailItem | null;
@@ -68,17 +77,19 @@ export default function DashboardClient({
   userId,
   displayName,
   currency,
-  budget,
+  allBudgets,
   allTransactions,
   holds,
   grailItem,
   initialYear,
   initialMonth,
 }: DashboardClientProps) {
+  const router = useRouter();
   const [selectedYear, setSelectedYear] = useState(initialYear);
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [showAddTx, setShowAddTx] = useState(false);
   const [showAddHold, setShowAddHold] = useState(false);
+  const [showEditBudget, setShowEditBudget] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   const now = new Date();
@@ -112,6 +123,11 @@ export default function DashboardClient({
     const prefix = `${selectedYear}-${String(selectedMonth).padStart(2, "0")}`;
     return allTransactions.filter((tx) => tx.date.startsWith(prefix));
   }, [allTransactions, selectedYear, selectedMonth]);
+
+  const budget =
+    allBudgets.find(
+      (b) => b.year === selectedYear && b.month === selectedMonth
+    )?.budget_amount ?? 0;
 
   const { spent, inflow } = calcMonthTotals(monthTxs);
   const remaining = getRemaining(budget, spent, inflow);
@@ -188,6 +204,7 @@ export default function DashboardClient({
             onPrevMonth={prevMonth}
             onNextMonth={nextMonth}
             canGoForward={canGoForward}
+            onEditBudget={() => setShowEditBudget(true)}
           />
 
           {grailItem && (
@@ -262,6 +279,23 @@ export default function DashboardClient({
           onSuccess={() => {
             setShowAddHold(false);
             setToast("Something's in the tall grass...");
+          }}
+        />
+      )}
+
+      {showEditBudget && (
+        <EditBudgetForm
+          userId={userId}
+          year={selectedYear}
+          month={selectedMonth}
+          monthLabel={monthLabel}
+          currentAmount={budget}
+          currency={currency}
+          onClose={() => setShowEditBudget(false)}
+          onSuccess={() => {
+            setShowEditBudget(false);
+            setToast("Budget updated.");
+            router.refresh();
           }}
         />
       )}
