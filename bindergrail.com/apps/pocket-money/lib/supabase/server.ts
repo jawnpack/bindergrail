@@ -1,12 +1,13 @@
 import { createServerClient as createSupabaseServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import type { Database } from "@bindergrail/database";
 
 const cookieDomain =
   process.env.NODE_ENV === "production" ? ".bindergrail.com" : undefined;
 
 export async function createServerClient() {
   const cookieStore = await cookies();
-  return createSupabaseServerClient(
+  return createSupabaseServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {

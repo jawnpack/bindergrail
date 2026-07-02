@@ -15,6 +15,7 @@ export type Database = {
           email: string
           display_name: string | null
           plan: 'free' | 'premium'
+          currency: string
           stripe_customer_id: string | null
           beehiiv_subscriber_id: string | null
           created_at: string
@@ -25,15 +26,18 @@ export type Database = {
           email: string
           display_name?: string | null
           plan?: 'free' | 'premium'
+          currency?: string
           stripe_customer_id?: string | null
           beehiiv_subscriber_id?: string | null
         }
         Update: {
           display_name?: string | null
           plan?: 'free' | 'premium'
+          currency?: string
           stripe_customer_id?: string | null
           beehiiv_subscriber_id?: string | null
         }
+        Relationships: []
       }
       pm_monthly_budgets: {
         Row: {
@@ -56,6 +60,7 @@ export type Database = {
           budget_amount?: number
           currency?: string
         }
+        Relationships: []
       }
       pm_transactions: {
         Row: {
@@ -89,6 +94,7 @@ export type Database = {
           note?: string | null
           destination?: 'budget' | 'grail_fund' | null
         }
+        Relationships: []
       }
       pm_holds: {
         Row: {
@@ -119,6 +125,7 @@ export type Database = {
           note?: string | null
           status?: 'pending' | 'done'
         }
+        Relationships: []
       }
       pm_wishlist_items: {
         Row: {
@@ -153,6 +160,7 @@ export type Database = {
           is_grail?: boolean
           status?: 'active' | 'acquired'
         }
+        Relationships: []
       }
       pm_grail_fund: {
         Row: {
@@ -170,6 +178,7 @@ export type Database = {
         Update: {
           amount_saved?: number
         }
+        Relationships: []
       }
       pm_user_tags: {
         Row: {
@@ -188,7 +197,20 @@ export type Database = {
           name?: string
           color?: string | null
         }
+        Relationships: []
       }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }

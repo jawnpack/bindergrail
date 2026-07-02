@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@bindergrail/database";
 
 export interface BudgetRow {
   id: string;
@@ -60,8 +61,7 @@ export interface UserProfileRow {
 }
 
 export async function getOrCreateMonthlyBudget(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string,
   year: number,
   month: number
@@ -104,8 +104,7 @@ export async function getOrCreateMonthlyBudget(
 }
 
 export async function getAllBudgets(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<MonthlyBudgetRow[]> {
   const { data } = await supabase
@@ -117,8 +116,7 @@ export async function getAllBudgets(
 }
 
 export async function getMonthTransactions(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string,
   year: number,
   month: number
@@ -136,8 +134,7 @@ export async function getMonthTransactions(
 }
 
 export async function getAllTransactions(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<TransactionRow[]> {
   const { data } = await supabase
@@ -150,8 +147,7 @@ export async function getAllTransactions(
 }
 
 export async function getPendingHolds(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<HoldRow[]> {
   const { data } = await supabase
@@ -165,8 +161,7 @@ export async function getPendingHolds(
 }
 
 export async function getActiveGrail(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<{ item: GrailItemRow; fund: GrailFundRow | null } | null> {
   const { data: item } = await supabase
@@ -193,8 +188,7 @@ export async function getActiveGrail(
 }
 
 export async function getWishlistItems(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<WishlistItemRow[]> {
   const { data } = await supabase
@@ -207,8 +201,7 @@ export async function getWishlistItems(
 }
 
 export async function getUserProfile(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  supabase: SupabaseClient<any>,
+  supabase: SupabaseClient<Database>,
   userId: string
 ): Promise<UserProfileRow> {
   const { data } = await supabase
