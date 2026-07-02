@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 interface TopbarProps {
   displayName: string | null;
+  active?: "dashboard" | "wishlist";
 }
 
 function getInitials(name: string | null): string {
@@ -9,11 +12,35 @@ function getInitials(name: string | null): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export default function Topbar({ displayName }: TopbarProps) {
+function NavLink({
+  href,
+  label,
+  isActive,
+}: {
+  href: string;
+  label: string;
+  isActive: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      style={{
+        fontSize: 12,
+        fontWeight: 500,
+        color: isActive ? "var(--pm-green-lightest)" : "var(--pm-gray-text)",
+        textDecoration: "none",
+      }}
+    >
+      {label}
+    </Link>
+  );
+}
+
+export default function Topbar({ displayName, active }: TopbarProps) {
   return (
     <div
       style={{
-        backgroundColor: "#2C2C2A",
+        backgroundColor: "var(--pm-ink)",
         padding: "0 20px",
         height: 48,
         display: "flex",
@@ -34,24 +61,36 @@ export default function Topbar({ displayName }: TopbarProps) {
         <span style={{ color: "var(--pm-green-mid)" }}>money</span>
       </span>
 
-      {/* Avatar */}
-      <div
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: "50%",
-          backgroundColor: "#3B6D11",
-          color: "var(--pm-green-lightest)",
-          fontSize: 11,
-          fontWeight: 500,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexShrink: 0,
-          letterSpacing: "0.02em",
-        }}
-      >
-        {getInitials(displayName)}
+      {/* Nav + avatar */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <NavLink
+          href="/dashboard"
+          label="dashboard"
+          isActive={active === "dashboard"}
+        />
+        <NavLink
+          href="/wishlist"
+          label="wishlist"
+          isActive={active === "wishlist"}
+        />
+        <div
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: "50%",
+            backgroundColor: "var(--pm-green-dark)",
+            color: "var(--pm-green-lightest)",
+            fontSize: 11,
+            fontWeight: 500,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+            letterSpacing: "0.02em",
+          }}
+        >
+          {getInitials(displayName)}
+        </div>
       </div>
     </div>
   );

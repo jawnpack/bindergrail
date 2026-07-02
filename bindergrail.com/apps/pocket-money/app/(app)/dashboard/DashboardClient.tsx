@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import Topbar from "@/components/layout/Topbar";
 import BudgetHeader from "@/components/dashboard/BudgetHeader";
 import GrailStrip from "@/components/dashboard/GrailStrip";
@@ -173,7 +174,7 @@ export default function DashboardClient({
             paddingBottom: 88,
           }}
         >
-          <Topbar displayName={displayName} />
+          <Topbar displayName={displayName} active="dashboard" />
 
           <BudgetHeader
             monthLabel={monthLabel}
@@ -190,12 +191,17 @@ export default function DashboardClient({
           />
 
           {grailItem && (
-            <GrailStrip
-              name={grailItem.name}
-              targetPrice={grailItem.targetPrice}
-              amountSaved={grailItem.amountSaved}
-              currency={currency}
-            />
+            <Link
+              href="/wishlist"
+              style={{ display: "block", textDecoration: "none" }}
+            >
+              <GrailStrip
+                name={grailItem.name}
+                targetPrice={grailItem.targetPrice}
+                amountSaved={grailItem.amountSaved}
+                currency={currency}
+              />
+            </Link>
           )}
 
           <HoldsSection
