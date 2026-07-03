@@ -61,6 +61,7 @@ interface MonthlyBudget {
 interface DashboardClientProps {
   userId: string;
   displayName: string | null;
+  avatarColor: string | null;
   currency: string;
   allBudgets: MonthlyBudget[];
   allTransactions: Transaction[];
@@ -82,6 +83,7 @@ function getMonthLabel(year: number, month: number): string {
 export default function DashboardClient({
   userId,
   displayName,
+  avatarColor,
   currency,
   allBudgets,
   allTransactions,
@@ -205,7 +207,11 @@ export default function DashboardClient({
             paddingBottom: 88,
           }}
         >
-          <Topbar displayName={displayName} active="dashboard" />
+          <Topbar
+            displayName={displayName}
+            avatarColor={avatarColor}
+            active="dashboard"
+          />
 
           <BudgetHeader
             monthLabel={monthLabel}

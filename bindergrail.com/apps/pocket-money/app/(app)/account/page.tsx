@@ -32,6 +32,7 @@ export default async function AccountPage() {
       userId={user.id}
       email={user.email ?? ""}
       displayName={profile.display_name}
+      avatarColor={profile.avatar_color}
       currency={budget.currency}
       currentBudget={budget.budget_amount}
       currentYear={year}

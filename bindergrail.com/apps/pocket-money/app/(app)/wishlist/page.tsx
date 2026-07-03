@@ -27,6 +27,7 @@ export default async function WishlistPage() {
     <WishlistClient
       userId={user.id}
       displayName={profile.display_name}
+      avatarColor={profile.avatar_color}
       currency={profile.currency}
       items={items}
       grailAmountSaved={grail?.fund?.amount_saved ?? 0}

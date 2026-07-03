@@ -4,9 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { DEFAULT_AVATAR_COLOR } from "@/lib/pocket-money/avatar";
 
 interface TopbarProps {
   displayName: string | null;
+  avatarColor?: string | null;
   active?: "dashboard" | "wishlist";
 }
 
@@ -41,7 +43,7 @@ function NavLink({
   );
 }
 
-export default function Topbar({ displayName, active }: TopbarProps) {
+export default function Topbar({ displayName, avatarColor, active }: TopbarProps) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
@@ -110,7 +112,7 @@ export default function Topbar({ displayName, active }: TopbarProps) {
               width: 28,
               height: 28,
               borderRadius: "50%",
-              backgroundColor: "var(--pm-green-dark)",
+              backgroundColor: avatarColor ?? DEFAULT_AVATAR_COLOR,
               color: "var(--pm-green-lightest)",
               fontSize: 11,
               fontWeight: 500,

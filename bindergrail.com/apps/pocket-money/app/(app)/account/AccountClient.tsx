@@ -7,6 +7,8 @@ import Topbar from "@/components/layout/Topbar";
 import Toast from "@/components/forms/Toast";
 import { formatCurrency } from "@/lib/pocket-money/budget";
 import { DEFAULT_TAGS } from "@/lib/pocket-money/tags";
+import { isNameAllowed } from "@/lib/pocket-money/profanity";
+import { AVATAR_COLORS, DEFAULT_AVATAR_COLOR } from "@/lib/pocket-money/avatar";
 import type { CustomTagRow } from "@/lib/pocket-money/queries";
 
 const MAX_CUSTOM_TAGS = 10;
@@ -15,6 +17,7 @@ interface AccountClientProps {
   userId: string;
   email: string;
   displayName: string | null;
+  avatarColor: string | null;
   currency: string;
   currentBudget: number;
   currentYear: number;
@@ -54,6 +57,7 @@ export default function AccountClient({
   userId,
   email,
   displayName,
+  avatarColor,
   currency,
   currentBudget,
   currentYear,
@@ -62,6 +66,13 @@ export default function AccountClient({
 }: AccountClientProps) {
   const router = useRouter();
   const supabase = createClient();
+
+  const [nameInput, setNameInput] = useState(displayName ?? "");
+  const [selectedColor, setSelectedColor] = useState(
+    avatarColor ?? DEFAULT_AVATAR_COLOR
+  );
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [profileError, setProfileError] = useState("");
 
   const [budgetInput, setBudgetInput] = useState(
     currentBudget > 0 ? String(currentBudget) : ""
@@ -74,6 +85,35 @@ export default function AccountClient({
   const [deletingTag, setDeletingTag] = useState<string | null>(null);
 
   const [toast, setToast] = useState<string | null>(null);
+
+  async function handleSaveProfile(e: React.FormEvent) {
+    e.preventDefault();
+    setProfileError("");
+
+    const check = isNameAllowed(nameInput);
+    if (!check.ok) {
+      setProfileError(check.reason ?? "That name won't work.");
+      return;
+    }
+
+    setSavingProfile(true);
+    const { error } = await supabase
+      .from("users")
+      .update({
+        display_name: nameInput.trim(),
+        avatar_color: selectedColor,
+      })
+      .eq("id", userId);
+    setSavingProfile(false);
+
+    if (error) {
+      setProfileError("Couldn't save your profile. Try again.");
+      return;
+    }
+
+    setToast("Profile updated.");
+    router.refresh();
+  }
 
   async function handleSaveBudget(e: React.FormEvent) {
     e.preventDefault();
@@ -168,7 +208,7 @@ export default function AccountClient({
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "var(--pm-gray-bg)" }}>
       <div className="md:max-w-[600px] md:mx-auto" style={{ minHeight: "100vh" }}>
-        <Topbar displayName={displayName} />
+        <Topbar displayName={displayName} avatarColor={avatarColor} />
 
         <div
           style={{
@@ -185,12 +225,120 @@ export default function AccountClient({
           {/* Profile */}
           <div style={sectionStyle}>
             <p style={sectionLabelStyle}>Trainer</p>
-            <p style={{ fontSize: 14, fontWeight: 500, color: "var(--pm-ink)" }}>
-              {displayName ?? "No display name"}
-            </p>
-            <p style={{ fontSize: 12, color: "var(--pm-gray-text)", marginTop: 2 }}>
-              {email}
-            </p>
+            <form
+              onSubmit={handleSaveProfile}
+              style={{ display: "flex", flexDirection: "column", gap: 12 }}
+            >
+              {/* Avatar preview + name */}
+              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "50%",
+                    backgroundColor: selectedColor,
+                    color: "var(--pm-green-lightest)",
+                    fontSize: 15,
+                    fontWeight: 500,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                    letterSpacing: "0.02em",
+                  }}
+                >
+                  {(nameInput.trim() || "?")
+                    .split(/\s+/)
+                    .map((p, i, arr) =>
+                      i === 0 || i === arr.length - 1 ? p[0] : ""
+                    )
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <input
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    placeholder="Display name"
+                    maxLength={30}
+                    required
+                    style={inputStyle}
+                  />
+                  <p
+                    style={{
+                      fontSize: 11,
+                      color: "var(--pm-gray-text)",
+                      marginTop: 4,
+                    }}
+                  >
+                    {email}
+                  </p>
+                </div>
+              </div>
+
+              {/* Color swatches */}
+              <div>
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: "var(--pm-gray-text)",
+                    marginBottom: 6,
+                  }}
+                >
+                  Avatar color
+                </p>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {AVATAR_COLORS.map((c) => (
+                    <button
+                      key={c.value}
+                      type="button"
+                      onClick={() => setSelectedColor(c.value)}
+                      aria-label={`${c.name} avatar color`}
+                      title={c.name}
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: "50%",
+                        backgroundColor: c.value,
+                        border:
+                          selectedColor === c.value
+                            ? "2px solid var(--pm-ink)"
+                            : "2px solid var(--pm-white)",
+                        outline: "0.5px solid var(--pm-gray-border)",
+                        cursor: "pointer",
+                        padding: 0,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {profileError && (
+                <p style={{ fontSize: 12, color: "var(--pm-red-mid)" }}>
+                  {profileError}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={savingProfile}
+                style={{
+                  backgroundColor: "var(--pm-green-mid)",
+                  color: "var(--pm-white)",
+                  border: "none",
+                  borderRadius: 10,
+                  padding: "11px 0",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  cursor: savingProfile ? "not-allowed" : "pointer",
+                  opacity: savingProfile ? 0.6 : 1,
+                  fontFamily: "inherit",
+                }}
+              >
+                {savingProfile ? "Saving..." : "Save profile"}
+              </button>
+            </form>
           </div>
 
           {/* Monthly budget */}

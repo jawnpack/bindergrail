@@ -50,6 +50,7 @@ export default async function DashboardPage() {
     <DashboardClient
       userId={user.id}
       displayName={profile.display_name}
+      avatarColor={profile.avatar_color}
       currency={currentBudget.currency}
       allBudgets={allBudgets}
       customTags={customTags.map((t) => t.name)}

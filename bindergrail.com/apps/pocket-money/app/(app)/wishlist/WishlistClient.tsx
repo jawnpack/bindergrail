@@ -15,6 +15,7 @@ import type { WishlistItemRow } from "@/lib/pocket-money/queries";
 interface WishlistClientProps {
   userId: string;
   displayName: string | null;
+  avatarColor: string | null;
   currency: string;
   items: WishlistItemRow[];
   grailAmountSaved: number;
@@ -35,6 +36,7 @@ const smallButtonStyle: React.CSSProperties = {
 export default function WishlistClient({
   userId,
   displayName,
+  avatarColor,
   currency,
   items,
   grailAmountSaved,
@@ -268,7 +270,11 @@ export default function WishlistClient({
   return (
     <div style={{ minHeight: "100vh", backgroundColor: "var(--pm-gray-bg)" }}>
       <div className="md:max-w-[600px] md:mx-auto" style={{ minHeight: "100vh" }}>
-        <Topbar displayName={displayName} active="wishlist" />
+        <Topbar
+          displayName={displayName}
+          avatarColor={avatarColor}
+          active="wishlist"
+        />
 
         {/* Active grail */}
         {grail && (

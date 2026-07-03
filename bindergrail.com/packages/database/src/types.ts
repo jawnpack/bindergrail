@@ -14,6 +14,7 @@ export type Database = {
           id: string
           email: string
           display_name: string | null
+          avatar_color: string | null
           plan: 'free' | 'premium'
           currency: string
           stripe_customer_id: string | null
@@ -25,6 +26,7 @@ export type Database = {
           id: string
           email: string
           display_name?: string | null
+          avatar_color?: string | null
           plan?: 'free' | 'premium'
           currency?: string
           stripe_customer_id?: string | null
@@ -32,6 +34,7 @@ export type Database = {
         }
         Update: {
           display_name?: string | null
+          avatar_color?: string | null
           plan?: 'free' | 'premium'
           currency?: string
           stripe_customer_id?: string | null

@@ -67,6 +67,7 @@ export interface GrailFundRow {
 
 export interface UserProfileRow {
   display_name: string | null;
+  avatar_color: string | null;
   currency: string;
 }
 
@@ -242,9 +243,15 @@ export async function getUserProfile(
 ): Promise<UserProfileRow> {
   const { data } = await supabase
     .from("users")
-    .select("display_name, currency")
+    .select("display_name, avatar_color, currency")
     .eq("id", userId)
     .maybeSingle();
 
-  return (data as UserProfileRow) ?? { display_name: null, currency: "USD" };
+  return (
+    (data as UserProfileRow) ?? {
+      display_name: null,
+      avatar_color: null,
+      currency: "USD",
+    }
+  );
 }
