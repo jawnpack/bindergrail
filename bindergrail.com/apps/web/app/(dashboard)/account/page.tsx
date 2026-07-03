@@ -118,7 +118,6 @@ export default async function AccountPage() {
             Upgrade to Common Rare Premium for exclusive sleeper card coverage
             and market alerts.
           </p>
-          {/* TODO: when Stripe is live, change href to call /api/stripe/checkout */}
           <Link
             href="/upgrade"
             className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"

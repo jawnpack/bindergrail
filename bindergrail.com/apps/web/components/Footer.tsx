@@ -25,6 +25,20 @@ export default function Footer() {
           >
             Common Rare newsletter
           </a>
+          <Link
+            href="/newsletter"
+            className="text-xs hover:underline"
+            style={{ color: "#7A7468" }}
+          >
+            Issue archive
+          </Link>
+          <Link
+            href="/upgrade"
+            className="text-xs hover:underline"
+            style={{ color: "#7A7468" }}
+          >
+            Premium
+          </Link>
           <p className="text-xs" style={{ color: "#7A7468" }}>
             © {new Date().getFullYear()}
           </p>

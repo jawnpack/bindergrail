@@ -61,14 +61,25 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "WebSite",
-              name: "Binder Grail",
-              url: "https://bindergrail.com",
-              description:
-                "Practical Pokémon TCG market analysis, sealed product strategy, and honest buying advice for casual collectors.",
-            }),
+            __html: JSON.stringify([
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                name: "Binder Grail",
+                url: "https://bindergrail.com",
+                description:
+                  "Practical Pokémon TCG market analysis, sealed product strategy, and honest buying advice for casual collectors.",
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                name: "Binder Grail",
+                url: "https://bindergrail.com",
+                logo: "https://bindergrail.com/images/binder_grail_logo.png",
+                email: "hello@bindergrail.com",
+                sameAs: ["https://commonrare.bindergrail.com"],
+              },
+            ]),
           }}
         />
         {children}

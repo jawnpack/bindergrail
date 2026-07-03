@@ -17,7 +17,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "https://bindergrail.com/origins",       lastModified: new Date(), priority: 0.7 },
     { url: "https://bindergrail.com/pocket-money",  lastModified: new Date(), priority: 0.7 },
     { url: "https://bindergrail.com/about",         lastModified: new Date(), priority: 0.6 },
-    { url: "https://bindergrail.com/newsletter",    lastModified: new Date(), priority: 0.4 },
     ...postEntries,
   ];
 }

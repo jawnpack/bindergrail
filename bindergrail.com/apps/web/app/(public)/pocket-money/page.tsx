@@ -30,6 +30,23 @@ const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http:
 export default function PocketMoneyPage() {
   return (
     <div style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Pocket Money",
+            applicationCategory: "FinanceApplication",
+            operatingSystem: "Web",
+            url: "https://pocketmoney.bindergrail.com",
+            description:
+              "Set a monthly budget, log every purchase, and track your Pokémon TCG spending.",
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
+          }),
+        }}
+      />
       {/* ── Nav ────────────────────────────────────────────── */}
       <header style={{ backgroundColor: "#3D5C42" }}>
         <div
