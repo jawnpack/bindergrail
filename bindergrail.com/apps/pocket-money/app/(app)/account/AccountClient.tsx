@@ -6,12 +6,10 @@ import { createClient } from "@/lib/supabase/client";
 import Topbar from "@/components/layout/Topbar";
 import Toast from "@/components/forms/Toast";
 import { formatCurrency } from "@/lib/pocket-money/budget";
-import { DEFAULT_TAGS } from "@/lib/pocket-money/tags";
+import { DEFAULT_TAGS, MAX_CUSTOM_TAGS } from "@/lib/pocket-money/tags";
 import { isNameAllowed } from "@/lib/pocket-money/profanity";
 import { AVATAR_COLORS, DEFAULT_AVATAR_COLOR } from "@/lib/pocket-money/avatar";
 import type { CustomTagRow } from "@/lib/pocket-money/queries";
-
-const MAX_CUSTOM_TAGS = 10;
 
 interface AccountClientProps {
   userId: string;

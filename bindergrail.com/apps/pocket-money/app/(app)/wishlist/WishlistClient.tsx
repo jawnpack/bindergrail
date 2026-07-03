@@ -18,6 +18,7 @@ interface WishlistClientProps {
   avatarColor: string | null;
   currency: string;
   items: WishlistItemRow[];
+  customTags: string[];
   grailAmountSaved: number;
 }
 
@@ -39,6 +40,7 @@ export default function WishlistClient({
   avatarColor,
   currency,
   items,
+  customTags,
   grailAmountSaved,
 }: WishlistClientProps) {
   const router = useRouter();
@@ -394,6 +396,7 @@ export default function WishlistClient({
       {showAddForm && (
         <AddWishlistItemForm
           userId={userId}
+          customTags={customTags}
           onClose={() => setShowAddForm(false)}
           onSuccess={(name) => {
             setShowAddForm(false);

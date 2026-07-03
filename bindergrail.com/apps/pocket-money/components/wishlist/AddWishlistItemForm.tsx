@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { DEFAULT_TAGS } from "@/lib/pocket-money/tags";
+import { DEFAULT_TAGS, MAX_CUSTOM_TAGS } from "@/lib/pocket-money/tags";
+
+const NEW_TAG_OPTION = "__new__";
 
 interface AddWishlistItemFormProps {
   userId: string;
+  customTags: string[];
   onClose: () => void;
   onSuccess: (name: string) => void;
 }
@@ -32,6 +35,7 @@ const labelStyle: React.CSSProperties = {
 
 export default function AddWishlistItemForm({
   userId,
+  customTags,
   onClose,
   onSuccess,
 }: AddWishlistItemFormProps) {
@@ -43,7 +47,67 @@ export default function AddWishlistItemForm({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Inline tag creation
+  const [localCustomTags, setLocalCustomTags] = useState(customTags);
+  const [creatingTag, setCreatingTag] = useState(false);
+  const [newTagName, setNewTagName] = useState("");
+  const [tagError, setTagError] = useState("");
+  const [savingTag, setSavingTag] = useState(false);
+
   const supabase = createClient();
+
+  const atTagLimit = localCustomTags.length >= MAX_CUSTOM_TAGS;
+
+  function handleTagSelect(value: string) {
+    if (value === NEW_TAG_OPTION) {
+      setTagError("");
+      if (atTagLimit) {
+        setTagError(
+          `You've hit the ${MAX_CUSTOM_TAGS} custom tag limit. Manage tags in Account.`
+        );
+        return;
+      }
+      setCreatingTag(true);
+      return;
+    }
+    setTag(value);
+  }
+
+  async function handleCreateTag() {
+    const trimmed = newTagName.trim();
+    if (!trimmed) return;
+    setTagError("");
+
+    if (atTagLimit) {
+      setTagError(
+        `You've hit the ${MAX_CUSTOM_TAGS} custom tag limit. Manage tags in Account.`
+      );
+      return;
+    }
+    const exists =
+      DEFAULT_TAGS.some((t) => t.name.toLowerCase() === trimmed.toLowerCase()) ||
+      localCustomTags.some((t) => t.toLowerCase() === trimmed.toLowerCase());
+    if (exists) {
+      setTagError("That tag already exists.");
+      return;
+    }
+
+    setSavingTag(true);
+    const { error: insertError } = await supabase
+      .from("pm_user_tags")
+      .insert({ user_id: userId, name: trimmed });
+    setSavingTag(false);
+
+    if (insertError) {
+      setTagError("Couldn't create that tag. Try again.");
+      return;
+    }
+
+    setLocalCustomTags([...localCustomTags, trimmed]);
+    setTag(trimmed);
+    setNewTagName("");
+    setCreatingTag(false);
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -184,18 +248,94 @@ export default function AddWishlistItemForm({
           {/* Tag */}
           <div>
             <label style={labelStyle}>Tag</label>
-            <select
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
-              style={{ ...inputStyle, appearance: "none" }}
-            >
-              <option value="">No tag</option>
-              {DEFAULT_TAGS.map((t) => (
-                <option key={t.name} value={t.name}>
-                  {t.name}
+            {!creatingTag ? (
+              <select
+                value={tag}
+                onChange={(e) => handleTagSelect(e.target.value)}
+                style={{ ...inputStyle, appearance: "none" }}
+              >
+                <option value="">No tag</option>
+                {DEFAULT_TAGS.map((t) => (
+                  <option key={t.name} value={t.name}>
+                    {t.name}
+                  </option>
+                ))}
+                {localCustomTags.map((t) => (
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
+                ))}
+                <option value={NEW_TAG_OPTION}>
+                  + New tag… ({localCustomTags.length}/{MAX_CUSTOM_TAGS} used)
                 </option>
-              ))}
-            </select>
+              </select>
+            ) : (
+              <div style={{ display: "flex", gap: 8 }}>
+                <input
+                  value={newTagName}
+                  onChange={(e) => setNewTagName(e.target.value)}
+                  placeholder="New tag name"
+                  maxLength={20}
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleCreateTag();
+                    }
+                  }}
+                  style={{ ...inputStyle, flex: 1 }}
+                />
+                <button
+                  type="button"
+                  onClick={handleCreateTag}
+                  disabled={savingTag}
+                  style={{
+                    backgroundColor: "var(--pm-green-mid)",
+                    color: "var(--pm-white)",
+                    border: "none",
+                    borderRadius: 8,
+                    padding: "0 14px",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    cursor: savingTag ? "not-allowed" : "pointer",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  {savingTag ? "..." : "add"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCreatingTag(false);
+                    setNewTagName("");
+                    setTagError("");
+                  }}
+                  style={{
+                    background: "none",
+                    border: "0.5px solid var(--pm-gray-border)",
+                    borderRadius: 8,
+                    padding: "0 12px",
+                    fontSize: 13,
+                    color: "var(--pm-gray-text)",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  cancel
+                </button>
+              </div>
+            )}
+            {tagError && (
+              <p
+                style={{
+                  fontSize: 12,
+                  color: "var(--pm-red-mid)",
+                  marginTop: 6,
+                }}
+              >
+                {tagError}
+              </p>
+            )}
           </div>
 
           {error && (

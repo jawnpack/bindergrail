@@ -10,6 +10,8 @@ export const DEFAULT_TAGS = [
 
 export type DefaultTag = (typeof DEFAULT_TAGS)[number];
 
+export const MAX_CUSTOM_TAGS = 10;
+
 export function getTagStyle(tagName: string): { bg: string; text: string } {
   const found = DEFAULT_TAGS.find((t) => t.name === tagName);
   return found ?? { bg: "#F1EFE8", text: "#5F5E5A" };
