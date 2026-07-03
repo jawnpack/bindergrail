@@ -75,7 +75,7 @@ export default function Nav() {
               Pocket Money
             </a>
             <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42", marginTop: "2px" }}>
-              Soon
+              Live
             </span>
           </div>
           <Link
@@ -159,7 +159,7 @@ export default function Nav() {
             onMouseLeave={e => (e.currentTarget.style.color = "#F5F0E8")}
           >
             Pocket Money{" "}
-            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42" }}>· Soon</span>
+            <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42" }}>· Live</span>
           </a>
           <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             About

@@ -78,19 +78,19 @@ export default function AboutPage() {
                 </dd>
               </div>
               <div>
-                <dt className="font-semibold mb-1" style={{ color: "#7A7468" }}>
-                  Origins — Coming soon
+                <dt className="font-semibold mb-1" style={{ color: "#1A1814" }}>
+                  Pocket Money — Live now
                 </dt>
                 <dd style={{ color: "#7A7468" }}>
-                  A deep-dive into Pokémon set history and what it tells us about long-term value.
+                  A simple tool for managing your monthly collecting budget. Set a limit, log your pickups, and save toward your grail.
                 </dd>
               </div>
               <div>
                 <dt className="font-semibold mb-1" style={{ color: "#7A7468" }}>
-                  Budget tool — Coming soon
+                  Origins — Coming soon
                 </dt>
                 <dd style={{ color: "#7A7468" }}>
-                  A simple tool for managing your monthly collecting budget and tracking what you own.
+                  A collection tracker for every card you own. Log condition, price paid, and see what your binder is worth.
                 </dd>
               </div>
             </dl>

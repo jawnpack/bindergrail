@@ -7,13 +7,12 @@
 // Export as PNG 2x transparent
 
 import type { Metadata } from "next";
-import WaitlistForm from "@/components/WaitlistForm";
 import PocketMoneyScreenshotStrip from "@/components/PocketMoneyScreenshotStrip";
 
 export const metadata: Metadata = {
   title: "Pocket Money — Pokémon TCG Budget Tracker | Binder Grail",
   description:
-    "Set a monthly budget, log every purchase, and track your Pokémon TCG spending by category. Coming soon from Binder Grail.",
+    "Set a monthly budget, log every purchase, and track your Pokémon TCG spending. Free from Binder Grail, live now.",
   robots: { index: true, follow: true },
   alternates: { canonical: "https://bindergrail.com/pocket-money" },
   openGraph: {
@@ -67,19 +66,21 @@ export default function PocketMoneyPage() {
               a Binder Grail app
             </div>
           </div>
-          <span
+          <a
+            href="https://pocketmoney.bindergrail.com"
             style={{
               fontSize: 11,
               fontWeight: 600,
-              color: "#B0D4B8",
-              backgroundColor: "#2A4230",
+              color: "#2A4230",
+              backgroundColor: "#B0D4B8",
               border: "1px solid #4A7052",
               borderRadius: 20,
               padding: "4px 12px",
+              textDecoration: "none",
             }}
           >
-            Coming soon
-          </span>
+            Open the app
+          </a>
         </div>
       </header>
 
@@ -171,24 +172,32 @@ export default function PocketMoneyPage() {
             ))}
           </div>
 
-          {/* Sign-up form */}
-          <p
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#F5F0E8",
-              marginBottom: 12,
-            }}
-          >
-            Get notified at launch
-          </p>
-          <WaitlistForm
-            app="pocket-money"
-            inputBg="#2A4230"
-            inputBorder="#4A7052"
-          />
-          <p style={{ marginTop: 10, fontSize: 11, color: "#4A7052" }}>
-            No spam. Just a launch notification.
+          {/* CTA */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+            <a
+              href="https://pocketmoney.bindergrail.com/signup"
+              style={{
+                display: "inline-block",
+                backgroundColor: "#B07035",
+                color: "#F5F0E8",
+                borderRadius: 4,
+                padding: "12px 24px",
+                fontSize: 14,
+                fontWeight: 500,
+                textDecoration: "none",
+              }}
+            >
+              Create your free account
+            </a>
+            <a
+              href="https://pocketmoney.bindergrail.com/login"
+              style={{ fontSize: 13, color: "#B0D4B8", textDecoration: "underline" }}
+            >
+              Already tracking? Sign in
+            </a>
+          </div>
+          <p style={{ marginTop: 12, fontSize: 11, color: "#4A7052" }}>
+            Free to use. Your Binder Grail account works here too.
           </p>
         </div>
       </section>

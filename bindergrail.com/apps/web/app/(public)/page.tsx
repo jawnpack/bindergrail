@@ -255,9 +255,9 @@ export default function HomePage() {
                   </span>
                   <span
                     className="text-[9px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded-sm"
-                    style={{ backgroundColor: "#C8D8CA", color: "#3D5C42" }}
+                    style={{ backgroundColor: "#3D5C42", color: "#EAF0EB" }}
                   >
-                    Soon
+                    Live
                   </span>
                 </div>
                 <p
