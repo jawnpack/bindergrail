@@ -82,6 +82,7 @@ export default function SignupPage() {
   const [displayName, setDisplayName] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [budget, setBudget] = useState("");
+  const [newsletterOptIn, setNewsletterOptIn] = useState(false);
   const [confirmEmailNotice, setConfirmEmailNotice] = useState(false);
 
   async function handleStep1(e: React.FormEvent) {
@@ -102,6 +103,15 @@ export default function SignupPage() {
       setError(signUpError.message);
       setLoading(false);
       return;
+    }
+
+    // Explicit opt-in only; best-effort, never blocks signup
+    if (newsletterOptIn) {
+      fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, tag: "pocketmoney-signup" }),
+      }).catch(() => {});
     }
 
     // Email confirmation enabled: no session yet, so the profile/budget
@@ -306,6 +316,33 @@ export default function SignupPage() {
                   ))}
                 </select>
               </div>
+
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  gap: 8,
+                  fontSize: 12,
+                  color: "var(--pm-gray-text)",
+                  cursor: "pointer",
+                  lineHeight: 1.5,
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={newsletterOptIn}
+                  onChange={(e) => setNewsletterOptIn(e.target.checked)}
+                  style={{
+                    marginTop: 2,
+                    cursor: "pointer",
+                    accentColor: "var(--pm-green-mid)",
+                  }}
+                />
+                <span>
+                  Also subscribe me to Common Rare, the free weekly Pokémon TCG
+                  newsletter. Optional, unsubscribe anytime.
+                </span>
+              </label>
 
               {error && (
                 <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>

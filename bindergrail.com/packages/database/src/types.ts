@@ -180,6 +180,24 @@ export type Database = {
         }
         Relationships: []
       }
+      waitlist: {
+        Row: {
+          id: string
+          email: string
+          source: string
+          opted_into_newsletter: boolean
+          created_at: string
+        }
+        Insert: {
+          email: string
+          source?: string
+          opted_into_newsletter?: boolean
+        }
+        Update: {
+          opted_into_newsletter?: boolean
+        }
+        Relationships: []
+      }
       pm_user_tags: {
         Row: {
           id: string

@@ -4,7 +4,7 @@ import { subscribeToBeehiiv } from "@/lib/beehiiv";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, tag = "free" } = body;
+    const { email, tag = "site" } = body;
 
     if (!email || typeof email !== "string") {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });

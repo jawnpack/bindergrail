@@ -8,6 +8,7 @@ type Props = {
   inputBg?: string;
   inputBorder?: string;
   inputTextColor?: string;
+  labelColor?: string;
 };
 
 export default function WaitlistForm({
@@ -16,8 +17,10 @@ export default function WaitlistForm({
   inputBg = "#2C2920",
   inputBorder = "rgba(255,255,255,0.1)",
   inputTextColor = "#F5F0E8",
+  labelColor = "#7A7468",
 }: Props) {
   const [email, setEmail] = useState("");
+  const [optIn, setOptIn] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   async function handleSubmit(e: React.FormEvent) {
@@ -27,7 +30,11 @@ export default function WaitlistForm({
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, app }),
+        body: JSON.stringify({
+          email,
+          source: app,
+          optedIntoNewsletter: optIn,
+        }),
       });
       if (res.ok) {
         setStatus("success");
@@ -50,28 +57,47 @@ export default function WaitlistForm({
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:gap-2">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="your@email.com"
-          required
-          className="flex-1 rounded-sm px-4 py-2.5 text-sm outline-none"
-          style={{
-            backgroundColor: inputBg,
-            color: inputTextColor,
-            border: `1px solid ${inputBorder}`,
-          }}
-        />
-        <button
-          type="submit"
-          disabled={status === "loading"}
-          className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-60 whitespace-nowrap"
-          style={{ backgroundColor: buttonColor, color: "#F5F0E8" }}
+      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row sm:gap-2">
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="your@email.com"
+            required
+            className="flex-1 rounded-sm px-4 py-2.5 text-sm outline-none"
+            style={{
+              backgroundColor: inputBg,
+              color: inputTextColor,
+              border: `1px solid ${inputBorder}`,
+            }}
+          />
+          <button
+            type="submit"
+            disabled={status === "loading"}
+            className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-60 whitespace-nowrap"
+            style={{ backgroundColor: buttonColor, color: "#F5F0E8" }}
+          >
+            {status === "loading" ? "Joining…" : "Notify me"}
+          </button>
+        </div>
+
+        <label
+          className="flex items-start gap-2 text-xs cursor-pointer select-none"
+          style={{ color: labelColor }}
         >
-          {status === "loading" ? "Joining…" : "Notify me"}
-        </button>
+          <input
+            type="checkbox"
+            checked={optIn}
+            onChange={(e) => setOptIn(e.target.checked)}
+            className="mt-0.5 cursor-pointer"
+            style={{ accentColor: buttonColor }}
+          />
+          <span>
+            Also subscribe me to Common Rare, the free weekly Pok&eacute;mon TCG
+            newsletter. Optional, unsubscribe anytime.
+          </span>
+        </label>
       </form>
       {status === "error" && (
         <p className="mt-2 text-xs" style={{ color: "#B07035" }}>
