@@ -41,15 +41,11 @@ export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const hostname = request.headers.get("host") ?? "";
 
-  // Subdomain routing — rewrite subdomain requests to the correct path
+  // Subdomain routing — origins.bindergrail.com serves the Origins landing
+  // page from this app. (pocketmoney.bindergrail.com is its own Vercel app.)
   if (hostname.startsWith("origins.")) {
     const url = request.nextUrl.clone();
     url.pathname = "/origins";
-    return NextResponse.rewrite(url);
-  }
-  if (hostname.startsWith("pocketmoney.")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/pocket-money";
     return NextResponse.rewrite(url);
   }
 

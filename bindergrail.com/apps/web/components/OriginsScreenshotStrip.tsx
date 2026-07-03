@@ -497,57 +497,8 @@ export default function OriginsScreenshotStrip() {
           </div>
         </div>
 
-        {/* ── PLACEHOLDER SLOT ─────────────────────────────────── */}
-        {/* SCREENSHOT PLACEHOLDER
-            To add a real screenshot:
-            1. Save image to public/images/apps/origins-screen-1.jpg
-            2. Replace this placeholder div with:
-               <div style={{ flexShrink: 0, width: 110 }}>
-                 <div style={{ background: '#2C2A22', borderRadius: 16, padding: '6px 5px 5px' }}>
-                   <div style={{ width: 30, height: 4, background: '#1A1814', borderRadius: 2, margin: '0 auto 5px' }} />
-                   <img src="/images/apps/origins-screen-1.jpg" style={{ borderRadius: 10, width: '100%' }} />
-                 </div>
-               </div>
-            3. Repeat for each additional screenshot, incrementing the filename
-        */}
-        <div
-          style={{
-            flexShrink: 0,
-            width: 90,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 8,
-          }}
-        >
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              borderRadius: "50%",
-              border: "2px dashed #C8C0B0",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 16,
-              color: "#C8C0B0",
-              fontWeight: 300,
-            }}
-          >
-            +
-          </div>
-          <p
-            style={{
-              fontSize: 9,
-              color: "#B4B2A9",
-              textAlign: "center",
-              lineHeight: 1.4,
-            }}
-          >
-            Your screenshots go here
-          </p>
-        </div>
+        {/* To add real screenshots: save to public/images/apps/origins-screen-N.jpg
+            and append framed <img> blocks here (see git history for the frame markup). */}
       </div>
     </section>
   );
