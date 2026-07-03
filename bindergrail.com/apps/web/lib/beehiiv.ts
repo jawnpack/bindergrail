@@ -115,9 +115,11 @@ export async function getIssue(id: string): Promise<IssueDetail | null> {
 
 // ─── Subscription helpers ─────────────────────────────────────────────────────
 
+// Source attribution via utm_source — Beehiiv captures it natively and it's
+// filterable in the dashboard. Tags/custom fields are gated on the current plan.
 export async function subscribeToBeehiiv(
   email: string,
-  tag: string = "free"
+  utmSource: string = "site"
 ): Promise<string | undefined> {
   const res = await fetch(`${BASE}/publications/${PUB}/subscriptions`, {
     method: "POST",
@@ -129,7 +131,7 @@ export async function subscribeToBeehiiv(
       email,
       reactivate_existing: true,
       send_welcome_email: true,
-      tags: [tag],
+      utm_source: utmSource,
     }),
   });
   const data = await res.json();

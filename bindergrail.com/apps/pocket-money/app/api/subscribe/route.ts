@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(req: Request) {
-  let body: { email?: string; tag?: string };
+  let body: { email?: string; utmSource?: string };
   try {
     body = await req.json();
   } catch {
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
   }
 
   const email = (body.email ?? "").trim().toLowerCase();
-  const tag = body.tag ?? "pocketmoney-signup";
+  const utmSource = body.utmSource ?? "pocketmoney-signup";
 
   if (!EMAIL_RE.test(email)) {
     return NextResponse.json({ error: "Invalid email" }, { status: 400 });
@@ -39,7 +39,8 @@ export async function POST(req: Request) {
           email,
           reactivate_existing: true,
           send_welcome_email: true,
-          tags: [tag],
+          // utm_source instead of tags — tags are gated on the current plan
+          utm_source: utmSource,
         }),
       }
     );

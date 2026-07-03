@@ -30,7 +30,7 @@ function WaitlistForm() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, tag: "premium_waitlist" }),
+        body: JSON.stringify({ email, utmSource: "premium-waitlist" }),
       });
       if (res.ok) {
         setStatus("success");

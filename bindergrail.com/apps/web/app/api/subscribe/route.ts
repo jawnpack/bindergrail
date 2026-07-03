@@ -4,7 +4,7 @@ import { subscribeToBeehiiv } from "@/lib/beehiiv";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, tag = "site" } = body;
+    const { email, utmSource = "site" } = body;
 
     if (!email || typeof email !== "string") {
       return NextResponse.json({ error: "Invalid email" }, { status: 400 });
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
-    await subscribeToBeehiiv(email, tag);
+    await subscribeToBeehiiv(email, utmSource);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Subscribe error:", err);

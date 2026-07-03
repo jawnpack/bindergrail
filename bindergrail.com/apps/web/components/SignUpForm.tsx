@@ -14,7 +14,7 @@ export default function SignUpForm() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, tag: "site" }),
+        body: JSON.stringify({ email, utmSource: "site" }),
       });
       if (res.ok) {
         setStatus("success");
