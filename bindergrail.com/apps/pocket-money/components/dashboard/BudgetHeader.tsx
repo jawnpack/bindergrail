@@ -9,6 +9,7 @@ interface BudgetHeaderProps {
   budget: number;
   currency: string;
   statusCopy: string;
+  statusColor: string;
   percent: number;
   progressColor: string;
   onPrevMonth: () => void;
@@ -24,6 +25,7 @@ export default function BudgetHeader({
   budget,
   currency,
   statusCopy,
+  statusColor,
   percent,
   progressColor,
   onPrevMonth,
@@ -32,11 +34,7 @@ export default function BudgetHeader({
   onEditBudget,
 }: BudgetHeaderProps) {
   const remainingColor =
-    remaining < 0
-      ? "var(--pm-red-dark)"
-      : remaining === 0
-      ? "var(--pm-red-dark)"
-      : "var(--pm-green-dark)";
+    remaining < 0 ? "var(--pm-red-dark)" : "var(--pm-green-dark)";
 
   return (
     <div
@@ -133,12 +131,12 @@ export default function BudgetHeader({
               marginBottom: 4,
             }}
           >
-            {formatCurrency(Math.abs(remaining), currency)}
+            {formatCurrency(remaining, currency)}
           </p>
           <p
             style={{
               fontSize: 11,
-              color: "var(--pm-green-dark)",
+              color: statusColor,
               fontStyle: "italic",
             }}
           >

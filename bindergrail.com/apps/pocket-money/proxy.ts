@@ -35,7 +35,9 @@ export async function proxy(request: NextRequest) {
 
   // Protect all /(app) routes
   const isProtected =
-    pathname.startsWith("/dashboard") || pathname.startsWith("/wishlist");
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/wishlist") ||
+    pathname.startsWith("/account");
   if (isProtected && !user) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";

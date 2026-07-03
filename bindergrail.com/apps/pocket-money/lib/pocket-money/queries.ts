@@ -21,8 +21,18 @@ export interface TransactionRow {
   amount: number;
   date: string;
   tag: string | null;
+  tags: string[];
   note: string | null;
   destination: "budget" | "grail_fund" | null;
+}
+
+export interface CustomTagRow {
+  id: string;
+  name: string;
+}
+
+export interface UserSettingsRow {
+  cash_reserve: number;
 }
 
 export interface HoldRow {
@@ -124,7 +134,7 @@ export async function getMonthTransactions(
   const monthStr = String(month).padStart(2, "0");
   const { data } = await supabase
     .from("pm_transactions")
-    .select("id, type, name, amount, date, tag, note, destination")
+    .select("id, type, name, amount, date, tag, tags, note, destination")
     .eq("user_id", userId)
     .gte("date", `${year}-${monthStr}-01`)
     .lt("date", month === 12 ? `${year + 1}-01-01` : `${year}-${String(month + 1).padStart(2, "0")}-01`)
@@ -139,7 +149,7 @@ export async function getAllTransactions(
 ): Promise<TransactionRow[]> {
   const { data } = await supabase
     .from("pm_transactions")
-    .select("id, type, name, amount, date, tag, note, destination")
+    .select("id, type, name, amount, date, tag, tags, note, destination")
     .eq("user_id", userId)
     .order("date", { ascending: false });
 
@@ -198,6 +208,32 @@ export async function getWishlistItems(
     .order("created_at", { ascending: false });
 
   return (data ?? []) as WishlistItemRow[];
+}
+
+export async function getCustomTags(
+  supabase: SupabaseClient<Database>,
+  userId: string
+): Promise<CustomTagRow[]> {
+  const { data } = await supabase
+    .from("pm_user_tags")
+    .select("id, name")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  return (data ?? []) as CustomTagRow[];
+}
+
+export async function getUserSettings(
+  supabase: SupabaseClient<Database>,
+  userId: string
+): Promise<UserSettingsRow> {
+  const { data } = await supabase
+    .from("pm_user_settings")
+    .select("cash_reserve")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  return (data as UserSettingsRow) ?? { cash_reserve: 0 };
 }
 
 export async function getUserProfile(

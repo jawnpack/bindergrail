@@ -9,7 +9,9 @@ import GrailStrip from "@/components/dashboard/GrailStrip";
 import HoldsSection from "@/components/dashboard/HoldsSection";
 import TransactionLog from "@/components/dashboard/TransactionLog";
 import AddTransactionForm from "@/components/forms/AddTransactionForm";
+import EditTransactionForm from "@/components/forms/EditTransactionForm";
 import EditBudgetForm from "@/components/forms/EditBudgetForm";
+import EditWalletForm from "@/components/forms/EditWalletForm";
 import Toast from "@/components/forms/Toast";
 import {
   calcMonthTotals,
@@ -18,6 +20,7 @@ import {
   getRemaining,
   getProgressPercent,
   getProgressColor,
+  formatCurrency,
 } from "@/lib/pocket-money/budget";
 
 interface Transaction {
@@ -27,6 +30,7 @@ interface Transaction {
   amount: number;
   date: string;
   tag: string | null;
+  tags: string[];
   note: string | null;
   destination: "budget" | "grail_fund" | null;
 }
@@ -62,6 +66,8 @@ interface DashboardClientProps {
   allTransactions: Transaction[];
   holds: Hold[];
   grailItem: GrailItem | null;
+  customTags: string[];
+  walletAmount: number;
   initialYear: number;
   initialMonth: number;
 }
@@ -81,6 +87,8 @@ export default function DashboardClient({
   allTransactions,
   holds,
   grailItem,
+  customTags,
+  walletAmount,
   initialYear,
   initialMonth,
 }: DashboardClientProps) {
@@ -89,6 +97,8 @@ export default function DashboardClient({
   const [selectedMonth, setSelectedMonth] = useState(initialMonth);
   const [showAddTx, setShowAddTx] = useState(false);
   const [showEditBudget, setShowEditBudget] = useState(false);
+  const [showEditWallet, setShowEditWallet] = useState(false);
+  const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
   const now = new Date();
@@ -133,6 +143,12 @@ export default function DashboardClient({
   const percent = getProgressPercent(spent, budget);
   const status = getBudgetStatus(spent, budget);
   const statusCopy = getStatusCopy(status);
+  const statusColor =
+    status === "over"
+      ? "var(--pm-red-dark)"
+      : status === "warning"
+      ? "var(--pm-amber-dark)"
+      : "var(--pm-green-dark)";
   const progressColor = getProgressColor(spent, budget);
   const monthLabel = getMonthLabel(selectedYear, selectedMonth);
 
@@ -198,6 +214,7 @@ export default function DashboardClient({
             budget={budget}
             currency={currency}
             statusCopy={statusCopy}
+            statusColor={statusColor}
             percent={percent}
             progressColor={progressColor}
             onPrevMonth={prevMonth}
@@ -205,6 +222,57 @@ export default function DashboardClient({
             canGoForward={canGoForward}
             onEditBudget={() => setShowEditBudget(true)}
           />
+
+          {/* Wallet */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "10px 20px",
+              backgroundColor: "var(--pm-white)",
+              borderBottom: "0.5px solid var(--pm-gray-border)",
+            }}
+          >
+            <div>
+              <p
+                style={{
+                  fontSize: 10,
+                  fontWeight: 500,
+                  color: "var(--pm-gray-text)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  marginBottom: 1,
+                }}
+              >
+                Wallet
+              </p>
+              <p
+                style={{
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: "var(--pm-ink)",
+                }}
+              >
+                {formatCurrency(walletAmount, currency)}
+              </p>
+            </div>
+            <button
+              onClick={() => setShowEditWallet(true)}
+              style={{
+                border: "0.5px solid var(--pm-gray-border)",
+                borderRadius: 6,
+                padding: "4px 10px",
+                fontSize: 11,
+                backgroundColor: "var(--pm-white)",
+                color: "var(--pm-gray-text)",
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
+            >
+              edit
+            </button>
+          </div>
 
           {grailItem && (
             <Link
@@ -238,7 +306,11 @@ export default function DashboardClient({
 
         {/* Right column — full transaction log */}
         <div className="md:flex-1" style={{ minWidth: 0 }}>
-          <TransactionLog transactions={allTransactions} currency={currency} />
+          <TransactionLog
+            transactions={allTransactions}
+            currency={currency}
+            onEdit={(tx) => setEditingTx(tx as Transaction)}
+          />
         </div>
       </div>
 
@@ -265,8 +337,34 @@ export default function DashboardClient({
           userId={userId}
           currency={currency}
           grailItemId={grailItem?.id ?? null}
+          customTags={customTags}
           onClose={() => setShowAddTx(false)}
           onSuccess={handleTxSuccess}
+        />
+      )}
+
+      {editingTx && (
+        <EditTransactionForm
+          transaction={editingTx}
+          customTags={customTags}
+          onClose={() => setEditingTx(null)}
+          onSuccess={(message) => {
+            setEditingTx(null);
+            setToast(message);
+          }}
+        />
+      )}
+
+      {showEditWallet && (
+        <EditWalletForm
+          userId={userId}
+          currentAmount={walletAmount}
+          onClose={() => setShowEditWallet(false)}
+          onSuccess={() => {
+            setShowEditWallet(false);
+            setToast("Wallet updated.");
+            router.refresh();
+          }}
         />
       )}
 

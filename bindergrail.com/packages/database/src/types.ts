@@ -71,6 +71,7 @@ export type Database = {
           amount: number
           date: string
           tag: string | null
+          tags: string[]
           note: string | null
           destination: 'budget' | 'grail_fund' | null
           created_at: string
@@ -82,6 +83,7 @@ export type Database = {
           amount: number
           date: string
           tag?: string | null
+          tags?: string[]
           note?: string | null
           destination?: 'budget' | 'grail_fund' | null
         }
@@ -91,6 +93,7 @@ export type Database = {
           amount?: number
           date?: string
           tag?: string | null
+          tags?: string[]
           note?: string | null
           destination?: 'budget' | 'grail_fund' | null
         }
@@ -195,6 +198,21 @@ export type Database = {
         }
         Update: {
           opted_into_newsletter?: boolean
+        }
+        Relationships: []
+      }
+      pm_user_settings: {
+        Row: {
+          user_id: string
+          cash_reserve: number
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          cash_reserve?: number
+        }
+        Update: {
+          cash_reserve?: number
         }
         Relationships: []
       }

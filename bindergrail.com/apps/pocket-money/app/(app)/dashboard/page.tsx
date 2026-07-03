@@ -6,6 +6,8 @@ import {
   getAllTransactions,
   getPendingHolds,
   getActiveGrail,
+  getCustomTags,
+  getUserSettings,
 } from "@/lib/pocket-money/queries";
 import DashboardClient from "./DashboardClient";
 
@@ -33,13 +35,15 @@ export default async function DashboardPage() {
     initialMonth
   );
 
-  const [profile, allBudgets, allTransactions, holds, grail] =
+  const [profile, allBudgets, allTransactions, holds, grail, customTags, settings] =
     await Promise.all([
       getUserProfile(supabase, user.id),
       getAllBudgets(supabase, user.id),
       getAllTransactions(supabase, user.id),
       getPendingHolds(supabase, user.id),
       getActiveGrail(supabase, user.id),
+      getCustomTags(supabase, user.id),
+      getUserSettings(supabase, user.id),
     ]);
 
   return (
@@ -48,6 +52,8 @@ export default async function DashboardPage() {
       displayName={profile.display_name}
       currency={currentBudget.currency}
       allBudgets={allBudgets}
+      customTags={customTags.map((t) => t.name)}
+      walletAmount={settings.cash_reserve}
       allTransactions={allTransactions}
       holds={holds}
       grailItem={

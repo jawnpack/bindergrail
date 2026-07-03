@@ -5,13 +5,22 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import TagPicker from "@/components/forms/TagPicker";
 
-interface AddTransactionFormProps {
-  userId: string;
-  currency: string;
-  grailItemId?: string | null;
+interface EditableTransaction {
+  id: string;
+  type: "spend" | "return" | "sale";
+  name: string;
+  amount: number;
+  date: string;
+  tag: string | null;
+  tags?: string[];
+  note: string | null;
+}
+
+interface EditTransactionFormProps {
+  transaction: EditableTransaction;
   customTags?: string[];
   onClose: () => void;
-  onSuccess: (name: string, type: string, destination?: string) => void;
+  onSuccess: (message: string) => void;
 }
 
 const inputStyle: React.CSSProperties = {
@@ -34,24 +43,29 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 6,
 };
 
-export default function AddTransactionForm({
-  userId,
-  currency: _currency,
-  grailItemId,
+export default function EditTransactionForm({
+  transaction,
   customTags = [],
   onClose,
   onSuccess,
-}: AddTransactionFormProps) {
-  const today = new Date().toISOString().split("T")[0];
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [type, setType] = useState<"spend" | "return" | "sale">("spend");
-  const [date, setDate] = useState(today);
-  const [tags, setTags] = useState<string[]>([]);
-  const [note, setNote] = useState("");
-  const [destination, setDestination] = useState<"budget" | "grail_fund">("budget");
+}: EditTransactionFormProps) {
+  const [name, setName] = useState(transaction.name);
+  const [amount, setAmount] = useState(String(transaction.amount));
+  const [type, setType] = useState<"spend" | "return" | "sale">(
+    transaction.type
+  );
+  const [date, setDate] = useState(transaction.date);
+  const [tags, setTags] = useState<string[]>(
+    transaction.tags?.length
+      ? transaction.tags
+      : transaction.tag
+      ? [transaction.tag]
+      : []
+  );
+  const [note, setNote] = useState(transaction.note ?? "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const supabase = createClient();
   const router = useRouter();
@@ -62,10 +76,11 @@ export default function AddTransactionForm({
     setError("");
     setLoading(true);
 
-    const { error: insertError } = await supabase
+    // Destination is intentionally not editable here — changing a
+    // grail-fund sale after the fact would desync pm_grail_fund.
+    const { error: updateError } = await supabase
       .from("pm_transactions")
-      .insert({
-        user_id: userId,
+      .update({
         type,
         name,
         amount: parseFloat(amount),
@@ -73,46 +88,41 @@ export default function AddTransactionForm({
         tag: tags[0] ?? null,
         tags,
         note: note || null,
-        destination: type === "sale" ? destination : null,
-      });
+      })
+      .eq("id", transaction.id);
 
-    if (insertError) {
-      setLoading(false);
-      setError("Couldn't log that. Try again.");
+    setLoading(false);
+
+    if (updateError) {
+      setError("Couldn't save the changes. Try again.");
       return;
     }
 
-    if (type === "sale" && destination === "grail_fund" && grailItemId) {
-      const { data: existing, error: fundReadError } = await supabase
-        .from("pm_grail_fund")
-        .select("amount_saved")
-        .eq("user_id", userId)
-        .eq("wishlist_item_id", grailItemId)
-        .maybeSingle();
+    router.refresh();
+    onSuccess("Transaction updated.");
+  }
 
-      const currentSaved = existing ? Number((existing as { amount_saved: number }).amount_saved) : 0;
+  async function handleDelete() {
+    if (!window.confirm(`Delete "${transaction.name}"? This can't be undone.`)) {
+      return;
+    }
+    setError("");
+    setDeleting(true);
 
-      const { error: fundWriteError } = fundReadError
-        ? { error: fundReadError }
-        : await supabase.from("pm_grail_fund").upsert({
-            user_id: userId,
-            wishlist_item_id: grailItemId,
-            amount_saved: currentSaved + parseFloat(amount),
-          });
+    const { error: deleteError } = await supabase
+      .from("pm_transactions")
+      .delete()
+      .eq("id", transaction.id);
 
-      if (fundWriteError) {
-        setLoading(false);
-        setError(
-          "Sale was logged, but the grail fund didn't update. Check the wishlist."
-        );
-        router.refresh();
-        return;
-      }
+    setDeleting(false);
+
+    if (deleteError) {
+      setError("Couldn't delete that. Try again.");
+      return;
     }
 
-    setLoading(false);
     router.refresh();
-    onSuccess(name, type, type === "sale" ? destination : undefined);
+    onSuccess("Transaction deleted.");
   }
 
   const typeButtons: { value: "spend" | "return" | "sale"; label: string }[] = [
@@ -156,7 +166,7 @@ export default function AddTransactionForm({
           }}
         >
           <p style={{ fontSize: 15, fontWeight: 500, color: "var(--pm-ink)" }}>
-            Log a transaction
+            Edit transaction
           </p>
           <button
             onClick={onClose}
@@ -180,11 +190,10 @@ export default function AddTransactionForm({
         >
           {/* Name */}
           <div>
-            <label style={labelStyle}>What did you buy?</label>
+            <label style={labelStyle}>Name</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Prismatic Evolutions booster box"
               required
               style={inputStyle}
             />
@@ -192,7 +201,7 @@ export default function AddTransactionForm({
 
           {/* Amount */}
           <div>
-            <label style={labelStyle}>How much?</label>
+            <label style={labelStyle}>Amount</label>
             <input
               type="number"
               inputMode="decimal"
@@ -200,7 +209,6 @@ export default function AddTransactionForm({
               step="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
               required
               style={inputStyle}
             />
@@ -249,44 +257,6 @@ export default function AddTransactionForm({
             </div>
           </div>
 
-          {/* Destination (sale only) */}
-          {type === "sale" && (
-            <div>
-              <label style={labelStyle}>Where does this go?</label>
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                {[
-                  { value: "budget" as const, label: "Back into my budget" },
-                  { value: "grail_fund" as const, label: "Toward my grail" },
-                ].map(({ value, label }) => (
-                  <button
-                    key={value}
-                    type="button"
-                    onClick={() => setDestination(value)}
-                    style={{
-                      padding: "10px 14px",
-                      borderRadius: 8,
-                      fontSize: 13,
-                      fontWeight: 500,
-                      border: "0.5px solid var(--pm-gray-border)",
-                      cursor: "pointer",
-                      textAlign: "left",
-                      backgroundColor:
-                        destination === value ? "var(--pm-ink)" : "var(--pm-white)",
-                      color:
-                        destination === value
-                          ? "var(--pm-green-lightest)"
-                          : "var(--pm-ink)",
-                      transition: "background-color 0.15s",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Date */}
           <div>
             <label style={labelStyle}>Date</label>
@@ -324,10 +294,10 @@ export default function AddTransactionForm({
             <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
           )}
 
-          {/* Submit */}
+          {/* Save */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || deleting}
             style={{
               width: "100%",
               backgroundColor: "var(--pm-green-mid)",
@@ -343,7 +313,27 @@ export default function AddTransactionForm({
               marginTop: 2,
             }}
           >
-            {loading ? "Logging..." : "Log it"}
+            {loading ? "Saving..." : "Save changes"}
+          </button>
+
+          {/* Delete */}
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={loading || deleting}
+            style={{
+              width: "100%",
+              backgroundColor: "transparent",
+              color: "var(--pm-red-dark)",
+              border: "none",
+              padding: 6,
+              fontSize: 12,
+              fontWeight: 500,
+              cursor: deleting ? "not-allowed" : "pointer",
+              fontFamily: "inherit",
+            }}
+          >
+            {deleting ? "Deleting..." : "Delete transaction"}
           </button>
         </form>
       </div>

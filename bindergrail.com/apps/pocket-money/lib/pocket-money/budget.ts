@@ -1,7 +1,7 @@
 export type BudgetStatus = "healthy" | "warning" | "over";
 
 export function getBudgetStatus(spent: number, budget: number): BudgetStatus {
-  if (budget <= 0) return "healthy";
+  if (budget <= 0) return spent > 0 ? "over" : "healthy";
   if (spent > budget) return "over";
   if (spent >= budget * 0.75) return "warning";
   return "healthy";
@@ -22,7 +22,7 @@ export function getRemaining(
 }
 
 export function getProgressPercent(spent: number, budget: number): number {
-  if (budget <= 0) return 0;
+  if (budget <= 0) return spent > 0 ? 100 : 0;
   return Math.min((spent / budget) * 100, 100);
 }
 

@@ -11,6 +11,7 @@ interface Transaction {
   amount: number;
   date: string;
   tag: string | null;
+  tags?: string[];
   note: string | null;
   destination?: "budget" | "grail_fund" | null;
 }
@@ -18,6 +19,7 @@ interface Transaction {
 interface TransactionLogProps {
   transactions: Transaction[];
   currency: string;
+  onEdit?: (tx: Transaction) => void;
 }
 
 function formatDate(dateStr: string) {
@@ -57,6 +59,7 @@ const typeLabel: Record<Transaction["type"], string> = {
 export default function TransactionLog({
   transactions,
   currency,
+  onEdit,
 }: TransactionLogProps) {
   if (transactions.length === 0) {
     return (
@@ -86,17 +89,24 @@ export default function TransactionLog({
             const dotColor = inflow ? "var(--pm-green-mid)" : "var(--pm-red-mid)";
             const amountColor = inflow ? "var(--pm-green-dark)" : "var(--pm-red-dark)";
             const prefix = inflow ? "+" : "-";
-            const tagStyle = tx.tag ? getTagStyle(tx.tag) : null;
+            const tagList = tx.tags?.length
+              ? tx.tags
+              : tx.tag
+              ? [tx.tag]
+              : [];
 
             return (
               <div
                 key={tx.id}
+                onClick={onEdit ? () => onEdit(tx) : undefined}
+                title={onEdit ? "Edit transaction" : undefined}
                 style={{
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
                   padding: "9px 20px",
                   borderBottom: "0.5px solid var(--pm-gray-border)",
+                  cursor: onEdit ? "pointer" : "default",
                 }}
               >
                 {/* Dot */}
@@ -134,20 +144,34 @@ export default function TransactionLog({
                   >
                     {formatDate(tx.date)}
                   </p>
-                  {tagStyle && tx.tag && (
+                  {tagList.length > 0 && (
                     <span
                       style={{
-                        display: "inline-block",
+                        display: "inline-flex",
+                        gap: 4,
                         marginTop: 3,
-                        fontSize: 9,
-                        fontWeight: 500,
-                        padding: "1px 6px",
-                        borderRadius: 4,
-                        backgroundColor: tagStyle.bg,
-                        color: tagStyle.text,
+                        flexWrap: "wrap",
                       }}
                     >
-                      {tx.tag}
+                      {tagList.map((t) => {
+                        const style = getTagStyle(t);
+                        return (
+                          <span
+                            key={t}
+                            style={{
+                              display: "inline-block",
+                              fontSize: 9,
+                              fontWeight: 500,
+                              padding: "1px 6px",
+                              borderRadius: 4,
+                              backgroundColor: style.bg,
+                              color: style.text,
+                            }}
+                          >
+                            {t}
+                          </span>
+                        );
+                      })}
                     </span>
                   )}
                 </div>

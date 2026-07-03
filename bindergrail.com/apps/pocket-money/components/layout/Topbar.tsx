@@ -156,6 +156,20 @@ export default function Topbar({ displayName, active }: TopbarProps) {
                   {displayName}
                 </p>
               )}
+              <Link
+                href="/account"
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: "block",
+                  padding: "10px 14px",
+                  fontSize: 12,
+                  color: "var(--pm-ink)",
+                  textDecoration: "none",
+                  borderBottom: "0.5px solid var(--pm-gray-border)",
+                }}
+              >
+                Account
+              </Link>
               <button
                 onClick={handleSignOut}
                 disabled={signingOut}
