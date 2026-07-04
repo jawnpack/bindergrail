@@ -114,9 +114,9 @@ export default function AddTransactionForm({
 
       if (fundWriteError) {
         setLoading(false);
-        setError(
-          "Sale was logged, but the reserve didn't update. Check the wishlist."
-        );
+        const detail =
+          fundReadError?.message ?? fundWriteError.message ?? "unknown error";
+        setError(`Sale was logged, but the reserve didn't update: ${detail}`);
         router.refresh();
         return;
       }
