@@ -130,7 +130,8 @@ export default function EditWalletForm({
               marginTop: -6,
             }}
           >
-            Your total hobby cash on hand. Update it whenever it changes.
+            Your total hobby cash on hand. Spends subtract from it, returns
+            and sales add back. Edit any time to reset it.
           </p>
 
           {error && (
