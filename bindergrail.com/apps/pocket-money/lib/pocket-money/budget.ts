@@ -56,12 +56,12 @@ export function calcMonthTotals(
   for (const t of transactions) {
     if (t.type === "spend") {
       spent += Number(t.amount);
-    } else if (t.type === "sale" && t.destination === "grail_fund") {
-      // Sale proceeds routed to the grail fund live there, not in the
-      // month's budget envelope.
-    } else {
+    } else if (t.type === "return") {
+      // A return undoes a spend, so it refunds the budget envelope.
       inflow += Number(t.amount);
     }
+    // Sales never touch the budget — proceeds go to the wallet
+    // (or get reserved for a wishlist item).
   }
   return { spent, inflow };
 }

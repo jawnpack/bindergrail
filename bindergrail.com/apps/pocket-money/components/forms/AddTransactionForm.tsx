@@ -5,10 +5,16 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import TagPicker from "@/components/forms/TagPicker";
 
+export interface WishlistPickerItem {
+  id: string;
+  name: string;
+  isGrail: boolean;
+}
+
 interface AddTransactionFormProps {
   userId: string;
   currency: string;
-  grailItemId?: string | null;
+  wishlistItems?: WishlistPickerItem[];
   customTags?: string[];
   onClose: () => void;
   onSuccess: (name: string, type: string, destination?: string) => void;
@@ -37,7 +43,7 @@ const labelStyle: React.CSSProperties = {
 export default function AddTransactionForm({
   userId,
   currency: _currency,
-  grailItemId,
+  wishlistItems = [],
   customTags = [],
   onClose,
   onSuccess,
@@ -50,6 +56,9 @@ export default function AddTransactionForm({
   const [tags, setTags] = useState<string[]>([]);
   const [note, setNote] = useState("");
   const [destination, setDestination] = useState<"budget" | "grail_fund">("budget");
+  const [reserveTargetId, setReserveTargetId] = useState<string>(
+    wishlistItems.find((i) => i.isGrail)?.id ?? wishlistItems[0]?.id ?? ""
+  );
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -82,12 +91,12 @@ export default function AddTransactionForm({
       return;
     }
 
-    if (type === "sale" && destination === "grail_fund" && grailItemId) {
+    if (type === "sale" && destination === "grail_fund" && reserveTargetId) {
       const { data: existing, error: fundReadError } = await supabase
         .from("pm_grail_fund")
         .select("amount_saved")
         .eq("user_id", userId)
-        .eq("wishlist_item_id", grailItemId)
+        .eq("wishlist_item_id", reserveTargetId)
         .maybeSingle();
 
       const currentSaved = existing ? Number((existing as { amount_saved: number }).amount_saved) : 0;
@@ -96,14 +105,14 @@ export default function AddTransactionForm({
         ? { error: fundReadError }
         : await supabase.from("pm_grail_fund").upsert({
             user_id: userId,
-            wishlist_item_id: grailItemId,
+            wishlist_item_id: reserveTargetId,
             amount_saved: currentSaved + parseFloat(amount),
           });
 
       if (fundWriteError) {
         setLoading(false);
         setError(
-          "Sale was logged, but the grail fund didn't update. Check the wishlist."
+          "Sale was logged, but the reserve didn't update. Check the wishlist."
         );
         router.refresh();
         return;
@@ -180,7 +189,7 @@ export default function AddTransactionForm({
         >
           {/* Name */}
           <div>
-            <label style={labelStyle}>What did you buy?</label>
+            <label style={labelStyle}>What is it?</label>
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -255,8 +264,15 @@ export default function AddTransactionForm({
               <label style={labelStyle}>Where does this go?</label>
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 {[
-                  { value: "budget" as const, label: "Back into my budget" },
-                  { value: "grail_fund" as const, label: "Toward my grail" },
+                  { value: "budget" as const, label: "Back into my wallet" },
+                  ...(wishlistItems.length > 0
+                    ? [
+                        {
+                          value: "grail_fund" as const,
+                          label: "Reserve for a wishlist item",
+                        },
+                      ]
+                    : []),
                 ].map(({ value, label }) => (
                   <button
                     key={value}
@@ -284,6 +300,44 @@ export default function AddTransactionForm({
                   </button>
                 ))}
               </div>
+
+              {destination === "grail_fund" && wishlistItems.length > 0 && (
+                <div style={{ marginTop: 8 }}>
+                  <select
+                    value={reserveTargetId}
+                    onChange={(e) => setReserveTargetId(e.target.value)}
+                    style={{ ...inputStyle, appearance: "none" }}
+                  >
+                    {wishlistItems.map((item) => (
+                      <option key={item.id} value={item.id}>
+                        {item.isGrail ? `★ ${item.name} (grail)` : item.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "var(--pm-gray-text)",
+                      marginTop: 4,
+                    }}
+                  >
+                    Funds are set aside for this item, separate from your
+                    available wallet cash.
+                  </p>
+                </div>
+              )}
+
+              {wishlistItems.length === 0 && (
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "var(--pm-gray-text)",
+                    marginTop: 6,
+                  }}
+                >
+                  Add items to your wishlist to reserve sale money for them.
+                </p>
+              )}
             </div>
           )}
 

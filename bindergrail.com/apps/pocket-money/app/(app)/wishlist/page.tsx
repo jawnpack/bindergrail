@@ -4,6 +4,7 @@ import {
   getWishlistItems,
   getActiveGrail,
   getCustomTags,
+  getGrailFunds,
 } from "@/lib/pocket-money/queries";
 import WishlistClient from "./WishlistClient";
 
@@ -18,12 +19,18 @@ export default async function WishlistPage() {
 
   if (!user) return null;
 
-  const [profile, items, grail, customTags] = await Promise.all([
+  const [profile, items, grail, customTags, grailFunds] = await Promise.all([
     getUserProfile(supabase, user.id),
     getWishlistItems(supabase, user.id),
     getActiveGrail(supabase, user.id),
     getCustomTags(supabase, user.id),
+    getGrailFunds(supabase, user.id),
   ]);
+
+  const reservedByItem: Record<string, number> = {};
+  for (const fund of grailFunds) {
+    reservedByItem[fund.wishlist_item_id] = Number(fund.amount_saved);
+  }
 
   return (
     <WishlistClient
@@ -33,6 +40,7 @@ export default async function WishlistPage() {
       currency={profile.currency}
       items={items}
       customTags={customTags.map((t) => t.name)}
+      reservedByItem={reservedByItem}
       grailAmountSaved={grail?.fund?.amount_saved ?? 0}
     />
   );

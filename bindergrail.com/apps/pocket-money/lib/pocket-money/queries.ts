@@ -65,6 +65,11 @@ export interface GrailFundRow {
   amount_saved: number;
 }
 
+export interface GrailFundEntry {
+  wishlist_item_id: string;
+  amount_saved: number;
+}
+
 export interface UserProfileRow {
   display_name: string | null;
   avatar_color: string | null;
@@ -209,6 +214,18 @@ export async function getWishlistItems(
     .order("created_at", { ascending: false });
 
   return (data ?? []) as WishlistItemRow[];
+}
+
+export async function getGrailFunds(
+  supabase: SupabaseClient<Database>,
+  userId: string
+): Promise<GrailFundEntry[]> {
+  const { data } = await supabase
+    .from("pm_grail_fund")
+    .select("wishlist_item_id, amount_saved")
+    .eq("user_id", userId);
+
+  return (data ?? []) as GrailFundEntry[];
 }
 
 export async function getCustomTags(

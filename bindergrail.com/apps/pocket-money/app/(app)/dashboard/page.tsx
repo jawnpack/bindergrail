@@ -8,6 +8,8 @@ import {
   getActiveGrail,
   getCustomTags,
   getUserSettings,
+  getWishlistItems,
+  getGrailFunds,
 } from "@/lib/pocket-money/queries";
 import DashboardClient from "./DashboardClient";
 
@@ -35,16 +37,32 @@ export default async function DashboardPage() {
     initialMonth
   );
 
-  const [profile, allBudgets, allTransactions, holds, grail, customTags, settings] =
-    await Promise.all([
-      getUserProfile(supabase, user.id),
-      getAllBudgets(supabase, user.id),
-      getAllTransactions(supabase, user.id),
-      getPendingHolds(supabase, user.id),
-      getActiveGrail(supabase, user.id),
-      getCustomTags(supabase, user.id),
-      getUserSettings(supabase, user.id),
-    ]);
+  const [
+    profile,
+    allBudgets,
+    allTransactions,
+    holds,
+    grail,
+    customTags,
+    settings,
+    wishlistItems,
+    grailFunds,
+  ] = await Promise.all([
+    getUserProfile(supabase, user.id),
+    getAllBudgets(supabase, user.id),
+    getAllTransactions(supabase, user.id),
+    getPendingHolds(supabase, user.id),
+    getActiveGrail(supabase, user.id),
+    getCustomTags(supabase, user.id),
+    getUserSettings(supabase, user.id),
+    getWishlistItems(supabase, user.id),
+    getGrailFunds(supabase, user.id),
+  ]);
+
+  const reservedTotal = grailFunds.reduce(
+    (sum, f) => sum + Number(f.amount_saved),
+    0
+  );
 
   return (
     <DashboardClient
@@ -53,8 +71,12 @@ export default async function DashboardPage() {
       avatarColor={profile.avatar_color}
       currency={currentBudget.currency}
       allBudgets={allBudgets}
+      wishlistItems={wishlistItems
+        .filter((i) => i.status === "active")
+        .map((i) => ({ id: i.id, name: i.name, isGrail: i.is_grail }))}
       customTags={customTags.map((t) => t.name)}
       walletAmount={settings.cash_reserve}
+      reservedTotal={reservedTotal}
       allTransactions={allTransactions}
       holds={holds}
       grailItem={

@@ -19,6 +19,7 @@ interface WishlistClientProps {
   currency: string;
   items: WishlistItemRow[];
   customTags: string[];
+  reservedByItem: Record<string, number>;
   grailAmountSaved: number;
 }
 
@@ -41,6 +42,7 @@ export default function WishlistClient({
   currency,
   items,
   customTags,
+  reservedByItem,
   grailAmountSaved,
 }: WishlistClientProps) {
   const router = useRouter();
@@ -215,7 +217,7 @@ export default function WishlistClient({
           </div>
         </div>
 
-        {/* Right: cost + actions */}
+        {/* Right: cost + reserved + actions */}
         <div
           style={{
             display: "flex",
@@ -234,6 +236,17 @@ export default function WishlistClient({
               }}
             >
               {formatCurrency(item.target_price, currency)}
+            </span>
+          )}
+          {!isAcquired && (reservedByItem[item.id] ?? 0) > 0 && (
+            <span
+              style={{
+                fontSize: 10,
+                fontWeight: 500,
+                color: "var(--pm-amber-dark)",
+              }}
+            >
+              {formatCurrency(reservedByItem[item.id], currency)} reserved
             </span>
           )}
           {!isAcquired && (

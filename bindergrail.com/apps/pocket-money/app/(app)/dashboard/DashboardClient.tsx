@@ -51,6 +51,12 @@ interface GrailItem {
   amountSaved: number;
 }
 
+interface WishlistPickerItem {
+  id: string;
+  name: string;
+  isGrail: boolean;
+}
+
 interface MonthlyBudget {
   year: number;
   month: number;
@@ -67,8 +73,10 @@ interface DashboardClientProps {
   allTransactions: Transaction[];
   holds: Hold[];
   grailItem: GrailItem | null;
+  wishlistItems: WishlistPickerItem[];
   customTags: string[];
   walletAmount: number;
+  reservedTotal: number;
   initialYear: number;
   initialMonth: number;
 }
@@ -89,8 +97,10 @@ export default function DashboardClient({
   allTransactions,
   holds,
   grailItem,
+  wishlistItems,
   customTags,
   walletAmount,
+  reservedTotal,
   initialYear,
   initialMonth,
 }: DashboardClientProps) {
@@ -157,9 +167,9 @@ export default function DashboardClient({
   function handleTxSuccess(name: string, type: string, destination?: string) {
     setShowAddTx(false);
     if (type === "sale" && destination === "grail_fund") {
-      setToast("Sale proceeds sent to your Grail Fund.");
+      setToast("Sale logged. Funds reserved for your wishlist item.");
     } else if (type === "sale") {
-      setToast("Sale proceeds added to your Bag.");
+      setToast("Sale logged. Funds added to your wallet.");
     } else if (type === "return") {
       setToast("Return logged.");
     } else {
@@ -232,52 +242,86 @@ export default function DashboardClient({
           {/* Wallet */}
           <div
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
               padding: "10px 20px",
               backgroundColor: "var(--pm-white)",
               borderBottom: "0.5px solid var(--pm-gray-border)",
             }}
           >
-            <div>
-              <p
-                style={{
-                  fontSize: 10,
-                  fontWeight: 500,
-                  color: "var(--pm-gray-text)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.06em",
-                  marginBottom: 1,
-                }}
-              >
-                Wallet
-              </p>
-              <p
-                style={{
-                  fontSize: 16,
-                  fontWeight: 500,
-                  color: "var(--pm-ink)",
-                }}
-              >
-                {formatCurrency(walletAmount, currency)}
-              </p>
-            </div>
-            <button
-              onClick={() => setShowEditWallet(true)}
+            <div
               style={{
-                border: "0.5px solid var(--pm-gray-border)",
-                borderRadius: 6,
-                padding: "4px 10px",
-                fontSize: 11,
-                backgroundColor: "var(--pm-white)",
-                color: "var(--pm-gray-text)",
-                cursor: "pointer",
-                fontFamily: "inherit",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              edit
-            </button>
+              <div>
+                <p
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 500,
+                    color: "var(--pm-gray-text)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    marginBottom: 1,
+                  }}
+                >
+                  Wallet
+                </p>
+                <p
+                  style={{
+                    fontSize: 16,
+                    fontWeight: 500,
+                    color: "var(--pm-ink)",
+                  }}
+                >
+                  {formatCurrency(walletAmount + reservedTotal, currency)}
+                </p>
+              </div>
+              <button
+                onClick={() => setShowEditWallet(true)}
+                style={{
+                  border: "0.5px solid var(--pm-gray-border)",
+                  borderRadius: 6,
+                  padding: "4px 10px",
+                  fontSize: 11,
+                  backgroundColor: "var(--pm-white)",
+                  color: "var(--pm-gray-text)",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                }}
+              >
+                edit
+              </button>
+            </div>
+
+            {/* Buckets */}
+            <div
+              style={{
+                display: "flex",
+                gap: 14,
+                marginTop: 4,
+              }}
+            >
+              <span style={{ fontSize: 11, color: "var(--pm-gray-text)" }}>
+                available{" "}
+                <span style={{ fontWeight: 500, color: "var(--pm-green-dark)" }}>
+                  {formatCurrency(walletAmount, currency)}
+                </span>
+              </span>
+              <Link
+                href="/wishlist"
+                style={{
+                  fontSize: 11,
+                  color: "var(--pm-gray-text)",
+                  textDecoration: "none",
+                }}
+              >
+                reserved{" "}
+                <span style={{ fontWeight: 500, color: "var(--pm-amber-dark)" }}>
+                  {formatCurrency(reservedTotal, currency)}
+                </span>
+              </Link>
+            </div>
           </div>
 
           {grailItem && (
@@ -342,7 +386,7 @@ export default function DashboardClient({
         <AddTransactionForm
           userId={userId}
           currency={currency}
-          grailItemId={grailItem?.id ?? null}
+          wishlistItems={wishlistItems}
           customTags={customTags}
           onClose={() => setShowAddTx(false)}
           onSuccess={handleTxSuccess}
