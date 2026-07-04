@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/client";
 import Topbar from "@/components/layout/Topbar";
 import GrailStrip from "@/components/dashboard/GrailStrip";
 import AddWishlistItemForm from "@/components/wishlist/AddWishlistItemForm";
+import EditWishlistItemForm from "@/components/wishlist/EditWishlistItemForm";
+import AddFundsForm from "@/components/wishlist/AddFundsForm";
 import GrailMoment from "@/components/wishlist/GrailMoment";
 import Toast from "@/components/forms/Toast";
 import { formatCurrency } from "@/lib/pocket-money/budget";
@@ -20,6 +22,7 @@ interface WishlistClientProps {
   items: WishlistItemRow[];
   customTags: string[];
   reservedByItem: Record<string, number>;
+  availableCash: number;
   grailAmountSaved: number;
 }
 
@@ -43,12 +46,15 @@ export default function WishlistClient({
   items,
   customTags,
   reservedByItem,
+  availableCash,
   grailAmountSaved,
 }: WishlistClientProps) {
   const router = useRouter();
   const supabase = createClient();
 
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingItem, setEditingItem] = useState<WishlistItemRow | null>(null);
+  const [fundingItem, setFundingItem] = useState<WishlistItemRow | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const [grailMomentName, setGrailMomentName] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -128,6 +134,11 @@ export default function WishlistClient({
 
   function renderRow(item: WishlistItemRow, isAcquired: boolean) {
     const tagStyle = item.tag ? getTagStyle(item.tag) : null;
+    const reserved = reservedByItem[item.id] ?? 0;
+    const funded =
+      item.target_price != null &&
+      item.target_price > 0 &&
+      reserved >= item.target_price;
 
     return (
       <div
@@ -139,6 +150,8 @@ export default function WishlistClient({
           padding: "12px 20px",
           borderBottom: "0.5px solid var(--pm-gray-border)",
           opacity: isAcquired ? 0.55 : 1,
+          backgroundColor:
+            funded && !isAcquired ? "var(--pm-amber-light)" : undefined,
         }}
       >
         {/* Dot */}
@@ -149,6 +162,8 @@ export default function WishlistClient({
             borderRadius: "50%",
             backgroundColor: isAcquired
               ? "var(--pm-gray-border)"
+              : funded
+              ? "var(--pm-amber-mid)"
               : "var(--pm-green-mid)",
             flexShrink: 0,
             marginTop: 5,
@@ -165,6 +180,23 @@ export default function WishlistClient({
             }}
           >
             {item.name}
+            {funded && !isAcquired && (
+              <span
+                style={{
+                  marginLeft: 6,
+                  fontSize: 9,
+                  fontWeight: 500,
+                  padding: "1px 6px",
+                  borderRadius: 4,
+                  backgroundColor: "var(--pm-amber-mid)",
+                  color: "var(--pm-white)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.04em",
+                }}
+              >
+                ★ Funded
+              </span>
+            )}
           </p>
           {item.note && (
             <p
@@ -238,7 +270,7 @@ export default function WishlistClient({
               {formatCurrency(item.target_price, currency)}
             </span>
           )}
-          {!isAcquired && (reservedByItem[item.id] ?? 0) > 0 && (
+          {!isAcquired && reserved > 0 && (
             <span
               style={{
                 fontSize: 10,
@@ -246,11 +278,27 @@ export default function WishlistClient({
                 color: "var(--pm-amber-dark)",
               }}
             >
-              {formatCurrency(reservedByItem[item.id], currency)} reserved
+              {funded
+                ? `fully funded · ${formatCurrency(reserved, currency)}`
+                : `${formatCurrency(reserved, currency)} reserved`}
             </span>
           )}
           {!isAcquired && (
-            <div style={{ display: "flex", gap: 6 }}>
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+              <button
+                disabled={busy === item.id}
+                onClick={() => setFundingItem(item)}
+                style={smallButtonStyle}
+              >
+                + funds
+              </button>
+              <button
+                disabled={busy === item.id}
+                onClick={() => setEditingItem(item)}
+                style={smallButtonStyle}
+              >
+                edit
+              </button>
               {!item.is_grail && (
                 <button
                   disabled={busy === item.id}
@@ -306,11 +354,30 @@ export default function WishlistClient({
                 justifyContent: "flex-end",
                 gap: 6,
                 padding: "8px 20px",
-                backgroundColor: "var(--pm-green-lightest)",
+                backgroundColor:
+                  grail.target_price != null &&
+                  grail.target_price > 0 &&
+                  grailAmountSaved >= grail.target_price
+                    ? "var(--pm-amber-light)"
+                    : "var(--pm-green-lightest)",
                 borderBottom: "0.5px solid var(--pm-green-light)",
                 marginTop: -1,
               }}
             >
+              <button
+                disabled={busy === grail.id}
+                onClick={() => setFundingItem(grail)}
+                style={smallButtonStyle}
+              >
+                + funds
+              </button>
+              <button
+                disabled={busy === grail.id}
+                onClick={() => setEditingItem(grail)}
+                style={smallButtonStyle}
+              >
+                edit
+              </button>
               <button
                 disabled={busy === grail.id}
                 onClick={() => markAcquired(grail)}
@@ -414,6 +481,35 @@ export default function WishlistClient({
           onSuccess={(name) => {
             setShowAddForm(false);
             setToast(`${name} added to the hunt.`);
+            router.refresh();
+          }}
+        />
+      )}
+
+      {editingItem && (
+        <EditWishlistItemForm
+          item={editingItem}
+          customTags={customTags}
+          onClose={() => setEditingItem(null)}
+          onSuccess={(message) => {
+            setEditingItem(null);
+            setToast(message);
+            router.refresh();
+          }}
+        />
+      )}
+
+      {fundingItem && (
+        <AddFundsForm
+          userId={userId}
+          itemId={fundingItem.id}
+          itemName={fundingItem.name}
+          availableCash={availableCash}
+          currency={currency}
+          onClose={() => setFundingItem(null)}
+          onSuccess={(message) => {
+            setFundingItem(null);
+            setToast(message);
             router.refresh();
           }}
         />
