@@ -103,11 +103,14 @@ export default function AddTransactionForm({
 
       const { error: fundWriteError } = fundReadError
         ? { error: fundReadError }
-        : await supabase.from("pm_grail_fund").upsert({
-            user_id: userId,
-            wishlist_item_id: reserveTargetId,
-            amount_saved: currentSaved + parseFloat(amount),
-          });
+        : await supabase.from("pm_grail_fund").upsert(
+            {
+              user_id: userId,
+              wishlist_item_id: reserveTargetId,
+              amount_saved: currentSaved + parseFloat(amount),
+            },
+            { onConflict: "user_id,wishlist_item_id" }
+          );
 
       if (fundWriteError) {
         setLoading(false);
