@@ -6,6 +6,8 @@ export const metadata: Metadata = {
     "Exclusive sleeper card coverage, key buying moments, and market alerts — premium Pokémon TCG analysis delivered every week.",
   alternates: { canonical: "https://bindergrail.com/upgrade" },
   openGraph: {
+    type: "website",
+    siteName: "Binder Grail",
     title: "Go Premium — Common Rare by Binder Grail",
     description:
       "Exclusive sleeper card coverage, key buying moments, and market alerts — premium Pokémon TCG analysis delivered every week.",

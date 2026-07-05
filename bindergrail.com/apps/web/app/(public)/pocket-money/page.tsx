@@ -36,6 +36,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: "https://bindergrail.com/pocket-money" },
   openGraph: {
+    type: "website",
+    siteName: "Binder Grail",
     title: "Pocket Money — Hobby Budget App with Wallet Buckets",
     description:
       "Set a monthly budget, split your cash into spending buckets, track holds before they land, and save toward your grail. Free, built for collectors.",

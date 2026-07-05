@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   alternates: { canonical: "https://bindergrail.com/origins" },
   openGraph: {
+    type: "website",
+    siteName: "Binder Grail",
     title: "Origins — Pokémon TCG Collection Tracker",
     description:
       "Track every card you own. Search the full Pokémon TCG database, log condition and price paid, and see your collection value at a glance.",

@@ -8,6 +8,8 @@ export const metadata: Metadata = {
     "Pokémon TCG investing and collecting guides — sealed product strategy, grading, market timing, and more.",
   alternates: { canonical: "https://bindergrail.com/blog" },
   openGraph: {
+    type: "website",
+    siteName: "Binder Grail",
     title: "All Posts — Pokémon TCG Guides & Market Analysis",
     description:
       "Pokémon TCG investing and collecting guides — sealed product strategy, grading, market timing, and more.",

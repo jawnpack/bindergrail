@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description:
     "Binder Grail is the home for budget-conscious Pokémon TCG collectors. Market analysis, collecting tools, and the Common Rare newsletter — built to help you collect consciously.",
   openGraph: {
+    type: "website",
+    siteName: "Binder Grail",
     title: "Binder Grail",
     description: "Pokémon TCG tools and market analysis for frugal collectors.",
     images: [{ url: "/api/og?variant=home", width: 1200, height: 630 }],

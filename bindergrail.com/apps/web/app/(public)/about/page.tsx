@@ -7,6 +7,8 @@ export const metadata: Metadata = {
     "A Pokémon TCG platform for collectors who have a life outside of buying and selling cards. Built by a collector, for collectors.",
   alternates: { canonical: "https://bindergrail.com/about" },
   openGraph: {
+    type: "website",
+    siteName: "Binder Grail",
     title: "About Binder Grail",
     description:
       "A Pokémon TCG platform for collectors who have a life outside of buying and selling cards.",
