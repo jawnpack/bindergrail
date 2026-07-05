@@ -21,7 +21,7 @@ const PM_OG = existsSync(join(process.cwd(), "public", PM_OG_FILE))
 export const metadata: Metadata = {
   title: "Pocket Money — Hobby Budget App with Wallet Buckets",
   description:
-    "Free hobby budgeting app for collectors. Set a monthly budget, split your cash into buckets like sneakers and TCG, track pending holds, and save toward your grail. Envelope budgeting built for the way collectors actually spend.",
+    "Free hobby budget app with wallet buckets, holds, and a grail fund. No bank linking, ever. Track collecting money the way you actually spend it.",
   keywords: [
     "hobby budget app",
     "budgeting app for collectors",
@@ -49,6 +49,14 @@ const FAQS = [
   {
     q: "Is Pocket Money free?",
     a: "Yes. Pocket Money is completely free. Create an account and your login works across every Binder Grail tool.",
+  },
+  {
+    q: "Does it connect to my bank?",
+    a: "No, and it never will. Pocket Money is privacy-first: you log transactions yourself, which takes seconds and keeps your financial accounts completely out of it. Nothing to link, nothing to leak.",
+  },
+  {
+    q: "Is it only for Pokémon cards?",
+    a: "No. It was built by a collector for hobby money of every kind. Buckets and custom tags work just as well for sneakers, gaming, vinyl, or whatever you collect.",
   },
   {
     q: "What are wallet buckets?",
@@ -330,8 +338,8 @@ export default function PocketMoneyPage() {
                 body: "Up to 3 tags per transaction from the built-in set plus 10 custom tags of your own. Every entry is editable after the fact.",
               },
               {
-                title: "One account, every tool",
-                body: "Your Binder Grail login works across the whole family of collector tools. Free, no card required.",
+                title: "Sales and returns",
+                body: "Money coming back in goes where you say: into your pocket, into a bucket, or reserved for a wishlist item. Your budget stays honest either way.",
               },
             ].map((f) => (
               <div

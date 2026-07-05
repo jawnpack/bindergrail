@@ -1,496 +1,113 @@
-export default function PocketMoneyScreenshotStrip() {
-  return (
-    <section style={{ backgroundColor: "#EAF0EB", padding: "24px 0 28px" }}>
-      {/* Label */}
-      <p
-        style={{
-          fontSize: 9,
-          fontWeight: 600,
-          textTransform: "uppercase",
-          letterSpacing: "0.14em",
-          color: "#6A9470",
-          paddingLeft: 24,
-          marginBottom: 14,
-        }}
-      >
-        App preview · scroll to see more
-      </p>
+import { existsSync } from "fs";
+import { join } from "path";
 
-      {/* Scroll container */}
+// Real app screenshots, rendered only when the file exists under
+// public/images/pocket-money/. Shot list (save as PNG, exact filenames):
+//   pm-dashboard-desktop.png  — full desktop dashboard, ~1900×1000 (16:9-ish)
+//   pm-add-transaction.png    — the "Log a transaction" modal, ~840×1500 portrait
+//   pm-wishlist-grail.png     — wishlist page with grail + reserved, ~1200×1000
+//   pm-mobile-dashboard.png   — narrow browser/phone view, ~750×1500 portrait
+const SCREENSHOTS: { file: string; caption: string; wide: boolean }[] = [
+  {
+    file: "pm-dashboard-desktop.png",
+    caption: "The dashboard: budget, wallet buckets, holds, and the full log",
+    wide: true,
+  },
+  {
+    file: "pm-add-transaction.png",
+    caption: "Log a spend, return, or sale in seconds",
+    wide: false,
+  },
+  {
+    file: "pm-wishlist-grail.png",
+    caption: "The wishlist, with funds reserved toward your grail",
+    wide: true,
+  },
+  {
+    file: "pm-mobile-dashboard.png",
+    caption: "Works great on your phone",
+    wide: false,
+  },
+];
+
+export default function PocketMoneyScreenshotStrip() {
+  const available = SCREENSHOTS.filter((s) =>
+    existsSync(join(process.cwd(), "public/images/pocket-money", s.file))
+  );
+
+  if (available.length === 0) return null;
+
+  return (
+    <section style={{ backgroundColor: "#2A4230", padding: "56px 0" }}>
+      <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 24px" }}>
+        <h2
+          style={{
+            fontFamily: "var(--font-playfair), Georgia, serif",
+            fontWeight: 700,
+            fontSize: 26,
+            color: "#F5F0E8",
+            marginBottom: 6,
+          }}
+        >
+          See it in action
+        </h2>
+        <p style={{ fontSize: 13, color: "#8AAE90", marginBottom: 28 }}>
+          Real screenshots, no mockups. This is the app you get.
+        </p>
+      </div>
+
       <div
         style={{
           display: "flex",
-          gap: 16,
+          gap: 20,
           overflowX: "auto",
-          paddingLeft: 24,
-          paddingRight: 24,
-          paddingBottom: 10,
+          padding: "0 max(24px, calc((100% - 960px) / 2)) 8px",
           scrollbarWidth: "thin",
-          scrollbarColor: "#3D5C42 #C8D8CA",
         }}
       >
-        {/* ── FRAME 1: Desktop browser ─────────────────────────── */}
-        <div
-          style={{
-            flexShrink: 0,
-            backgroundColor: "#2A4230",
-            borderRadius: 10,
-            padding: "8px 8px 5px",
-            width: 290,
-          }}
-        >
-          {/* Traffic lights */}
-          <div style={{ display: "flex", gap: 4, marginBottom: 6 }}>
-            <div style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#E24B4A" }} />
-            <div style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#EF9F27" }} />
-            <div style={{ width: 5, height: 5, borderRadius: "50%", backgroundColor: "#639922" }} />
-          </div>
-
-          {/* Screen */}
-          <div style={{ backgroundColor: "#F5F0E8", borderRadius: 6, overflow: "hidden" }}>
-            {/* Nav */}
-            <div
-              style={{
-                backgroundColor: "#3D5C42",
-                padding: "5px 10px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-dm-sans), Arial, sans-serif",
-                  fontWeight: 700,
-                  fontSize: 10,
-                  color: "#F5F0E8",
-                }}
-              >
-                Pocket <span style={{ color: "#B0D4B8" }}>Money</span>
-              </span>
-              <span
-                style={{
-                  fontFamily: "var(--font-dm-sans), Arial, sans-serif",
-                  fontSize: 6,
-                  color: "#6A9470",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                }}
-              >
-                a Binder Grail app
-              </span>
-            </div>
-
-            {/* Body */}
-            <div style={{ padding: 10, backgroundColor: "#F5F0E8" }}>
-              {/* Stats row */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 1fr",
-                  gap: 5,
-                  marginBottom: 6,
-                }}
-              >
-                {[
-                  { label: "Spent", value: "$184", valueColor: "#2C2A22" },
-                  { label: "Remaining", value: "$116", valueColor: "#3D5C42" },
-                  { label: "Budget", value: "$300", valueColor: "#2C2A22" },
-                ].map(({ label, value, valueColor }) => (
-                  <div
-                    key={label}
-                    style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #C8D8CA",
-                      borderRadius: 4,
-                      padding: 5,
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: 6,
-                        color: "#8AAE90",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.08em",
-                        marginBottom: 2,
-                      }}
-                    >
-                      {label}
-                    </div>
-                    <div
-                      style={{
-                        fontFamily: "var(--font-playfair), Georgia, serif",
-                        fontWeight: 700,
-                        fontSize: 12,
-                        color: valueColor,
-                      }}
-                    >
-                      {value}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Budget bar card */}
-              <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  border: "1px solid #C8D8CA",
-                  borderRadius: 4,
-                  padding: "7px 8px",
-                  marginBottom: 6,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 4,
-                  }}
-                >
-                  <span style={{ fontSize: 7, fontWeight: 500, color: "#2A4230" }}>April 2026</span>
-                  <span style={{ fontSize: 7, color: "#3D5C42", fontWeight: 600 }}>61%</span>
-                </div>
-                {/* Track */}
-                <div
-                  style={{
-                    backgroundColor: "#EAF0EB",
-                    height: 5,
-                    borderRadius: 3,
-                    overflow: "hidden",
-                    marginBottom: 4,
-                  }}
-                >
-                  <div
-                    style={{
-                      backgroundColor: "#3D5C42",
-                      height: "100%",
-                      width: "61%",
-                      borderRadius: 3,
-                    }}
-                  />
-                </div>
-                <div style={{ fontSize: 6, color: "#8AAE90" }}>
-                  Packs $80 · Singles $64 · Sealed $40
-                </div>
-              </div>
-
-              {/* Entry list */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                {[
-                  { name: "Obsidian Flames booster box", date: "Apr 6", pill: "SEALED", amount: "$160" },
-                  { name: "Greninja ex SIR raw", date: "Apr 3", pill: "SINGLES", amount: "$24" },
-                ].map(({ name, date, pill, amount }) => (
-                  <div
-                    key={name}
-                    style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #C8D8CA",
-                      borderRadius: 3,
-                      padding: "4px 8px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: 7, fontWeight: 500, color: "#2A4230", marginBottom: 1 }}>{name}</div>
-                      <div style={{ fontSize: 6, color: "#8AAE90" }}>{date}</div>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                      <span
-                        style={{
-                          fontSize: 6,
-                          fontWeight: 600,
-                          backgroundColor: "#EAF0EB",
-                          color: "#3D5C42",
-                          borderRadius: 3,
-                          padding: "1px 4px",
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        {pill}
-                      </span>
-                      <span style={{ fontSize: 8, fontWeight: 600, color: "#3D5C42" }}>{amount}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── FRAME 2: Mobile — dashboard ──────────────────────── */}
-        <div
-          style={{
-            flexShrink: 0,
-            backgroundColor: "#2A4230",
-            borderRadius: 16,
-            padding: "6px 5px 5px",
-            width: 110,
-          }}
-        >
-          {/* Notch */}
-          <div
+        {available.map((shot) => (
+          <figure
+            key={shot.file}
             style={{
-              width: 30,
-              height: 4,
-              backgroundColor: "#1A2E1E",
-              borderRadius: 2,
-              margin: "0 auto 5px",
+              flexShrink: 0,
+              width: shot.wide ? "min(680px, 85vw)" : "min(300px, 70vw)",
+              margin: 0,
             }}
-          />
-          {/* Screen */}
-          <div style={{ backgroundColor: "#F5F0E8", borderRadius: 10, overflow: "hidden" }}>
-            {/* Nav */}
+          >
             <div
               style={{
-                backgroundColor: "#3D5C42",
-                padding: "6px 8px",
+                backgroundColor: "#1A2E1E",
+                borderRadius: 12,
+                padding: 8,
+                border: "1px solid #4A7052",
               }}
             >
-              <span
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`/images/pocket-money/${shot.file}`}
+                alt={shot.caption}
+                loading="lazy"
+                decoding="async"
                 style={{
-                  fontFamily: "var(--font-dm-sans), Arial, sans-serif",
-                  fontWeight: 700,
-                  fontSize: 8,
-                  color: "#F5F0E8",
-                }}
-              >
-                Pocket <span style={{ color: "#B0D4B8" }}>Money</span>
-              </span>
-            </div>
-
-            {/* Body */}
-            <div style={{ padding: 8, backgroundColor: "#F5F0E8" }}>
-              {/* Month label */}
-              <div
-                style={{
-                  fontSize: 6,
-                  fontWeight: 500,
-                  color: "#6A9470",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  marginBottom: 4,
-                }}
-              >
-                April 2026
-              </div>
-              {/* Big number */}
-              <div
-                style={{
-                  fontFamily: "var(--font-playfair), Georgia, serif",
-                  fontSize: 16,
-                  fontWeight: 700,
-                  color: "#3D5C42",
-                  marginBottom: 2,
-                }}
-              >
-                $184
-              </div>
-              {/* Sub */}
-              <div style={{ fontSize: 7, color: "#8AAE90", marginBottom: 8 }}>
-                of $300 budget · 61%
-              </div>
-              {/* Budget bar */}
-              <div
-                style={{
-                  backgroundColor: "#EAF0EB",
-                  height: 6,
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  marginBottom: 6,
-                }}
-              >
-                <div
-                  style={{
-                    backgroundColor: "#3D5C42",
-                    height: "100%",
-                    width: "61%",
-                    borderRadius: 3,
-                  }}
-                />
-              </div>
-
-              {/* Entry rows */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                {[
-                  { name: "Booster box", category: "Sealed", amount: "$160" },
-                  { name: "Singles", category: "Singles", amount: "$24" },
-                ].map(({ name, category, amount }) => (
-                  <div
-                    key={name}
-                    style={{
-                      backgroundColor: "#FFFFFF",
-                      border: "1px solid #C8D8CA",
-                      borderRadius: 4,
-                      padding: "5px 6px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: 7, color: "#2A4230", marginBottom: 1 }}>{name}</div>
-                      <div style={{ fontSize: 6, color: "#8AAE90" }}>{category}</div>
-                    </div>
-                    <span style={{ fontSize: 8, fontWeight: 600, color: "#3D5C42" }}>{amount}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── FRAME 3: Mobile — log purchase screen ────────────── */}
-        <div
-          style={{
-            flexShrink: 0,
-            backgroundColor: "#2A4230",
-            borderRadius: 16,
-            padding: "6px 5px 5px",
-            width: 110,
-          }}
-        >
-          {/* Notch */}
-          <div
-            style={{
-              width: 30,
-              height: 4,
-              backgroundColor: "#1A2E1E",
-              borderRadius: 2,
-              margin: "0 auto 5px",
-            }}
-          />
-          {/* Screen */}
-          <div style={{ backgroundColor: "#F5F0E8", borderRadius: 10, overflow: "hidden" }}>
-            {/* Nav */}
-            <div
-              style={{
-                backgroundColor: "#3D5C42",
-                padding: "6px 8px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span
-                style={{
-                  fontFamily: "var(--font-dm-sans), Arial, sans-serif",
-                  fontWeight: 700,
-                  fontSize: 8,
-                  color: "#F5F0E8",
-                }}
-              >
-                Pocket <span style={{ color: "#B0D4B8" }}>Money</span>
-              </span>
-              <span style={{ fontSize: 7, color: "#B0D4B8", fontWeight: 500 }}>+ Log</span>
-            </div>
-
-            {/* Body */}
-            <div style={{ padding: 8, backgroundColor: "#F5F0E8" }}>
-              {/* Section label */}
-              <div
-                style={{
-                  fontSize: 7,
-                  fontWeight: 500,
-                  color: "#6A9470",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.1em",
-                  marginBottom: 6,
-                }}
-              >
-                Log a purchase
-              </div>
-
-              {/* Description input */}
-              <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  border: "1px solid #C8D8CA",
-                  borderRadius: 4,
-                  padding: "4px 6px",
-                  fontSize: 7,
-                  color: "#B4B2A9",
-                  marginBottom: 5,
-                }}
-              >
-                Description...
-              </div>
-
-              {/* Amount input */}
-              <div
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  border: "1px solid #C8D8CA",
-                  borderRadius: 4,
-                  padding: "4px 6px",
-                  fontSize: 7,
-                  color: "#B4B2A9",
-                  marginBottom: 5,
-                }}
-              >
-                Amount: $
-              </div>
-
-              {/* Category selector */}
-              <div style={{ marginBottom: 8 }}>
-                <div
-                  style={{
-                    fontSize: 6,
-                    color: "#8AAE90",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                    marginBottom: 3,
-                  }}
-                >
-                  Category
-                </div>
-                <div style={{ display: "flex", gap: 3, flexWrap: "wrap" }}>
-                  {[
-                    { label: "Packs", selected: true },
-                    { label: "Singles", selected: false },
-                    { label: "Sealed", selected: false },
-                  ].map(({ label, selected }) => (
-                    <div
-                      key={label}
-                      style={{
-                        fontSize: 6,
-                        fontWeight: 600,
-                        padding: "2px 5px",
-                        borderRadius: 3,
-                        backgroundColor: selected ? "#3D5C42" : "#EAF0EB",
-                        color: selected ? "#F5F0E8" : "#3D5C42",
-                      }}
-                    >
-                      {label}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Submit */}
-              <div
-                style={{
-                  backgroundColor: "#3D5C42",
-                  color: "#F5F0E8",
-                  borderRadius: 4,
-                  padding: "5px 0",
-                  fontSize: 7,
-                  fontWeight: 500,
-                  textAlign: "center",
                   width: "100%",
+                  height: "auto",
+                  display: "block",
+                  borderRadius: 6,
                 }}
-              >
-                Log purchase
-              </div>
+              />
             </div>
-          </div>
-        </div>
-
-        {/* To add real screenshots: save to public/images/apps/pocket-money-screen-N.jpg
-            and append framed <img> blocks here (see git history for the frame markup). */}
+            <figcaption
+              style={{
+                fontSize: 12,
+                color: "#B0D4B8",
+                marginTop: 10,
+                lineHeight: 1.5,
+              }}
+            >
+              {shot.caption}
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </section>
   );
