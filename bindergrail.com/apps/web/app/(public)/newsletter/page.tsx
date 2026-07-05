@@ -5,7 +5,7 @@ import GrainOverlay from "@/components/GrainOverlay";
 import NewsletterArchive from "./NewsletterArchive";
 
 export const metadata: Metadata = {
-  title: "Newsletter Archive | Binder Grail",
+  title: "Newsletter Archive",
   description: "Every issue of Common Rare — Pokémon TCG market analysis and buying advice for frugal collectors.",
   robots: { index: false, follow: false },
 };

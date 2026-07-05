@@ -3,9 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
+import { BLOG_IMAGE_DIMENSIONS } from "@/lib/blog-images";
 import GrainOverlay from "@/components/GrainOverlay";
 import SignUpForm from "@/components/SignUpForm";
 import ArticleHero from "@/components/ArticleHero";
+import JsonLd from "@/components/JsonLd";
 import type { Metadata } from "next";
 
 export async function generateStaticParams() {
@@ -34,6 +36,7 @@ export async function generateMetadata({
       description: meta.description,
       type: "article",
       publishedTime: meta.date,
+      modifiedTime: meta.updated ?? meta.date,
       images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
     },
     twitter: { card: "summary_large_image" },
@@ -115,15 +118,31 @@ const mdxComponents = {
     </blockquote>
   ),
   hr: () => <hr className="my-10" style={{ borderColor: "#D8D0C0" }} />,
-  img: ({ src, alt }: { src?: string; alt?: string }) => (
-    <div style={{ margin: "2rem 0", borderRadius: "8px", overflow: "hidden", border: "1px solid #D8D0C0" }}>
-      <img
-        src={src}
-        alt={alt || "Pokémon TCG blog image"}
-        style={{ width: "100%", height: "auto", display: "block", objectFit: "contain", maxHeight: "none" }}
-      />
-    </div>
-  ),
+  img: ({ src, alt }: { src?: string; alt?: string }) => {
+    const dims = src ? BLOG_IMAGE_DIMENSIONS[src] : undefined;
+    return (
+      <div style={{ margin: "2rem 0", borderRadius: "8px", overflow: "hidden", border: "1px solid #D8D0C0" }}>
+        {src && dims ? (
+          <Image
+            src={src}
+            alt={alt || "Pokémon TCG blog image"}
+            width={dims.width}
+            height={dims.height}
+            sizes="(max-width: 728px) 100vw, 680px"
+            style={{ width: "100%", height: "auto", display: "block" }}
+          />
+        ) : (
+          <img
+            src={src}
+            alt={alt || "Pokémon TCG blog image"}
+            loading="lazy"
+            decoding="async"
+            style={{ width: "100%", height: "auto", display: "block", objectFit: "contain", maxHeight: "none" }}
+          />
+        )}
+      </div>
+    );
+  },
 };
 
 export default async function BlogPostPage({
@@ -137,6 +156,10 @@ export default async function BlogPostPage({
 
   const { meta, content } = post;
 
+  const postUrl = `https://bindergrail.com/blog/${slug}`;
+  const firstBodyImage = content.match(/\/images\/blog\/[\w.-]+/)?.[0];
+  const articleImage = meta.image ?? firstBodyImage;
+
   const jsonLd = [
     {
       "@context": "https://schema.org",
@@ -144,9 +167,22 @@ export default async function BlogPostPage({
       headline: meta.title,
       description: meta.description,
       datePublished: meta.date,
-      author: { "@type": "Person", name: "Jon Paek" },
-      publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
-      url: `https://bindergrail.com/blog/${slug}`,
+      dateModified: meta.updated ?? meta.date,
+      author: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
+      publisher: {
+        "@type": "Organization",
+        name: "Binder Grail",
+        url: "https://bindergrail.com",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://bindergrail.com/images/binder_grail_logo.png",
+        },
+      },
+      ...(articleImage
+        ? { image: `https://bindergrail.com${articleImage}` }
+        : {}),
+      mainEntityOfPage: { "@type": "WebPage", "@id": postUrl },
+      url: postUrl,
     },
     {
       "@context": "https://schema.org",
@@ -154,17 +190,14 @@ export default async function BlogPostPage({
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: "https://bindergrail.com" },
         { "@type": "ListItem", position: 2, name: "Blog", item: "https://bindergrail.com/blog" },
-        { "@type": "ListItem", position: 3, name: meta.title, item: `https://bindergrail.com/blog/${slug}` },
+        { "@type": "ListItem", position: 3, name: meta.title, item: postUrl },
       ],
     },
   ];
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <JsonLd data={jsonLd} />
       <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
         <div className="max-w-[680px] mx-auto px-6">
           {/* Back link */}
@@ -180,11 +213,16 @@ export default async function BlogPostPage({
           <ArticleHero
             title={meta.title}
             tag={meta.tag as "Market" | "Advice" | "News"}
-            date={new Date(meta.date).toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
+            date={
+              new Date(meta.date).toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              }) +
+              (meta.updated
+                ? ` · Updated ${new Date(meta.updated).toLocaleDateString("en-US", { month: "long", year: "numeric" })}`
+                : "")
+            }
           />
 
           {/* Optional hero image from frontmatter */}

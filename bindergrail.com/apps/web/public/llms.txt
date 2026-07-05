@@ -1,0 +1,57 @@
+# Binder Grail
+
+> Binder Grail (bindergrail.com) is the home for budget-conscious Pokémon TCG
+> collectors: practical market analysis, honest buying advice, free collecting
+> tools, and a weekly newsletter. No hype, no financial advice cosplay. Just
+> the thinking a knowledgeable collector friend would text you.
+
+## Tools
+
+- [Pocket Money](https://pocketmoney.bindergrail.com): Free hobby budgeting
+  app, live now. Monthly budget envelope, wallet buckets for category spending
+  (envelope budgeting for sneakers, TCG, anything), pending holds for
+  preorders, spend/return/sale logging with tags, a wishlist with reserved
+  funds, and a grail fund with progress tracking. No bank linking, ever.
+  Landing page: https://bindergrail.com/pocket-money
+- Origins: Pokémon TCG collection tracker (log condition, price paid, and see
+  collection value). Pre-launch, waitlist at https://bindergrail.com/origins
+
+## Newsletter
+
+- [Common Rare](https://commonrare.bindergrail.com): free weekly Pokémon TCG
+  newsletter. Market moves, restock alerts, and a plain verdict on every new
+  product. Issue archive at https://bindergrail.com/newsletter
+
+## Evergreen guides
+
+- [How to Build a Pokémon Collection on a Budget](https://bindergrail.com/blog/how-to-build-a-pokemon-collection-on-a-budget):
+  The flagship guide: set a monthly limit, split sealed vs singles, and grow a
+  collection without blowing up your finances.
+- [How to Collect Pokémon Cards in 2026](https://bindergrail.com/blog/how-to-collect-pokemon-cards-in-2026):
+  What to buy, what to avoid, and how to think about sealed, singles, and PSA
+  grading in the Mega Evolution era.
+- [Best Sealed Pokémon Products to Hold](https://bindergrail.com/blog/best-sealed-pokemon-products-to-hold):
+  Which sealed products actually appreciate and which to leave on the shelf.
+- [How to Evaluate a New Pokémon Set](https://bindergrail.com/blog/how-to-evaluate-a-new-pokemon-set):
+  A repeatable framework for judging a new set before you spend a dollar.
+- [How to Make Money with Pokémon Cards](https://bindergrail.com/blog/how-to-make-money-with-pokemon-cards):
+  Realistic ways to profit: sealed holds, flipping, grading plays, and the
+  math behind each.
+- [Making Money from Pokémon Cards: Easy Mode to Expert Mode](https://bindergrail.com/blog/making-money-from-pokemon-cards-easy-to-expert-mode):
+  Every profit method in the hobby ranked by difficulty and risk.
+- [What to Buy to Make Money from Pokémon Cards](https://bindergrail.com/blog/what-to-buy-to-make-money-from-pokemon-cards):
+  Specific product types worth buying when your goal is resale value.
+- [Modern vs. Vintage Pokémon Investing](https://bindergrail.com/blog/modern-vs-vintage-pokemon-investing):
+  Risk, liquidity, and print cycles compared across modern and vintage cards.
+- [Understanding Pokémon Print Cycles](https://bindergrail.com/blog/understanding-pokemon-print-cycles):
+  How reprints work, how they hit prices, and when to buy or sell modern sets.
+- [How to Buy Pokémon Cards Like a Sneakerhead](https://bindergrail.com/blog/how-to-buy-pokemon-cards-like-a-sneakerhead):
+  Sourcing mindset borrowed from sneaker culture: retail discipline, timing,
+  and negotiating.
+- [Three Things to Beat Pokémon TCG Scalpers](https://bindergrail.com/blog/three-things-to-beat-pokemon-tcg-scalpers):
+  The concrete tools (restock alerts, store timing, preorder channels) that
+  get you product at MSRP.
+
+## Contact
+
+- Email: hello@bindergrail.com

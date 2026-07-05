@@ -8,6 +8,8 @@ export type PostMeta = {
   slug: string;
   title: string;
   date: string;
+  /** Optional revision date (YYYY-MM-DD) — feeds dateModified + visible label */
+  updated?: string;
   description: string;
   tag: string;
   canonical?: string;

@@ -22,7 +22,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const issue = await getIssue(id);
-  if (!issue) return { title: "Issue Not Found | Binder Grail" };
+  if (!issue) return { title: "Issue Not Found" };
   return {
     title: `${issue.title} | Common Rare`,
     robots: { index: false, follow: false },

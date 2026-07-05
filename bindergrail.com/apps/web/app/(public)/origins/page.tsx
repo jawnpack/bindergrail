@@ -9,9 +9,10 @@
 import type { Metadata } from "next";
 import WaitlistForm from "@/components/WaitlistForm";
 import OriginsScreenshotStrip from "@/components/OriginsScreenshotStrip";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Origins — Pokémon TCG Collection Tracker | Binder Grail",
+  title: "Origins — Pokémon TCG Collection Tracker",
   description:
     "Track every card you own. Search the full Pokémon TCG database, log condition and price paid, and see your collection value at a glance. Coming soon from Binder Grail.",
   robots: { index: true, follow: true },
@@ -31,21 +32,18 @@ const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http:
 export default function OriginsPage() {
   return (
     <div style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "SoftwareApplication",
-            name: "Origins",
-            applicationCategory: "LifestyleApplication",
-            operatingSystem: "Web",
-            url: "https://bindergrail.com/origins",
-            description:
-              "Track every Pokémon card you own. Log condition and price paid, and see your collection value at a glance.",
-            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-            publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
-          }),
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Origins",
+          applicationCategory: "LifestyleApplication",
+          operatingSystem: "Web",
+          url: "https://bindergrail.com/origins",
+          description:
+            "Track every Pokémon card you own. Log condition and price paid, and see your collection value at a glance.",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
         }}
       />
       {/* ── Nav ────────────────────────────────────────────── */}

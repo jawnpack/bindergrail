@@ -8,9 +8,10 @@
 
 import type { Metadata } from "next";
 import PocketMoneyScreenshotStrip from "@/components/PocketMoneyScreenshotStrip";
+import JsonLd from "@/components/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Pocket Money — Hobby Budget App with Wallet Buckets | Binder Grail",
+  title: "Pocket Money — Hobby Budget App with Wallet Buckets",
   description:
     "Free hobby budgeting app for collectors. Set a monthly budget, split your cash into buckets like sneakers and TCG, track pending holds, and save toward your grail. Envelope budgeting built for the way collectors actually spend.",
   keywords: [
@@ -64,10 +65,8 @@ const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http:
 export default function PocketMoneyPage() {
   return (
     <div style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
+      <JsonLd
+        data={[
             {
               "@context": "https://schema.org",
               "@type": "SoftwareApplication",
@@ -98,8 +97,7 @@ export default function PocketMoneyPage() {
                 acceptedAnswer: { "@type": "Answer", text: f.a },
               })),
             },
-          ]),
-        }}
+        ]}
       />
       {/* ── Nav ────────────────────────────────────────────── */}
       <header style={{ backgroundColor: "#3D5C42" }}>
