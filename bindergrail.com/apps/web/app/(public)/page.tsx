@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Binder Grail",
     description: "Pokémon TCG tools and market analysis for frugal collectors.",
-    images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
+    images: [{ url: "/api/og?variant=home", width: 1200, height: 630 }],
   },
 };
 

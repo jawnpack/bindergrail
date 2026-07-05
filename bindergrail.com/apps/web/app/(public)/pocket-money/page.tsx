@@ -7,8 +7,16 @@
 // Export as PNG 2x transparent
 
 import type { Metadata } from "next";
+import { existsSync } from "fs";
+import { join } from "path";
 import PocketMoneyScreenshotStrip from "@/components/PocketMoneyScreenshotStrip";
 import JsonLd from "@/components/JsonLd";
+
+// Real app screenshot once provided; dynamic card until then.
+const PM_OG_FILE = "/images/og/pocket-money-og.png";
+const PM_OG = existsSync(join(process.cwd(), "public", PM_OG_FILE))
+  ? PM_OG_FILE
+  : `/api/og?title=${encodeURIComponent("Pocket Money: hobby budgeting with wallet buckets")}`;
 
 export const metadata: Metadata = {
   title: "Pocket Money — Hobby Budget App with Wallet Buckets",
@@ -32,9 +40,9 @@ export const metadata: Metadata = {
     description:
       "Set a monthly budget, split your cash into spending buckets, track holds before they land, and save toward your grail. Free, built for collectors.",
     url: "https://bindergrail.com/pocket-money",
-    images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
+    images: [{ url: PM_OG, width: 1200, height: 630 }],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: { card: "summary_large_image", images: [PM_OG] },
 };
 
 const FAQS = [

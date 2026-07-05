@@ -12,7 +12,13 @@ export const metadata: Metadata = {
     description:
       "Pokémon TCG investing and collecting guides — sealed product strategy, grading, market timing, and more.",
     url: "https://bindergrail.com/blog",
-    images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
+    images: [
+      {
+        url: `/api/og?title=${encodeURIComponent("Pokémon TCG guides and market analysis")}`,
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
   twitter: { card: "summary_large_image" },
 };
