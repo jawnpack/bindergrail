@@ -77,7 +77,7 @@ export default function EditWalletForm({
           }}
         >
           <p style={{ fontSize: 15, fontWeight: 500, color: "var(--pm-ink)" }}>
-            Your wallet
+            Your Pocket
           </p>
           <button
             onClick={onClose}
@@ -130,8 +130,9 @@ export default function EditWalletForm({
               marginTop: -6,
             }}
           >
-            Your total hobby cash on hand. Spends subtract from it, returns
-            and sales add back. Edit any time to reset it.
+            Your unassigned cash. Pocket spends subtract from it, returns and
+            sales add back. Bucket money is managed separately. Edit any time
+            to reset it.
           </p>
 
           {error && (

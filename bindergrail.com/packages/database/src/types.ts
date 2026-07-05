@@ -77,6 +77,7 @@ export type Database = {
           tags: string[]
           note: string | null
           destination: 'budget' | 'grail_fund' | null
+          bucket_id: string | null
           created_at: string
         }
         Insert: {
@@ -89,6 +90,7 @@ export type Database = {
           tags?: string[]
           note?: string | null
           destination?: 'budget' | 'grail_fund' | null
+          bucket_id?: string | null
         }
         Update: {
           type?: 'spend' | 'return' | 'sale'
@@ -99,6 +101,7 @@ export type Database = {
           tags?: string[]
           note?: string | null
           destination?: 'budget' | 'grail_fund' | null
+          bucket_id?: string | null
         }
         Relationships: []
       }
@@ -201,6 +204,25 @@ export type Database = {
         }
         Update: {
           opted_into_newsletter?: boolean
+        }
+        Relationships: []
+      }
+      pm_wallet_buckets: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          amount: number
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          name: string
+          amount?: number
+        }
+        Update: {
+          name?: string
+          amount?: number
         }
         Relationships: []
       }

@@ -14,11 +14,13 @@ interface Transaction {
   tags?: string[];
   note: string | null;
   destination?: "budget" | "grail_fund" | null;
+  bucket_id?: string | null;
 }
 
 interface TransactionLogProps {
   transactions: Transaction[];
   currency: string;
+  bucketNames?: Record<string, string>;
   onEdit?: (tx: Transaction) => void;
 }
 
@@ -59,6 +61,7 @@ const typeLabel: Record<Transaction["type"], string> = {
 export default function TransactionLog({
   transactions,
   currency,
+  bucketNames = {},
   onEdit,
 }: TransactionLogProps) {
   if (transactions.length === 0) {
@@ -197,6 +200,8 @@ export default function TransactionLog({
                   >
                     {tx.type === "sale" && tx.destination === "grail_fund"
                       ? "sale → grail"
+                      : tx.bucket_id && bucketNames[tx.bucket_id]
+                      ? `${typeLabel[tx.type]} · ${bucketNames[tx.bucket_id]}`
                       : typeLabel[tx.type]}
                   </p>
                 </div>

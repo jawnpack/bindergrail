@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(npm run:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(cp \"/Users/jonathanpaek/Downloads/files-4/binder_grail_logo_transparent.png\" /Users/jonathanpaek/bindergrail.com/bindergrail.com/public/images/binder_grail_logo.png)",
+      "Bash(cp \"/Users/jonathanpaek/Downloads/files-4/common_rare_logo_transparent.png\" /Users/jonathanpaek/bindergrail.com/bindergrail.com/public/images/common_rare_logo.png)",
+      "Bash(git commit -m ':*)"
     ]
   }
 }

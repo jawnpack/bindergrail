@@ -11,10 +11,16 @@ export interface WishlistPickerItem {
   isGrail: boolean;
 }
 
+export interface BucketOption {
+  id: string;
+  name: string;
+}
+
 interface AddTransactionFormProps {
   userId: string;
   currency: string;
   wishlistItems?: WishlistPickerItem[];
+  buckets?: BucketOption[];
   customTags?: string[];
   onClose: () => void;
   onSuccess: (name: string, type: string, destination?: string) => void;
@@ -44,6 +50,7 @@ export default function AddTransactionForm({
   userId,
   currency: _currency,
   wishlistItems = [],
+  buckets = [],
   customTags = [],
   onClose,
   onSuccess,
@@ -59,6 +66,7 @@ export default function AddTransactionForm({
   const [reserveTargetId, setReserveTargetId] = useState<string>(
     wishlistItems.find((i) => i.isGrail)?.id ?? wishlistItems[0]?.id ?? ""
   );
+  const [bucketId, setBucketId] = useState<string>("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -83,6 +91,10 @@ export default function AddTransactionForm({
         tags,
         note: note || null,
         destination: type === "sale" ? destination : null,
+        bucket_id:
+          type === "sale" && destination === "grail_fund"
+            ? null
+            : bucketId || null,
       });
 
     if (insertError) {
@@ -343,6 +355,40 @@ export default function AddTransactionForm({
               )}
             </div>
           )}
+
+          {/* Bucket (skipped for reserved sales) */}
+          {buckets.length > 0 &&
+            !(type === "sale" && destination === "grail_fund") && (
+              <div>
+                <label style={labelStyle}>
+                  {type === "spend" ? "Pay from" : "Deposit to"}
+                </label>
+                <select
+                  value={bucketId}
+                  onChange={(e) => setBucketId(e.target.value)}
+                  style={{ ...inputStyle, appearance: "none" }}
+                >
+                  <option value="">Pocket (unassigned cash)</option>
+                  {buckets.map((b) => (
+                    <option key={b.id} value={b.id}>
+                      {b.name}
+                    </option>
+                  ))}
+                </select>
+                {bucketId && (
+                  <p
+                    style={{
+                      fontSize: 10,
+                      color: "var(--pm-gray-text)",
+                      marginTop: 4,
+                    }}
+                  >
+                    Bucket transactions don&apos;t count against your monthly
+                    budget.
+                  </p>
+                )}
+              </div>
+            )}
 
           {/* Date */}
           <div>

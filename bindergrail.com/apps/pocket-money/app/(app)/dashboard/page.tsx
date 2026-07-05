@@ -10,6 +10,7 @@ import {
   getUserSettings,
   getWishlistItems,
   getGrailFunds,
+  getWalletBuckets,
 } from "@/lib/pocket-money/queries";
 import DashboardClient from "./DashboardClient";
 
@@ -47,6 +48,7 @@ export default async function DashboardPage() {
     settings,
     wishlistItems,
     grailFunds,
+    walletBuckets,
   ] = await Promise.all([
     getUserProfile(supabase, user.id),
     getAllBudgets(supabase, user.id),
@@ -57,6 +59,7 @@ export default async function DashboardPage() {
     getUserSettings(supabase, user.id),
     getWishlistItems(supabase, user.id),
     getGrailFunds(supabase, user.id),
+    getWalletBuckets(supabase, user.id),
   ]);
 
   const reservedTotal = grailFunds.reduce(
@@ -76,6 +79,7 @@ export default async function DashboardPage() {
         .map((i) => ({ id: i.id, name: i.name, isGrail: i.is_grail }))}
       customTags={customTags.map((t) => t.name)}
       walletAmount={settings.cash_reserve}
+      buckets={walletBuckets}
       reservedTotal={reservedTotal}
       allTransactions={allTransactions}
       holds={holds}

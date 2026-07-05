@@ -49,11 +49,16 @@ export function calcMonthTotals(
     type: string;
     amount: number;
     destination?: string | null;
+    bucket_id?: string | null;
   }>
 ) {
   let spent = 0;
   let inflow = 0;
   for (const t of transactions) {
+    // Bucket transactions live outside the monthly budget entirely —
+    // that money was already set aside from the wallet.
+    if (t.bucket_id) continue;
+
     if (t.type === "spend") {
       spent += Number(t.amount);
     } else if (t.type === "return") {

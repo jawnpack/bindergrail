@@ -12,6 +12,7 @@ import AddTransactionForm from "@/components/forms/AddTransactionForm";
 import EditTransactionForm from "@/components/forms/EditTransactionForm";
 import EditBudgetForm from "@/components/forms/EditBudgetForm";
 import EditWalletForm from "@/components/forms/EditWalletForm";
+import ManageBucketsForm from "@/components/forms/ManageBucketsForm";
 import Toast from "@/components/forms/Toast";
 import {
   calcMonthTotals,
@@ -33,6 +34,13 @@ interface Transaction {
   tags: string[];
   note: string | null;
   destination: "budget" | "grail_fund" | null;
+  bucket_id: string | null;
+}
+
+interface WalletBucket {
+  id: string;
+  name: string;
+  amount: number;
 }
 
 interface Hold {
@@ -76,6 +84,7 @@ interface DashboardClientProps {
   wishlistItems: WishlistPickerItem[];
   customTags: string[];
   walletAmount: number;
+  buckets: WalletBucket[];
   reservedTotal: number;
   initialYear: number;
   initialMonth: number;
@@ -100,6 +109,7 @@ export default function DashboardClient({
   wishlistItems,
   customTags,
   walletAmount,
+  buckets,
   reservedTotal,
   initialYear,
   initialMonth,
@@ -110,6 +120,7 @@ export default function DashboardClient({
   const [showAddTx, setShowAddTx] = useState(false);
   const [showEditBudget, setShowEditBudget] = useState(false);
   const [showEditWallet, setShowEditWallet] = useState(false);
+  const [showBuckets, setShowBuckets] = useState(false);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -149,6 +160,9 @@ export default function DashboardClient({
     allBudgets.find(
       (b) => b.year === selectedYear && b.month === selectedMonth
     )?.budget_amount ?? 0;
+
+  const bucketsTotal = buckets.reduce((sum, b) => sum + Number(b.amount), 0);
+  const bucketNames = Object.fromEntries(buckets.map((b) => [b.id, b.name]));
 
   const { spent, inflow } = calcMonthTotals(monthTxs);
   const remaining = getRemaining(budget, spent, inflow);
@@ -274,53 +288,87 @@ export default function DashboardClient({
                     color: "var(--pm-ink)",
                   }}
                 >
-                  {formatCurrency(walletAmount + reservedTotal, currency)}
+                  {formatCurrency(
+                    walletAmount + bucketsTotal + reservedTotal,
+                    currency
+                  )}
                 </p>
               </div>
-              <button
-                onClick={() => setShowEditWallet(true)}
-                style={{
-                  border: "0.5px solid var(--pm-gray-border)",
-                  borderRadius: 6,
-                  padding: "4px 10px",
-                  fontSize: 11,
-                  backgroundColor: "var(--pm-white)",
-                  color: "var(--pm-gray-text)",
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                }}
-              >
-                edit
-              </button>
+              <div style={{ display: "flex", gap: 6 }}>
+                <button
+                  onClick={() => setShowBuckets(true)}
+                  style={{
+                    border: "0.5px solid var(--pm-gray-border)",
+                    borderRadius: 6,
+                    padding: "4px 10px",
+                    fontSize: 11,
+                    backgroundColor: "var(--pm-white)",
+                    color: "var(--pm-gray-text)",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  buckets
+                </button>
+                <button
+                  onClick={() => setShowEditWallet(true)}
+                  style={{
+                    border: "0.5px solid var(--pm-gray-border)",
+                    borderRadius: 6,
+                    padding: "4px 10px",
+                    fontSize: 11,
+                    backgroundColor: "var(--pm-white)",
+                    color: "var(--pm-gray-text)",
+                    cursor: "pointer",
+                    fontFamily: "inherit",
+                  }}
+                >
+                  edit
+                </button>
+              </div>
             </div>
 
             {/* Buckets */}
             <div
               style={{
                 display: "flex",
-                gap: 14,
+                gap: 12,
                 marginTop: 4,
+                flexWrap: "wrap",
               }}
             >
               <span style={{ fontSize: 11, color: "var(--pm-gray-text)" }}>
-                available{" "}
+                pocket{" "}
                 <span style={{ fontWeight: 500, color: "var(--pm-green-dark)" }}>
                   {formatCurrency(walletAmount, currency)}
                 </span>
               </span>
-              <Link
-                href="/wishlist"
-                style={{
-                  fontSize: 11,
-                  color: "var(--pm-gray-text)",
-                  textDecoration: "none",
-                }}
-              >
-                reserved{" "}
-                <span style={{ fontWeight: 500, color: "var(--pm-amber-dark)" }}>
-                  {formatCurrency(reservedTotal, currency)}
+              {buckets.map((b) => (
+                <span
+                  key={b.id}
+                  style={{ fontSize: 11, color: "var(--pm-gray-text)" }}
+                >
+                  {b.name.toLowerCase()}{" "}
+                  <span style={{ fontWeight: 500, color: "var(--pm-ink)" }}>
+                    {formatCurrency(Number(b.amount), currency)}
+                  </span>
                 </span>
-              </Link>
+              ))}
+              {reservedTotal > 0 && (
+                <Link
+                  href="/wishlist"
+                  style={{
+                    fontSize: 11,
+                    color: "var(--pm-gray-text)",
+                    textDecoration: "none",
+                  }}
+                >
+                  reserved{" "}
+                  <span style={{ fontWeight: 500, color: "var(--pm-amber-dark)" }}>
+                    {formatCurrency(reservedTotal, currency)}
+                  </span>
+                </Link>
+              )}
             </div>
           </div>
 
@@ -359,6 +407,7 @@ export default function DashboardClient({
           <TransactionLog
             transactions={allTransactions}
             currency={currency}
+            bucketNames={bucketNames}
             onEdit={(tx) => setEditingTx(tx as Transaction)}
           />
         </div>
@@ -387,6 +436,7 @@ export default function DashboardClient({
           userId={userId}
           currency={currency}
           wishlistItems={wishlistItems}
+          buckets={buckets}
           customTags={customTags}
           onClose={() => setShowAddTx(false)}
           onSuccess={handleTxSuccess}
@@ -396,11 +446,26 @@ export default function DashboardClient({
       {editingTx && (
         <EditTransactionForm
           transaction={editingTx}
+          buckets={buckets}
           customTags={customTags}
           onClose={() => setEditingTx(null)}
           onSuccess={(message) => {
             setEditingTx(null);
             setToast(message);
+          }}
+        />
+      )}
+
+      {showBuckets && (
+        <ManageBucketsForm
+          userId={userId}
+          pocketAmount={walletAmount}
+          buckets={buckets}
+          currency={currency}
+          onClose={() => setShowBuckets(false)}
+          onChanged={(message) => {
+            setToast(message);
+            router.refresh();
           }}
         />
       )}

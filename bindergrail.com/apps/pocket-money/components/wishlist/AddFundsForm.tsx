@@ -235,7 +235,7 @@ export default function AddFundsForm({
             >
               {(
                 [
-                  { value: "wallet", label: "my wallet" },
+                  { value: "wallet", label: "my pocket" },
                   { value: "sale", label: "log a sale" },
                 ] as const
               ).map((btn, i) => (

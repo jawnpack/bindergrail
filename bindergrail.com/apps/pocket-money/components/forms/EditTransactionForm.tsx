@@ -14,10 +14,18 @@ interface EditableTransaction {
   tag: string | null;
   tags?: string[];
   note: string | null;
+  destination?: "budget" | "grail_fund" | null;
+  bucket_id?: string | null;
+}
+
+interface BucketOption {
+  id: string;
+  name: string;
 }
 
 interface EditTransactionFormProps {
   transaction: EditableTransaction;
+  buckets?: BucketOption[];
   customTags?: string[];
   onClose: () => void;
   onSuccess: (message: string) => void;
@@ -45,6 +53,7 @@ const labelStyle: React.CSSProperties = {
 
 export default function EditTransactionForm({
   transaction,
+  buckets = [],
   customTags = [],
   onClose,
   onSuccess,
@@ -63,6 +72,7 @@ export default function EditTransactionForm({
       : []
   );
   const [note, setNote] = useState(transaction.note ?? "");
+  const [bucketId, setBucketId] = useState(transaction.bucket_id ?? "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -88,6 +98,8 @@ export default function EditTransactionForm({
         tag: tags[0] ?? null,
         tags,
         note: note || null,
+        bucket_id:
+          transaction.destination === "grail_fund" ? null : bucketId || null,
       })
       .eq("id", transaction.id);
 
@@ -256,6 +268,27 @@ export default function EditTransactionForm({
               ))}
             </div>
           </div>
+
+          {/* Bucket (not editable for reserved sales) */}
+          {buckets.length > 0 && transaction.destination !== "grail_fund" && (
+            <div>
+              <label style={labelStyle}>
+                {type === "spend" ? "Pay from" : "Deposit to"}
+              </label>
+              <select
+                value={bucketId}
+                onChange={(e) => setBucketId(e.target.value)}
+                style={{ ...inputStyle, appearance: "none" }}
+              >
+                <option value="">Pocket (unassigned cash)</option>
+                {buckets.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Date */}
           <div>

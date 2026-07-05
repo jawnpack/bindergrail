@@ -24,6 +24,13 @@ export interface TransactionRow {
   tags: string[];
   note: string | null;
   destination: "budget" | "grail_fund" | null;
+  bucket_id: string | null;
+}
+
+export interface WalletBucketRow {
+  id: string;
+  name: string;
+  amount: number;
 }
 
 export interface CustomTagRow {
@@ -140,7 +147,7 @@ export async function getMonthTransactions(
   const monthStr = String(month).padStart(2, "0");
   const { data } = await supabase
     .from("pm_transactions")
-    .select("id, type, name, amount, date, tag, tags, note, destination")
+    .select("id, type, name, amount, date, tag, tags, note, destination, bucket_id")
     .eq("user_id", userId)
     .gte("date", `${year}-${monthStr}-01`)
     .lt("date", month === 12 ? `${year + 1}-01-01` : `${year}-${String(month + 1).padStart(2, "0")}-01`)
@@ -155,7 +162,7 @@ export async function getAllTransactions(
 ): Promise<TransactionRow[]> {
   const { data } = await supabase
     .from("pm_transactions")
-    .select("id, type, name, amount, date, tag, tags, note, destination")
+    .select("id, type, name, amount, date, tag, tags, note, destination, bucket_id")
     .eq("user_id", userId)
     .order("date", { ascending: false });
 
@@ -239,6 +246,19 @@ export async function getCustomTags(
     .order("created_at", { ascending: true });
 
   return (data ?? []) as CustomTagRow[];
+}
+
+export async function getWalletBuckets(
+  supabase: SupabaseClient<Database>,
+  userId: string
+): Promise<WalletBucketRow[]> {
+  const { data } = await supabase
+    .from("pm_wallet_buckets")
+    .select("id, name, amount")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
+
+  return (data ?? []) as WalletBucketRow[];
 }
 
 export async function getUserSettings(
