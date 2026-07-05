@@ -4,9 +4,15 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { DEFAULT_TAGS } from "@/lib/pocket-money/tags";
 
+interface BucketOption {
+  id: string;
+  name: string;
+}
+
 interface AddHoldFormProps {
   userId: string;
   currency: string;
+  buckets?: BucketOption[];
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -34,6 +40,7 @@ const labelStyle: React.CSSProperties = {
 export default function AddHoldForm({
   userId,
   currency: _currency,
+  buckets = [],
   onClose,
   onSuccess,
 }: AddHoldFormProps) {
@@ -43,6 +50,7 @@ export default function AddHoldForm({
   const [dueDate, setDueDate] = useState(today);
   const [tag, setTag] = useState("");
   const [note, setNote] = useState("");
+  const [bucketId, setBucketId] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -62,6 +70,7 @@ export default function AddHoldForm({
       tag: tag || null,
       note: note || null,
       status: "pending",
+      bucket_id: bucketId || null,
     });
 
     setLoading(false);
@@ -158,6 +167,37 @@ export default function AddHoldForm({
               style={inputStyle}
             />
           </div>
+
+          {/* Bucket */}
+          {buckets.length > 0 && (
+            <div>
+              <label style={labelStyle}>Comes out of</label>
+              <select
+                value={bucketId}
+                onChange={(e) => setBucketId(e.target.value)}
+                style={{ ...inputStyle, appearance: "none" }}
+              >
+                <option value="">Pocket (unassigned cash)</option>
+                {buckets.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+              {bucketId && (
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "var(--pm-gray-text)",
+                    marginTop: 4,
+                  }}
+                >
+                  When it lands, the spend comes from this bucket and skips
+                  your monthly budget.
+                </p>
+              )}
+            </div>
+          )}
 
           {/* Due date */}
           <div>

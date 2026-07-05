@@ -49,6 +49,7 @@ export interface HoldRow {
   due_date: string;
   tag: string | null;
   note: string | null;
+  bucket_id: string | null;
 }
 
 export interface GrailItemRow {
@@ -175,7 +176,7 @@ export async function getPendingHolds(
 ): Promise<HoldRow[]> {
   const { data } = await supabase
     .from("pm_holds")
-    .select("id, name, amount, due_date, tag, note")
+    .select("id, name, amount, due_date, tag, note, bucket_id")
     .eq("user_id", userId)
     .eq("status", "pending")
     .order("due_date", { ascending: true });

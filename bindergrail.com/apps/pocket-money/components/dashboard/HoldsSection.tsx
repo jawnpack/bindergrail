@@ -13,12 +13,19 @@ interface Hold {
   due_date: string;
   tag: string | null;
   note: string | null;
+  bucket_id: string | null;
+}
+
+interface BucketOption {
+  id: string;
+  name: string;
 }
 
 interface HoldsSectionProps {
   holds: Hold[];
   currency: string;
   userId: string;
+  buckets?: BucketOption[];
   onToast: (msg: string) => void;
 }
 
@@ -33,8 +40,10 @@ export default function HoldsSection({
   holds,
   currency,
   userId,
+  buckets = [],
   onToast,
 }: HoldsSectionProps) {
+  const bucketNames = Object.fromEntries(buckets.map((b) => [b.id, b.name]));
   const router = useRouter();
   const supabase = createClient();
   const [showForm, setShowForm] = useState(false);
@@ -62,8 +71,10 @@ export default function HoldsSection({
       amount: hold.amount,
       date: today,
       tag: hold.tag,
+      tags: hold.tag ? [hold.tag] : [],
       note: hold.note,
       destination: null,
+      bucket_id: hold.bucket_id,
     });
 
     setCompleting(null);
@@ -178,6 +189,9 @@ export default function HoldsSection({
                   </p>
                   <p style={{ fontSize: 10, color: "var(--pm-gray-text)", marginTop: 1 }}>
                     {formatDate(hold.due_date)}
+                    {hold.bucket_id && bucketNames[hold.bucket_id]
+                      ? ` · ${bucketNames[hold.bucket_id]}`
+                      : ""}
                   </p>
                 </div>
               </div>
@@ -227,6 +241,7 @@ export default function HoldsSection({
         <AddHoldForm
           userId={userId}
           currency={currency}
+          buckets={buckets}
           onClose={() => setShowForm(false)}
           onSuccess={() => {
             setShowForm(false);

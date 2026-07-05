@@ -115,6 +115,7 @@ export type Database = {
           tag: string | null
           note: string | null
           status: 'pending' | 'done'
+          bucket_id: string | null
           created_at: string
         }
         Insert: {
@@ -125,6 +126,7 @@ export type Database = {
           tag?: string | null
           note?: string | null
           status?: 'pending' | 'done'
+          bucket_id?: string | null
         }
         Update: {
           name?: string
@@ -133,6 +135,7 @@ export type Database = {
           tag?: string | null
           note?: string | null
           status?: 'pending' | 'done'
+          bucket_id?: string | null
         }
         Relationships: []
       }

@@ -50,6 +50,7 @@ interface Hold {
   due_date: string;
   tag: string | null;
   note: string | null;
+  bucket_id: string | null;
 }
 
 interface GrailItem {
@@ -163,6 +164,13 @@ export default function DashboardClient({
 
   const bucketsTotal = buckets.reduce((sum, b) => sum + Number(b.amount), 0);
   const bucketNames = Object.fromEntries(buckets.map((b) => [b.id, b.name]));
+
+  // Pending holds, keyed by the bucket they'll come out of ("" = Pocket)
+  const pendingByBucket: Record<string, number> = {};
+  for (const hold of holds) {
+    const key = hold.bucket_id ?? "";
+    pendingByBucket[key] = (pendingByBucket[key] ?? 0) + Number(hold.amount);
+  }
 
   const { spent, inflow } = calcMonthTotals(monthTxs);
   const remaining = getRemaining(budget, spent, inflow);
@@ -342,6 +350,12 @@ export default function DashboardClient({
                 <span style={{ fontWeight: 500, color: "var(--pm-green-dark)" }}>
                   {formatCurrency(walletAmount, currency)}
                 </span>
+                {(pendingByBucket[""] ?? 0) > 0 && (
+                  <span style={{ color: "var(--pm-amber-dark)" }}>
+                    {" "}
+                    (−{formatCurrency(pendingByBucket[""], currency)} pending)
+                  </span>
+                )}
               </span>
               {buckets.map((b) => (
                 <span
@@ -352,6 +366,13 @@ export default function DashboardClient({
                   <span style={{ fontWeight: 500, color: "var(--pm-ink)" }}>
                     {formatCurrency(Number(b.amount), currency)}
                   </span>
+                  {(pendingByBucket[b.id] ?? 0) > 0 && (
+                    <span style={{ color: "var(--pm-amber-dark)" }}>
+                      {" "}
+                      (−{formatCurrency(pendingByBucket[b.id], currency)}{" "}
+                      pending)
+                    </span>
+                  )}
                 </span>
               ))}
               {reservedTotal > 0 && (
@@ -390,6 +411,7 @@ export default function DashboardClient({
             holds={holds}
             currency={currency}
             userId={userId}
+            buckets={buckets}
             onToast={(msg) => setToast(msg)}
           />
 
