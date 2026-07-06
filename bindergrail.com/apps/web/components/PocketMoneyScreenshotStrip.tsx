@@ -10,7 +10,7 @@ import { join } from "path";
 const SCREENSHOTS: { file: string; caption: string; wide: boolean }[] = [
   {
     file: "pm-dashboard-desktop.png",
-    caption: "The dashboard: budget, wallet buckets, holds, and the full log",
+    caption: "The dashboard: budget, wallet stashes, holds, and the full log",
     wide: true,
   },
   {

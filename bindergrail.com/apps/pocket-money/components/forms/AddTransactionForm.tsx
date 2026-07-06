@@ -383,7 +383,7 @@ export default function AddTransactionForm({
                       marginTop: 4,
                     }}
                   >
-                    Bucket transactions don&apos;t count against your monthly
+                    Stash transactions don&apos;t count against your monthly
                     budget.
                   </p>
                 )}

@@ -192,7 +192,7 @@ export default function AddHoldForm({
                     marginTop: 4,
                   }}
                 >
-                  When it lands, the spend comes from this bucket and skips
+                  When it lands, the spend comes from this stash and skips
                   your monthly budget.
                 </p>
               )}

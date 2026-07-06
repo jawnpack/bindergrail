@@ -316,7 +316,7 @@ export default function DashboardClient({
                     fontFamily: "inherit",
                   }}
                 >
-                  buckets
+                  stashes
                 </button>
                 <button
                   onClick={() => setShowEditWallet(true)}

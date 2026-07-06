@@ -131,7 +131,7 @@ export default function EditWalletForm({
             }}
           >
             Your unassigned cash. Pocket spends subtract from it, returns and
-            sales add back. Bucket money is managed separately. Edit any time
+            sales add back. Stash money is managed separately. Edit any time
             to reset it.
           </p>
 

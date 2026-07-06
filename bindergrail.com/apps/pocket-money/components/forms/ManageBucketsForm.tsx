@@ -79,7 +79,7 @@ export default function ManageBucketsForm({
       return;
     }
     if (buckets.some((b) => b.name.toLowerCase() === name.toLowerCase())) {
-      setError("A bucket with that name already exists.");
+      setError("A stash with that name already exists.");
       return;
     }
 
@@ -90,7 +90,7 @@ export default function ManageBucketsForm({
 
     if (insertError) {
       setBusy(false);
-      setError("Couldn't create that bucket. Try again.");
+      setError("Couldn't create that stash. Try again.");
       return;
     }
 
@@ -111,7 +111,7 @@ export default function ManageBucketsForm({
     setBusy(false);
     setNewName("");
     setNewAmount("");
-    onChanged(`Bucket "${name}" created.`);
+    onChanged(`Stash "${name}" created.`);
   }
 
   async function handleTransfer(bucket: WalletBucketRow) {
@@ -130,7 +130,7 @@ export default function ManageBucketsForm({
     }
     if (direction === "out" && parsed > Number(bucket.amount)) {
       setError(
-        `That bucket only has ${formatCurrency(Number(bucket.amount), currency)}.`
+        `That stash only has ${formatCurrency(Number(bucket.amount), currency)}.`
       );
       return;
     }
@@ -197,12 +197,12 @@ export default function ManageBucketsForm({
     if (deleteError) {
       await setPocket(pocketAmount);
       setBusy(false);
-      setError("Couldn't delete that bucket. Try again.");
+      setError("Couldn't delete that stash. Try again.");
       return;
     }
 
     setBusy(false);
-    onChanged(`Bucket "${bucket.name}" deleted.`);
+    onChanged(`Stash "${bucket.name}" deleted.`);
   }
 
   return (
@@ -240,7 +240,7 @@ export default function ManageBucketsForm({
           }}
         >
           <p style={{ fontSize: 15, fontWeight: 500, color: "var(--pm-ink)" }}>
-            Wallet buckets
+            Wallet stashes
           </p>
           <button
             onClick={onClose}
@@ -265,7 +265,7 @@ export default function ManageBucketsForm({
             marginBottom: 16,
           }}
         >
-          Split your wallet into spending pots. Bucket spends don&apos;t count
+          Split your wallet into spending stashes. Stash spends don&apos;t count
           against your monthly budget.
         </p>
 
@@ -418,7 +418,7 @@ export default function ManageBucketsForm({
                 fontStyle: "italic",
               }}
             >
-              No buckets yet. Make one below.
+              No stashes yet. Make one below.
             </p>
           )}
         </div>
@@ -429,7 +429,7 @@ export default function ManageBucketsForm({
           style={{ display: "flex", flexDirection: "column", gap: 8 }}
         >
           <p style={{ fontSize: 12, fontWeight: 500, color: "var(--pm-ink)" }}>
-            New bucket
+            New stash
           </p>
           <div style={{ display: "flex", gap: 6 }}>
             <input

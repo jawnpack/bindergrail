@@ -16,16 +16,17 @@ import JsonLd from "@/components/JsonLd";
 const PM_OG_FILE = "/images/og/pocket-money-og.png";
 const PM_OG = existsSync(join(process.cwd(), "public", PM_OG_FILE))
   ? PM_OG_FILE
-  : `/api/og?title=${encodeURIComponent("Pocket Money: hobby budgeting with wallet buckets")}`;
+  : `/api/og?title=${encodeURIComponent("Pocket Money: envelope budgeting with wallet stashes")}`;
 
 export const metadata: Metadata = {
-  title: "Pocket Money — Hobby Budget App with Wallet Buckets",
+  title: "Pocket Money — Hobby Budget App with Wallet Stashes",
   description:
-    "Free hobby budget app with wallet buckets, holds, and a grail fund. No bank linking, ever. Track collecting money the way you actually spend it.",
+    "Free hobby budget app with wallet stashes, holds, and a grail fund. Envelope budgeting, no bank linking ever. Track collecting money the way you spend it.",
   keywords: [
     "hobby budget app",
     "budgeting app for collectors",
     "envelope budgeting app",
+    "wallet stashes",
     "wallet buckets",
     "sinking funds app",
     "Pokemon TCG budget tracker",
@@ -38,9 +39,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Binder Grail",
-    title: "Pocket Money — Hobby Budget App with Wallet Buckets",
+    title: "Pocket Money — Hobby Budget App with Wallet Stashes",
     description:
-      "Set a monthly budget, split your cash into spending buckets, track holds before they land, and save toward your grail. Free, built for collectors.",
+      "Set a monthly budget, split your cash into spending stashes, track holds before they land, and save toward your grail. Free, built for collectors.",
     url: "https://bindergrail.com/pocket-money",
     images: [{ url: PM_OG, width: 1200, height: 630 }],
   },
@@ -58,15 +59,15 @@ const FAQS = [
   },
   {
     q: "Is it only for Pokémon cards?",
-    a: "No. It was built by a collector for hobby money of every kind. Buckets and custom tags work just as well for sneakers, gaming, vinyl, or whatever you collect.",
+    a: "No. It was built by a collector for hobby money of every kind. Stashes and custom tags work just as well for sneakers, gaming, vinyl, or whatever you collect.",
   },
   {
-    q: "What are wallet buckets?",
-    a: "Buckets are envelope budgeting for your hobby cash. Split your wallet into pots like a sneaker fund or a TCG fund, spend from a bucket without touching your monthly budget, and watch every balance update automatically.",
+    q: "What are wallet stashes?",
+    a: "Stashes are envelope budgeting for your hobby cash. Split your wallet into pots like a sneaker fund or a TCG fund, spend from a stash without touching your monthly budget, and watch every balance update automatically.",
   },
   {
     q: "Can I track sneaker and trading card spending separately?",
-    a: "That is exactly what Pocket Money is built for. Give each hobby its own bucket, tag every purchase with up to 3 tags, and see per-bucket balances plus pending holds at a glance.",
+    a: "That is exactly what Pocket Money is built for. Give each hobby its own stash, tag every purchase with up to 3 tags, and see per-stash balances plus pending holds at a glance.",
   },
   {
     q: "What is a grail fund?",
@@ -74,7 +75,7 @@ const FAQS = [
   },
   {
     q: "Does money from sales go back into my budget?",
-    a: "You decide. When you log a sale, the proceeds can land in your pocket, in any bucket, or get reserved for a wishlist item. Your monthly budget stays honest either way.",
+    a: "You decide. When you log a sale, the proceeds can land in your pocket, in any stash, or get reserved for a wishlist item. Your monthly budget stays honest either way.",
   },
 ];
 
@@ -93,14 +94,14 @@ export default function PocketMoneyPage() {
               operatingSystem: "Web",
               url: "https://pocketmoney.bindergrail.com",
               description:
-                "Free hobby budgeting app for collectors. Monthly budgets, envelope-style wallet buckets, pending holds, multi-tag transaction tracking, and a grail savings fund.",
+                "Free hobby budgeting app for collectors. Monthly budgets, envelope-style wallet stashes, pending holds, multi-tag transaction tracking, and a grail savings fund.",
               featureList: [
                 "Monthly hobby budget with month-by-month history",
-                "Wallet buckets for envelope-style category spending",
+                "Wallet stashes for envelope-style category spending",
                 "Pending holds that show money before it leaves",
                 "Spend, return, and sale logging with up to 3 tags each",
                 "Wishlist with reserved funds and one active grail",
-                "Sale proceeds routed to wallet, bucket, or grail fund",
+                "Sale proceeds routed to wallet, stash, or grail fund",
                 "Custom spending tags",
               ],
               offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
@@ -246,7 +247,7 @@ export default function PocketMoneyPage() {
           <div style={{ marginBottom: 40 }}>
             {[
               "Monthly budget with month-by-month history",
-              "Wallet buckets: split cash into sneaker money, TCG money, whatever",
+              "Wallet stashes: split cash into sneaker money, TCG money, whatever",
               "Holds show pending spend before it leaves your wallet",
               "Log spends, returns, and sales with up to 3 tags each",
               "Reserve sale money for your grail and watch it fill up",
@@ -307,7 +308,7 @@ export default function PocketMoneyPage() {
           </h2>
           <p style={{ fontSize: 14, color: "#3D5C42", maxWidth: 560, lineHeight: 1.6, marginBottom: 32 }}>
             Most budget apps treat your hobby like a line item. Pocket Money
-            treats it like the main event: envelope-style buckets, pending
+            treats it like the main event: envelope-style stashes, pending
             holds, and a fund for the one card you would trade the rest for.
           </p>
 
@@ -320,8 +321,8 @@ export default function PocketMoneyPage() {
           >
             {[
               {
-                title: "Wallet buckets",
-                body: "Split your cash into pots like a sneaker fund or TCG fund. Spending from a bucket never touches your monthly budget, and the app rebalances everything automatically.",
+                title: "Wallet stashes",
+                body: "Split your cash into pots like a sneaker fund or TCG fund. Spending from a stash never touches your monthly budget, and the app rebalances everything automatically. Classic envelope budgeting.",
               },
               {
                 title: "Monthly budget",
@@ -329,7 +330,7 @@ export default function PocketMoneyPage() {
               },
               {
                 title: "Holds and pending money",
-                body: "Preorders and IOUs sit as holds with a pending amount on the right bucket, so you always know what is already spoken for before it leaves.",
+                body: "Preorders and IOUs sit as holds with a pending amount on the right stash, so you always know what is already spoken for before it leaves.",
               },
               {
                 title: "The grail fund",
@@ -341,7 +342,7 @@ export default function PocketMoneyPage() {
               },
               {
                 title: "Sales and returns",
-                body: "Money coming back in goes where you say: into your pocket, into a bucket, or reserved for a wishlist item. Your budget stays honest either way.",
+                body: "Money coming back in goes where you say: into your pocket, into a stash, or reserved for a wishlist item. Your budget stays honest either way.",
               },
             ].map((f) => (
               <div

@@ -8,7 +8,7 @@
 ## Tools
 
 - [Pocket Money](https://pocketmoney.bindergrail.com): Free hobby budgeting
-  app, live now. Monthly budget envelope, wallet buckets for category spending
+  app, live now. Monthly budget envelope, wallet stashes for category spending
   (envelope budgeting for sneakers, TCG, anything), pending holds for
   preorders, spend/return/sale logging with tags, a wishlist with reserved
   funds, and a grail fund with progress tracking. No bank linking, ever.
