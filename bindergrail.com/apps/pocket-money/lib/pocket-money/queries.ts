@@ -67,6 +67,7 @@ export interface WishlistItemRow {
   tag: string | null;
   is_grail: boolean;
   status: "active" | "acquired";
+  created_at: string;
 }
 
 export interface GrailFundRow {
@@ -217,7 +218,7 @@ export async function getWishlistItems(
 ): Promise<WishlistItemRow[]> {
   const { data } = await supabase
     .from("pm_wishlist_items")
-    .select("id, name, target_price, note, url, tag, is_grail, status")
+    .select("id, name, target_price, note, url, tag, is_grail, status, created_at")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
 
