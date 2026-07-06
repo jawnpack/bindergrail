@@ -56,7 +56,10 @@ export default function WishlistClient({
   const [editingItem, setEditingItem] = useState<WishlistItemRow | null>(null);
   const [fundingItem, setFundingItem] = useState<WishlistItemRow | null>(null);
   const [toast, setToast] = useState<string | null>(null);
-  const [grailMomentName, setGrailMomentName] = useState<string | null>(null);
+  const [grailMomentItem, setGrailMomentItem] = useState<{
+    name: string;
+    createdAt: string;
+  } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
   const grail = items.find((i) => i.is_grail && i.status === "active") ?? null;
@@ -106,7 +109,7 @@ export default function WishlistClient({
     }
 
     if (item.is_grail) {
-      setGrailMomentName(item.name);
+      setGrailMomentItem({ name: item.name, createdAt: item.created_at });
     } else {
       setToast(`Got ${item.name}!`);
     }
@@ -515,10 +518,17 @@ export default function WishlistClient({
         />
       )}
 
-      {grailMomentName && (
+      {grailMomentItem && (
         <GrailMoment
-          itemName={grailMomentName}
-          onClose={() => setGrailMomentName(null)}
+          name={grailMomentItem.name}
+          days={Math.max(
+            0,
+            Math.floor(
+              (Date.now() - new Date(grailMomentItem.createdAt).getTime()) /
+                86400000
+            )
+          )}
+          onClose={() => setGrailMomentItem(null)}
         />
       )}
 
