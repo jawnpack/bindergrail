@@ -138,6 +138,27 @@ export async function subscribeToBeehiiv(
   return data.data?.id as string | undefined;
 }
 
+/**
+ * Look up a Beehiiv subscription by email. Returns the subscriber id and
+ * whether it's currently active, or null if the email isn't a subscriber.
+ * The id is returned even for inactive subscriptions so a later re-subscribe
+ * can reuse it; `active` reflects real subscription status.
+ */
+export async function getBeehiivSubscription(
+  email: string
+): Promise<{ id: string; active: boolean } | null> {
+  if (!isConfigured()) return null;
+  const res = await fetch(
+    `${BASE}/publications/${PUB}/subscriptions/by_email/${encodeURIComponent(email)}`,
+    { headers: { Authorization: `Bearer ${KEY}` } }
+  );
+  if (!res.ok) return null; // 404 = not a subscriber
+  const data = await res.json();
+  const sub = data.data;
+  if (!sub?.id) return null;
+  return { id: sub.id as string, active: sub.status === "active" };
+}
+
 export async function updateBeehiivTag(
   subscriberId: string,
   plan: "free" | "premium" | "premium_waitlist"

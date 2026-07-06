@@ -20,14 +20,15 @@ export default async function AccountPage() {
     redirect("/login");
   }
 
-  // Fetch profile from users table (newsletter_subscribed defaults true if row missing)
+  // Fetch profile from users table. newsletter_subscribed reflects a real
+  // Beehiiv opt-in (reconciled at login), so it defaults false when unknown.
   const { data: profile } = await supabase
     .from("users")
     .select("newsletter_subscribed")
     .eq("id", user.id)
     .single();
 
-  const newsletterSubscribed = profile?.newsletter_subscribed ?? true;
+  const newsletterSubscribed = profile?.newsletter_subscribed ?? false;
 
   return (
     <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
