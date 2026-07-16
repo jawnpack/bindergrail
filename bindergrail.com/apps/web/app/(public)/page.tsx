@@ -3,12 +3,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 import GrainOverlay from "@/components/GrainOverlay";
+import JsonLd from "@/components/JsonLd";
 
 
 export const metadata: Metadata = {
   title: "Binder Grail — Pokémon TCG Tools & Market Analysis for Frugal Collectors",
   description:
-    "Binder Grail is the home for budget-conscious Pokémon TCG collectors. Market analysis, collecting tools, and the Common Rare newsletter — built to help you collect consciously.",
+    "Market analysis, a free Pokémon TCG budget tracker, and the Common Rare newsletter — Binder Grail helps frugal collectors spend smarter.",
   openGraph: {
     type: "website",
     siteName: "Binder Grail",
@@ -48,6 +49,27 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Compact SoftwareApplication for Pocket Money. The full node
+          (featureList + FAQ) lives on /pocket-money; same url + @id here
+          so search engines treat them as one app, not a duplicate. */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "@id": "https://pocketmoney.bindergrail.com/#app",
+          name: "Pocket Money",
+          applicationCategory: "FinanceApplication",
+          operatingSystem: "Web",
+          url: "https://pocketmoney.bindergrail.com",
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+          publisher: {
+            "@type": "Organization",
+            name: "Binder Grail",
+            url: "https://bindergrail.com",
+          },
+        }}
+      />
+
       {/* ── Hero ──────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden" style={{ backgroundColor: "#1A1814" }}>
         <GrainOverlay />
@@ -92,6 +114,101 @@ export default function HomePage() {
             >
               Read Common Rare, our newsletter →
             </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Pocket Money feature ──────────────────────────────────── */}
+      <section className="py-16 md:py-20 bg-parchment border-t border-border">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
+            {/* Copy */}
+            <div>
+              <p className="text-[10px] font-medium uppercase tracking-[0.18em] mb-4 text-amber">
+                Pocket Money · A Binder Grail app
+              </p>
+              <h2
+                className="text-[30px] md:text-[40px] font-black leading-[1.1] tracking-tight mb-4 text-ink"
+                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+              >
+                A Pokémon budget tracker that&apos;s actually free
+              </h2>
+              <p className="text-[15px] leading-relaxed mb-6 text-dust max-w-md">
+                Set a monthly budget, log what you buy, and always know where
+                you stand before the next drop. No account fees, no catch.
+              </p>
+
+              {/* Differentiator stack */}
+              <ul className="flex flex-wrap gap-2 mb-7">
+                {[
+                  "Free forever",
+                  "No bank linking, ever",
+                  "No ads",
+                  "Your data is yours",
+                ].map((label) => (
+                  <li
+                    key={label}
+                    className="text-[12px] font-medium px-2.5 py-1 rounded-sm border border-border text-ink bg-cream"
+                  >
+                    {label}
+                  </li>
+                ))}
+              </ul>
+
+              {/* What it does */}
+              <ul className="flex flex-col gap-2 mb-8">
+                {[
+                  "A monthly budget envelope, with every purchase logged against it",
+                  "Holds for pre-orders and known costs, so nothing sneaks up on you",
+                  "A wishlist with one active grail and a fund that fills as you save",
+                  "Sale and return logging that flows the money back into your budget",
+                  "Tags and category stashes, so you see where the money actually goes",
+                  "Month-by-month history to spot the trend",
+                ].map((feature) => (
+                  <li key={feature} className="flex gap-2.5 text-[14px] leading-snug text-ink">
+                    <span aria-hidden className="mt-[3px] text-amber shrink-0">
+                      <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+                        <path
+                          d="M2.5 6.2l2.2 2.2 4.8-5"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="flex flex-wrap items-center gap-4">
+                <a
+                  href="https://pocketmoney.bindergrail.com"
+                  className="rounded-sm px-5 py-2.5 text-sm font-medium transition-opacity hover:opacity-80 bg-amber text-cream"
+                >
+                  Start tracking free
+                </a>
+                <Link
+                  href="/pocket-money"
+                  className="text-[13px] hover:underline text-dust"
+                >
+                  See how it works →
+                </Link>
+              </div>
+            </div>
+
+            {/* Screenshot */}
+            <div className="rounded-lg overflow-hidden border border-border shadow-sm">
+              <Image
+                src="/images/pocket-money/pm-dashboard-desktop.png"
+                alt="The Pocket Money dashboard showing a monthly budget, a wallet split into stashes, holds, an active grail, and a transaction log"
+                width={1900}
+                height={1000}
+                sizes="(max-width: 768px) 100vw, 520px"
+                className="w-full h-auto"
+              />
+            </div>
           </div>
         </div>
       </section>

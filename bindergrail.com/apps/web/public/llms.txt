@@ -8,10 +8,11 @@
 ## Tools
 
 - [Pocket Money](https://pocketmoney.bindergrail.com): Free hobby budgeting
-  app, live now. Monthly budget envelope, wallet stashes for category spending
+  app, live now — free forever, no bank linking ever, no ads, your data is
+  yours. Monthly budget envelope, wallet stashes for category spending
   (envelope budgeting for sneakers, TCG, anything), pending holds for
   preorders, spend/return/sale logging with tags, a wishlist with reserved
-  funds, and a grail fund with progress tracking. No bank linking, ever.
+  funds, and a grail fund with progress tracking.
   Landing page: https://bindergrail.com/pocket-money
 - Origins: Pokémon TCG collection tracker (log condition, price paid, and see
   collection value). Pre-launch, waitlist at https://bindergrail.com/origins
