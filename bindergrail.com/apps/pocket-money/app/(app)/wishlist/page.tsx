@@ -11,7 +11,12 @@ import WishlistClient from "./WishlistClient";
 
 export const dynamic = "force-dynamic";
 
-export default async function WishlistPage() {
+export default async function WishlistPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ funds?: string }>;
+}) {
+  const { funds: openFundsForItemId } = await searchParams;
   const supabase = await createServerClient();
 
   const {
@@ -48,6 +53,8 @@ export default async function WishlistPage() {
       availableCash={settings.cash_reserve}
       // same source as the wallet's reserved figure
       grailAmountSaved={grail ? reserved[grail.id] ?? 0 : 0}
+      // deep link from the dashboard's "reserved" figure
+      openFundsForItemId={openFundsForItemId ?? null}
     />
   );
 }

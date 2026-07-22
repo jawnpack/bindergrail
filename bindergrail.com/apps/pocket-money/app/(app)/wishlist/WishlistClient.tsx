@@ -24,6 +24,7 @@ interface WishlistClientProps {
   reservedByItem: Record<string, number>;
   availableCash: number;
   grailAmountSaved: number;
+  openFundsForItemId: string | null;
 }
 
 const smallButtonStyle: React.CSSProperties = {
@@ -57,13 +58,17 @@ export default function WishlistClient({
   reservedByItem,
   availableCash,
   grailAmountSaved,
+  openFundsForItemId,
 }: WishlistClientProps) {
   const router = useRouter();
   const supabase = createClient();
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingItem, setEditingItem] = useState<WishlistItemRow | null>(null);
-  const [fundingItem, setFundingItem] = useState<WishlistItemRow | null>(null);
+  // Opens straight from the dashboard's "reserved" figure via ?funds=<id>.
+  const [fundingItem, setFundingItem] = useState<WishlistItemRow | null>(
+    () => items.find((i) => i.id === openFundsForItemId) ?? null
+  );
   const [toast, setToast] = useState<string | null>(null);
   const [grailMomentItem, setGrailMomentItem] = useState<{
     name: string;
@@ -329,17 +334,28 @@ export default function WishlistClient({
             </span>
           )}
           {!isAcquired && reserved > 0 && (
-            <span
+            <button
+              type="button"
+              disabled={busy === item.id}
+              onClick={() => setFundingItem(item)}
+              title="Add or take back reserved money"
               style={{
                 fontSize: 10,
                 fontWeight: 500,
                 color: "var(--pm-amber-dark)",
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                fontFamily: "inherit",
+                textDecoration: "underline",
+                textUnderlineOffset: 2,
               }}
             >
               {funded
                 ? `fully funded · ${formatCurrency(reserved, currency)}`
                 : `${formatCurrency(reserved, currency)} reserved`}
-            </span>
+            </button>
           )}
           {!isAcquired && (
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
@@ -348,7 +364,7 @@ export default function WishlistClient({
                 onClick={() => setFundingItem(item)}
                 style={smallButtonStyle}
               >
-                + funds
+                funds
               </button>
               <button
                 disabled={busy === item.id}
@@ -409,7 +425,8 @@ export default function WishlistClient({
             <div
               style={{
                 display: "flex",
-                justifyContent: "flex-end",
+                justifyContent: "space-between",
+                alignItems: "center",
                 gap: 6,
                 padding: "8px 20px",
                 backgroundColor:
@@ -422,12 +439,37 @@ export default function WishlistClient({
                 marginTop: -1,
               }}
             >
+              {/* The money is the control: tap the amount to adjust it. */}
+              <button
+                type="button"
+                disabled={busy === grail.id}
+                onClick={() => setFundingItem(grail)}
+                title="Add or take back reserved money"
+                style={{
+                  fontSize: 11,
+                  fontWeight: 500,
+                  color: "var(--pm-green-text)",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                  textDecoration: "underline",
+                  textUnderlineOffset: 2,
+                }}
+              >
+                {grailAmountSaved > 0
+                  ? `${formatCurrency(grailAmountSaved, currency)} reserved · adjust`
+                  : "reserve funds"}
+              </button>
+
+              <div style={{ display: "flex", gap: 6 }}>
               <button
                 disabled={busy === grail.id}
                 onClick={() => setFundingItem(grail)}
                 style={smallButtonStyle}
               >
-                + funds
+                funds
               </button>
               <button
                 disabled={busy === grail.id}
@@ -451,6 +493,7 @@ export default function WishlistClient({
               >
                 ×
               </button>
+              </div>
             </div>
           </>
         )}

@@ -271,9 +271,10 @@ export default function AddFundsForm({
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: 14 }}
         >
-          {/* Direction: add to the reserve, or take money back out of it */}
-          {reservedAmount > 0 && (
-            <div>
+          {/* Direction: add to the reserve, or take money back out of it.
+              Always visible so the capability is discoverable before it's
+              usable; "take back" disables itself when nothing is held. */}
+          <div>
               <label style={labelStyle}>Which way?</label>
               <div
                 style={{
@@ -292,11 +293,14 @@ export default function AddFundsForm({
                   <button
                     key={btn.value}
                     type="button"
+                    disabled={btn.value === "take" && reservedAmount <= 0}
                     onClick={() => {
                       setMode(btn.value);
                       setError("");
                     }}
                     style={{
+                      opacity:
+                        btn.value === "take" && reservedAmount <= 0 ? 0.4 : 1,
                       flex: 1,
                       padding: "9px 0",
                       fontSize: 13,
@@ -321,19 +325,20 @@ export default function AddFundsForm({
                   </button>
                 ))}
               </div>
-              {mode === "take" && (
-                <p
-                  style={{
-                    fontSize: 10,
-                    color: "var(--pm-gray-text)",
-                    marginTop: 4,
-                  }}
-                >
-                  Releases the hold and returns the cash to your pocket.
-                </p>
-              )}
-            </div>
-          )}
+              <p
+                style={{
+                  fontSize: 10,
+                  color: "var(--pm-gray-text)",
+                  marginTop: 4,
+                }}
+              >
+                {reservedAmount <= 0
+                  ? "Nothing reserved yet — once you add funds you can take them back here."
+                  : mode === "take"
+                  ? "Releases the hold and returns the cash to your pocket."
+                  : "Money you add is held here until you catch it."}
+              </p>
+          </div>
 
           {/* Source segmented control */}
           <div style={{ display: mode === "take" ? "none" : undefined }}>

@@ -372,7 +372,11 @@ export default function DashboardClient({
               ))}
               {wallet.reserved > 0 && (
                 <Link
-                  href="/wishlist"
+                  href={
+                    grailItem
+                      ? `/wishlist?funds=${grailItem.id}`
+                      : "/wishlist"
+                  }
                   style={{
                     fontSize: 11,
                     color: "var(--pm-gray-text)",
