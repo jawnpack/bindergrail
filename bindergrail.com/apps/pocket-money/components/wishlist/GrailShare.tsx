@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 
 interface GrailShareProps {
   name: string;
@@ -60,8 +60,19 @@ const textBtn: React.CSSProperties = {
   textAlign: "center",
 };
 
+/** Whether the OS share sheet is available. Read via useSyncExternalStore
+ *  so it's SSR-safe (false on the server) without a setState-in-effect,
+ *  which would trigger a cascading re-render. */
+const subscribeToNothing = () => () => {};
+const hasNativeShare = () =>
+  typeof navigator !== "undefined" && typeof navigator.share === "function";
+
 export default function GrailShare({ name, days }: GrailShareProps) {
-  const [canNativeShare, setCanNativeShare] = useState(false);
+  const canNativeShare = useSyncExternalStore(
+    subscribeToNothing,
+    hasNativeShare,
+    () => false
+  );
   const [status, setStatus] = useState("");
   const [caption, setCaption] = useState(
     `Caught my grail: ${name}${
@@ -78,12 +89,6 @@ export default function GrailShare({ name, days }: GrailShareProps) {
     if (days !== null) params.set("days", String(days));
     return `${window.location.origin}/api/og/grail?${params.toString()}`;
   }, [name, days]);
-
-  useEffect(() => {
-    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      setCanNativeShare(true);
-    }
-  }, []);
 
   function flash(msg: string) {
     setStatus(msg);

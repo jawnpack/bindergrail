@@ -38,6 +38,15 @@ const smallButtonStyle: React.CSSProperties = {
   fontFamily: "inherit",
 };
 
+/** Whole days since an ISO timestamp. Called from event handlers only —
+ *  reading the clock during render is impure. */
+function daysSince(iso: string): number {
+  return Math.max(
+    0,
+    Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
+  );
+}
+
 export default function WishlistClient({
   userId,
   displayName,
@@ -58,7 +67,7 @@ export default function WishlistClient({
   const [toast, setToast] = useState<string | null>(null);
   const [grailMomentItem, setGrailMomentItem] = useState<{
     name: string;
-    createdAt: string;
+    days: number;
   } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
 
@@ -130,7 +139,7 @@ export default function WishlistClient({
     setBusy(null);
 
     if (item.is_grail) {
-      setGrailMomentItem({ name: item.name, createdAt: item.created_at });
+      setGrailMomentItem({ name: item.name, days: daysSince(item.created_at) });
     } else {
       setToast(`Got ${item.name}!`);
     }
@@ -568,13 +577,7 @@ export default function WishlistClient({
       {grailMomentItem && (
         <GrailMoment
           name={grailMomentItem.name}
-          days={Math.max(
-            0,
-            Math.floor(
-              (Date.now() - new Date(grailMomentItem.createdAt).getTime()) /
-                86400000
-            )
-          )}
+          days={grailMomentItem.days}
           onClose={() => setGrailMomentItem(null)}
         />
       )}
