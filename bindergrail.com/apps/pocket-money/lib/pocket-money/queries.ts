@@ -185,10 +185,16 @@ export async function getPendingHolds(
   return (data ?? []) as HoldRow[];
 }
 
+/**
+ * The active grail item only. The amount saved against it deliberately is
+ * NOT read here — it comes from getGrailFunds via lib/pocket-money/wallet,
+ * the same source the wallet's "reserved" figure uses. Two separate reads
+ * used to drift apart and show "$0.00 saved" while the money was counted.
+ */
 export async function getActiveGrail(
   supabase: SupabaseClient<Database>,
   userId: string
-): Promise<{ item: GrailItemRow; fund: GrailFundRow | null } | null> {
+): Promise<GrailItemRow | null> {
   const { data: item } = await supabase
     .from("pm_wishlist_items")
     .select("id, name, target_price")
@@ -197,19 +203,7 @@ export async function getActiveGrail(
     .eq("status", "active")
     .maybeSingle();
 
-  if (!item) return null;
-
-  const { data: fund } = await supabase
-    .from("pm_grail_fund")
-    .select("amount_saved")
-    .eq("user_id", userId)
-    .eq("wishlist_item_id", (item as GrailItemRow).id)
-    .maybeSingle();
-
-  return {
-    item: item as GrailItemRow,
-    fund: fund ? (fund as GrailFundRow) : null,
-  };
+  return item ? (item as GrailItemRow) : null;
 }
 
 export async function getWishlistItems(

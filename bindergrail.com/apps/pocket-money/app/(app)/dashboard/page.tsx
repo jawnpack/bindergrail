@@ -12,6 +12,11 @@ import {
   getGrailFunds,
   getWalletBuckets,
 } from "@/lib/pocket-money/queries";
+import {
+  activeFunds,
+  computeWallet,
+  reservedByItem,
+} from "@/lib/pocket-money/wallet";
 import DashboardClient from "./DashboardClient";
 
 export const dynamic = "force-dynamic";
@@ -62,10 +67,14 @@ export default async function DashboardPage() {
     getWalletBuckets(supabase, user.id),
   ]);
 
-  const reservedTotal = grailFunds.reduce(
-    (sum, f) => sum + Number(f.amount_saved),
-    0
-  );
+  // Money committed to grails already caught has been SPENT — scope the
+  // reserve to items still active so it can't linger in the wallet.
+  const activeItemIds = wishlistItems
+    .filter((i) => i.status === "active")
+    .map((i) => i.id);
+  const heldFunds = activeFunds(grailFunds, activeItemIds);
+  const wallet = computeWallet(settings.cash_reserve, walletBuckets, heldFunds);
+  const savedByItem = reservedByItem(heldFunds);
 
   return (
     <DashboardClient
@@ -78,18 +87,18 @@ export default async function DashboardPage() {
         .filter((i) => i.status === "active")
         .map((i) => ({ id: i.id, name: i.name, isGrail: i.is_grail }))}
       customTags={customTags.map((t) => t.name)}
-      walletAmount={settings.cash_reserve}
+      wallet={wallet}
       buckets={walletBuckets}
-      reservedTotal={reservedTotal}
       allTransactions={allTransactions}
       holds={holds}
       grailItem={
         grail
           ? {
-              id: grail.item.id,
-              name: grail.item.name,
-              targetPrice: grail.item.target_price,
-              amountSaved: grail.fund ? grail.fund.amount_saved : 0,
+              id: grail.id,
+              name: grail.name,
+              targetPrice: grail.target_price,
+              // same source as the wallet's reserved figure
+              amountSaved: savedByItem[grail.id] ?? 0,
             }
           : null
       }

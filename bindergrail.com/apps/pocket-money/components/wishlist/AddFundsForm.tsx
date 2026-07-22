@@ -9,6 +9,8 @@ interface AddFundsFormProps {
   itemId: string;
   itemName: string;
   availableCash: number;
+  /** currently held against this item — the ceiling for taking money back */
+  reservedAmount: number;
   currency: string;
   onClose: () => void;
   onSuccess: (message: string) => void;
@@ -39,11 +41,13 @@ export default function AddFundsForm({
   itemId,
   itemName,
   availableCash,
+  reservedAmount,
   currency,
   onClose,
   onSuccess,
 }: AddFundsFormProps) {
   const today = new Date().toISOString().split("T")[0];
+  const [mode, setMode] = useState<"add" | "take">("add");
   const [source, setSource] = useState<"wallet" | "sale">("wallet");
   const [amount, setAmount] = useState("");
   const [saleName, setSaleName] = useState("");
@@ -85,6 +89,43 @@ export default function AddFundsForm({
 
     const parsed = parseFloat(amount);
     if (parsed <= 0) return;
+
+    // ── Take money back out of the reserve, into the pocket ──
+    if (mode === "take") {
+      if (parsed > reservedAmount) {
+        setError(
+          `Only ${formatCurrency(reservedAmount, currency)} is reserved for this.`
+        );
+        return;
+      }
+
+      setLoading(true);
+
+      const ok = await bumpFund(-parsed);
+      if (!ok) {
+        setLoading(false);
+        setError("Couldn't release the funds. Try again.");
+        return;
+      }
+
+      const { error: walletError } = await supabase
+        .from("pm_user_settings")
+        .upsert({ user_id: userId, cash_reserve: availableCash + parsed });
+
+      setLoading(false);
+
+      if (walletError) {
+        // Put it back on the reserve so the money isn't lost.
+        await bumpFund(parsed);
+        setError("Couldn't move the cash. Try again.");
+        return;
+      }
+
+      onSuccess(
+        `${formatCurrency(parsed, currency)} moved back to your pocket.`
+      );
+      return;
+    }
 
     if (source === "wallet" && parsed > availableCash) {
       setError(
@@ -191,7 +232,7 @@ export default function AddFundsForm({
           }}
         >
           <p style={{ fontSize: 15, fontWeight: 500, color: "var(--pm-ink)" }}>
-            Add funds
+            {mode === "take" ? "Take funds back" : "Add funds"}
           </p>
           <button
             onClick={onClose}
@@ -216,14 +257,86 @@ export default function AddFundsForm({
           }}
         >
           Toward {itemName}
+          {reservedAmount > 0 && (
+            <>
+              {" · "}
+              <span style={{ color: "var(--pm-amber-dark)", fontWeight: 500 }}>
+                {formatCurrency(reservedAmount, currency)} reserved
+              </span>
+            </>
+          )}
         </p>
 
         <form
           onSubmit={handleSubmit}
           style={{ display: "flex", flexDirection: "column", gap: 14 }}
         >
+          {/* Direction: add to the reserve, or take money back out of it */}
+          {reservedAmount > 0 && (
+            <div>
+              <label style={labelStyle}>Which way?</label>
+              <div
+                style={{
+                  display: "flex",
+                  border: "0.5px solid var(--pm-gray-border)",
+                  borderRadius: 8,
+                  overflow: "hidden",
+                }}
+              >
+                {(
+                  [
+                    { value: "add", label: "add funds" },
+                    { value: "take", label: "take back" },
+                  ] as const
+                ).map((btn, i) => (
+                  <button
+                    key={btn.value}
+                    type="button"
+                    onClick={() => {
+                      setMode(btn.value);
+                      setError("");
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: "9px 0",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      border: "none",
+                      borderRight:
+                        i === 0 ? "0.5px solid var(--pm-gray-border)" : "none",
+                      cursor: "pointer",
+                      backgroundColor:
+                        mode === btn.value
+                          ? "var(--pm-ink)"
+                          : "var(--pm-white)",
+                      color:
+                        mode === btn.value
+                          ? "var(--pm-green-lightest)"
+                          : "var(--pm-gray-text)",
+                      transition: "background-color 0.15s",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    {btn.label}
+                  </button>
+                ))}
+              </div>
+              {mode === "take" && (
+                <p
+                  style={{
+                    fontSize: 10,
+                    color: "var(--pm-gray-text)",
+                    marginTop: 4,
+                  }}
+                >
+                  Releases the hold and returns the cash to your pocket.
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Source segmented control */}
-          <div>
+          <div style={{ display: mode === "take" ? "none" : undefined }}>
             <label style={labelStyle}>Where from?</label>
             <div
               style={{
@@ -280,7 +393,7 @@ export default function AddFundsForm({
           </div>
 
           {/* Sale name */}
-          {source === "sale" && (
+          {mode === "add" && source === "sale" && (
             <div>
               <label style={labelStyle}>What did you sell?</label>
               <input
@@ -331,7 +444,13 @@ export default function AddFundsForm({
               fontFamily: "inherit",
             }}
           >
-            {loading ? "Reserving..." : "Reserve funds"}
+            {loading
+              ? mode === "take"
+                ? "Releasing..."
+                : "Reserving..."
+              : mode === "take"
+              ? "Move back to pocket"
+              : "Reserve funds"}
           </button>
         </form>
       </div>

@@ -95,18 +95,39 @@ export default function WishlistClient({
 
   async function markAcquired(item: WishlistItemRow) {
     setBusy(item.id);
+    const reserved = reservedByItem[item.id] ?? 0;
 
     const { error } = await supabase
       .from("pm_wishlist_items")
       .update({ status: "acquired" })
       .eq("id", item.id);
 
-    setBusy(null);
-
     if (error) {
+      setBusy(null);
       setToast("Something went wrong. Try again.");
       return;
     }
+
+    // Catching SPENDS the money held against this item: clear the hold so it
+    // stops counting as reserved. Deliberately does NOT touch pocket/stashes —
+    // that money already left the wallet when it was reserved. Deducting here
+    // would count the same dollar twice.
+    if (reserved > 0) {
+      const { error: fundError } = await supabase
+        .from("pm_grail_fund")
+        .delete()
+        .eq("user_id", userId)
+        .eq("wishlist_item_id", item.id);
+
+      if (fundError) {
+        setBusy(null);
+        setToast("Marked as caught, but the reserve didn't clear. Try again.");
+        router.refresh();
+        return;
+      }
+    }
+
+    setBusy(null);
 
     if (item.is_grail) {
       setGrailMomentItem({ name: item.name, createdAt: item.created_at });
@@ -118,6 +139,21 @@ export default function WishlistClient({
 
   async function removeItem(item: WishlistItemRow) {
     setBusy(item.id);
+    const reserved = reservedByItem[item.id] ?? 0;
+
+    // Deleting the item cascades its fund row away, so return any money
+    // held against it to the pocket first — committed cash is never destroyed.
+    if (reserved > 0) {
+      const { error: refundError } = await supabase
+        .from("pm_user_settings")
+        .upsert({ user_id: userId, cash_reserve: availableCash + reserved });
+
+      if (refundError) {
+        setBusy(null);
+        setToast("Couldn't return the reserved money. Try again.");
+        return;
+      }
+    }
 
     const { error } = await supabase
       .from("pm_wishlist_items")
@@ -127,11 +163,21 @@ export default function WishlistClient({
     setBusy(null);
 
     if (error) {
+      // Roll the refund back so the money isn't counted twice.
+      if (reserved > 0) {
+        await supabase
+          .from("pm_user_settings")
+          .upsert({ user_id: userId, cash_reserve: availableCash });
+      }
       setToast("Something went wrong. Try again.");
       return;
     }
 
-    setToast("Removed from wishlist.");
+    setToast(
+      reserved > 0
+        ? `Removed. ${formatCurrency(reserved, currency)} returned to your pocket.`
+        : "Removed from wishlist."
+    );
     router.refresh();
   }
 
@@ -508,6 +554,7 @@ export default function WishlistClient({
           itemId={fundingItem.id}
           itemName={fundingItem.name}
           availableCash={availableCash}
+          reservedAmount={reservedByItem[fundingItem.id] ?? 0}
           currency={currency}
           onClose={() => setFundingItem(null)}
           onSuccess={(message) => {

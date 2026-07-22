@@ -2,11 +2,11 @@ import { createServerClient } from "@/lib/supabase/server";
 import {
   getUserProfile,
   getWishlistItems,
-  getActiveGrail,
   getCustomTags,
   getGrailFunds,
   getUserSettings,
 } from "@/lib/pocket-money/queries";
+import { activeFunds, reservedByItem } from "@/lib/pocket-money/wallet";
 import WishlistClient from "./WishlistClient";
 
 export const dynamic = "force-dynamic";
@@ -20,20 +20,21 @@ export default async function WishlistPage() {
 
   if (!user) return null;
 
-  const [profile, items, grail, customTags, grailFunds, settings] =
-    await Promise.all([
-      getUserProfile(supabase, user.id),
-      getWishlistItems(supabase, user.id),
-      getActiveGrail(supabase, user.id),
-      getCustomTags(supabase, user.id),
-      getGrailFunds(supabase, user.id),
-      getUserSettings(supabase, user.id),
-    ]);
+  const [profile, items, customTags, grailFunds, settings] = await Promise.all([
+    getUserProfile(supabase, user.id),
+    getWishlistItems(supabase, user.id),
+    getCustomTags(supabase, user.id),
+    getGrailFunds(supabase, user.id),
+    getUserSettings(supabase, user.id),
+  ]);
 
-  const reservedByItem: Record<string, number> = {};
-  for (const fund of grailFunds) {
-    reservedByItem[fund.wishlist_item_id] = Number(fund.amount_saved);
-  }
+  // Funds against acquired items are money already spent — scope to active.
+  const activeItemIds = items
+    .filter((i) => i.status === "active")
+    .map((i) => i.id);
+  const reserved = reservedByItem(activeFunds(grailFunds, activeItemIds));
+
+  const grail = items.find((i) => i.is_grail && i.status === "active") ?? null;
 
   return (
     <WishlistClient
@@ -43,9 +44,10 @@ export default async function WishlistPage() {
       currency={profile.currency}
       items={items}
       customTags={customTags.map((t) => t.name)}
-      reservedByItem={reservedByItem}
+      reservedByItem={reserved}
       availableCash={settings.cash_reserve}
-      grailAmountSaved={grail?.fund?.amount_saved ?? 0}
+      // same source as the wallet's reserved figure
+      grailAmountSaved={grail ? reserved[grail.id] ?? 0 : 0}
     />
   );
 }

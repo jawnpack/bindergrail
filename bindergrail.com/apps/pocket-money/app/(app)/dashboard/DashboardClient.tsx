@@ -14,6 +14,7 @@ import EditBudgetForm from "@/components/forms/EditBudgetForm";
 import EditWalletForm from "@/components/forms/EditWalletForm";
 import ManageBucketsForm from "@/components/forms/ManageBucketsForm";
 import Toast from "@/components/forms/Toast";
+import type { WalletBreakdown } from "@/lib/pocket-money/wallet";
 import {
   calcMonthTotals,
   getBudgetStatus,
@@ -84,9 +85,8 @@ interface DashboardClientProps {
   grailItem: GrailItem | null;
   wishlistItems: WishlistPickerItem[];
   customTags: string[];
-  walletAmount: number;
+  wallet: WalletBreakdown;
   buckets: WalletBucket[];
-  reservedTotal: number;
   initialYear: number;
   initialMonth: number;
 }
@@ -109,9 +109,8 @@ export default function DashboardClient({
   grailItem,
   wishlistItems,
   customTags,
-  walletAmount,
+  wallet,
   buckets,
-  reservedTotal,
   initialYear,
   initialMonth,
 }: DashboardClientProps) {
@@ -162,7 +161,6 @@ export default function DashboardClient({
       (b) => b.year === selectedYear && b.month === selectedMonth
     )?.budget_amount ?? 0;
 
-  const bucketsTotal = buckets.reduce((sum, b) => sum + Number(b.amount), 0);
   const bucketNames = Object.fromEntries(buckets.map((b) => [b.id, b.name]));
 
   // Pending holds, keyed by the bucket they'll come out of ("" = Pocket)
@@ -296,10 +294,7 @@ export default function DashboardClient({
                     color: "var(--pm-ink)",
                   }}
                 >
-                  {formatCurrency(
-                    walletAmount + bucketsTotal + reservedTotal,
-                    currency
-                  )}
+                  {formatCurrency(wallet.freeToSpend, currency)}
                 </p>
               </div>
               <div style={{ display: "flex", gap: 6 }}>
@@ -348,7 +343,7 @@ export default function DashboardClient({
               <span style={{ fontSize: 11, color: "var(--pm-gray-text)" }}>
                 pocket{" "}
                 <span style={{ fontWeight: 500, color: "var(--pm-green-dark)" }}>
-                  {formatCurrency(walletAmount, currency)}
+                  {formatCurrency(wallet.pocket, currency)}
                 </span>
                 {(pendingByBucket[""] ?? 0) > 0 && (
                   <span style={{ color: "var(--pm-amber-dark)" }}>
@@ -375,7 +370,7 @@ export default function DashboardClient({
                   )}
                 </span>
               ))}
-              {reservedTotal > 0 && (
+              {wallet.reserved > 0 && (
                 <Link
                   href="/wishlist"
                   style={{
@@ -386,7 +381,7 @@ export default function DashboardClient({
                 >
                   reserved{" "}
                   <span style={{ fontWeight: 500, color: "var(--pm-amber-dark)" }}>
-                    {formatCurrency(reservedTotal, currency)}
+                    {formatCurrency(wallet.reserved, currency)}
                   </span>
                 </Link>
               )}
@@ -481,7 +476,7 @@ export default function DashboardClient({
       {showBuckets && (
         <ManageBucketsForm
           userId={userId}
-          pocketAmount={walletAmount}
+          pocketAmount={wallet.pocket}
           buckets={buckets}
           currency={currency}
           onClose={() => setShowBuckets(false)}
@@ -495,7 +490,7 @@ export default function DashboardClient({
       {showEditWallet && (
         <EditWalletForm
           userId={userId}
-          currentAmount={walletAmount}
+          currentAmount={wallet.pocket}
           onClose={() => setShowEditWallet(false)}
           onSuccess={() => {
             setShowEditWallet(false);
