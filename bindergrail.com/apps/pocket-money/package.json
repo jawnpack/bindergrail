@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:wallet": "node --test lib/pocket-money/wallet.test.ts"
   },
   "dependencies": {
     "@bindergrail/database": "*",
