@@ -229,14 +229,14 @@ export default function DashboardClient({
         className="md:flex md:max-w-[900px] md:mx-auto"
         style={{ minHeight: "100vh" }}
       >
-        {/* Left column */}
+        {/* Left column — on desktop, a viewport-tall sticky column whose
+            content scrolls above a pinned log button */}
         <div
-          className="md:w-[400px] md:flex-shrink-0 md:flex md:flex-col md:border-r"
-          style={{
-            borderColor: "var(--pm-gray-border)",
-            paddingBottom: 88,
-          }}
+          className="pb-[88px] md:pb-0 md:w-[400px] md:flex-shrink-0 md:flex md:flex-col md:sticky md:top-0 md:h-screen md:overflow-hidden md:border-r"
+          style={{ borderColor: "var(--pm-gray-border)" }}
         >
+          {/* Scrollable content; min-h-0 lets it shrink so overflow works */}
+          <div className="md:flex md:flex-col md:flex-1 md:min-h-0 md:overflow-y-auto">
           <Topbar
             displayName={displayName}
             avatarColor={avatarColor}
@@ -414,10 +414,12 @@ export default function DashboardClient({
             onToast={(msg) => setToast(msg)}
           />
 
-          {/* Desktop log button */}
+          </div>
+
+          {/* Desktop log button — pinned to the bottom of the left column */}
           <div
             className="hidden md:block"
-            style={{ padding: "16px 20px", marginTop: "auto" }}
+            style={{ padding: "16px 20px" }}
           >
             {logButton}
           </div>
