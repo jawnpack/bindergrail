@@ -51,6 +51,22 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "inherit",
 };
 
+// Quiet, footnote-weight action — used by the support section only.
+const quietButtonStyle: React.CSSProperties = {
+  border: "0.5px solid var(--pm-gray-border)",
+  borderRadius: 8,
+  padding: "7px 20px",
+  fontSize: 13,
+  fontWeight: 500,
+  backgroundColor: "var(--pm-white)",
+  color: "var(--pm-ink-light)",
+  cursor: "pointer",
+  fontFamily: "inherit",
+  textDecoration: "none",
+};
+
+const SHARE_URL = "https://pocketmoney.bindergrail.com";
+
 export default function AccountClient({
   userId,
   email,
@@ -201,6 +217,27 @@ export default function AccountClient({
 
     setToast(`Tag "${tag.name}" removed.`);
     router.refresh();
+  }
+
+  async function handleShare() {
+    // Native share sheet where available (mobile); clipboard fallback.
+    if (
+      typeof navigator !== "undefined" &&
+      typeof navigator.share === "function"
+    ) {
+      try {
+        await navigator.share({ title: "Pocket Money", url: SHARE_URL });
+      } catch {
+        // user dismissed the sheet — nothing to do
+      }
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(SHARE_URL);
+      setToast("Link copied.");
+    } catch {
+      setToast("Couldn't copy — grab it from the address bar.");
+    }
   }
 
   return (
@@ -510,6 +547,48 @@ export default function AccountClient({
                 {savingTag ? "..." : "+ add"}
               </button>
             </form>
+          </div>
+
+          {/* Support — a quiet footnote, never an upsell. Everything is free. */}
+          <div
+            style={{
+              marginTop: 8,
+              paddingTop: 20,
+              borderTop: "0.5px solid var(--pm-gray-border)",
+              textAlign: "center",
+            }}
+          >
+            <p
+              style={{
+                fontSize: 12,
+                color: "var(--pm-gray-text)",
+                lineHeight: 1.6,
+                maxWidth: 320,
+                margin: "0 auto 14px",
+              }}
+            >
+              Pocket Money is free and always will be. If it&apos;s helped you,
+              sharing it or chipping in anything at all means a lot.
+            </p>
+            <div
+              style={{ display: "flex", gap: 8, justifyContent: "center" }}
+            >
+              <button
+                type="button"
+                onClick={handleShare}
+                style={quietButtonStyle}
+              >
+                Share
+              </button>
+              <a
+                href="https://www.paypal.com/ncp/payment/WJ56SJ8A8XFYE"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={quietButtonStyle}
+              >
+                Support
+              </a>
+            </div>
           </div>
         </div>
       </div>
