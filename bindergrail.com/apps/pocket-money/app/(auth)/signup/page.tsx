@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 type Step = 1 | 2 | 3;
@@ -70,7 +69,6 @@ function StepDots({ current }: { current: Step }) {
 }
 
 export default function SignupPage() {
-  const router = useRouter();
   const supabase = createClient();
 
   const [step, setStep] = useState<Step>(1);
@@ -587,7 +585,7 @@ export default function SignupPage() {
             </div>
 
             <button
-              onClick={() => router.push("/dashboard")}
+              onClick={() => window.location.assign("/dashboard")}
               style={{
                 width: "100%",
                 backgroundColor: "var(--pm-green-mid)",

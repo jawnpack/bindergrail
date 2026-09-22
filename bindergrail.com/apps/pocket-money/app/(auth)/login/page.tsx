@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 const inputStyle: React.CSSProperties = {
@@ -25,7 +25,6 @@ const labelStyle: React.CSSProperties = {
 };
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
 
@@ -56,7 +55,11 @@ function LoginForm() {
       return;
     }
 
-    router.push("/dashboard");
+    // Hard navigation (not router.push) so the browser makes a full document
+    // request carrying the session cookie just set by signInWithPassword.
+    // Safari doesn't reliably send a freshly-written cookie on a soft RSC nav,
+    // which bounced users back to /login.
+    window.location.assign("/dashboard");
   }
 
   return (
