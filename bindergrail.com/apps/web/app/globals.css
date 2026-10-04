@@ -11,10 +11,35 @@
   --color-border:    #D8D0C0;
 }
 
+/* ─── Binder Grail Arcade palette (used only under /arcade) ───────── */
+@theme {
+  --color-ink-950:     #0B0818; /* page ground, outlines, drop shadows */
+  --color-ink-900:     #141029; /* game screen, panels */
+  --color-ink-800:     #1E1840; /* text boxes, raised surfaces */
+  --color-ink-700:     #2C2459; /* card art window, bezels, dividers */
+  --color-ink-600:     #463C80; /* borders, empty states */
+  --color-cream-100:   #F6EEDA; /* primary text, text box rims */
+  --color-cream-400:   #B3A9CC; /* muted text, labels */
+  --color-stone-400:   #8E87A6; /* common rarity, locked, disabled */
+  --color-gold-400:    #FFC94A; /* primary action, coins, grail */
+  --color-gold-700:    #B9781A; /* gold bevel and text shadow */
+  --color-blue-400:    #5C8DFF; /* secondary action, close result */
+  --color-blue-700:    #2E4CB3; /* blue bevel */
+  --color-cyan-300:    #6FE6F2; /* rare, tells, info */
+  --color-magenta-400: #E06BEA; /* holo, story games */
+  --color-green-400:   #6BE08A; /* LIVE badge only */
+  --color-red-400:     #FF5D6E; /* lives, wrong, walk away */
+}
+
 /* ─── Font families (resolved at runtime from next/font variables) ── */
 @theme inline {
   --font-serif: var(--font-playfair);
   --font-sans:  var(--font-dm-sans);
+
+  /* Arcade fonts — variables are set on the /arcade wrapper only */
+  --font-display: var(--font-press-start); /* Press Start 2P — titles, buttons, labels */
+  --font-body:    var(--font-pixelify);    /* Pixelify Sans — dialogue, rules */
+  --font-num:     var(--font-vt323);       /* VT323 — scores, prices, counters */
 }
 
 /* ─── Base ────────────────────────────────────────────────────────── */
@@ -51,4 +76,13 @@ body {
 .prose h3,
 .prose h4 {
   font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* ─── Arcade motion (used under /arcade; stopped by reduced-motion) ── */
+@keyframes bgaBlink {
+  50% { opacity: 0; }
+}
+@keyframes bgaMarquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
