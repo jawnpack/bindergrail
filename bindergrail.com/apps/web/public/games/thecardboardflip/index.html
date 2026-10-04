@@ -21,7 +21,7 @@
   <meta name="theme-color" content="#000000">
   <meta property="og:url" content="https://bindergrail.com/games/thecardboardflip">
   <link rel="canonical" href="https://bindergrail.com/games/thecardboardflip">
-  <script>window.GAME_HOME = { label: "More from Binder Grail", url: "https://bindergrail.com" };</script>
+  <script>window.GAME_HOME = { label: "Back to the arcade", url: "https://bindergrail.com/arcade" };</script>
   <link rel="stylesheet" href="css/gamestyle.css">
   <link rel="stylesheet" href="css/intro.css">
 </head>
@@ -30,7 +30,10 @@
   <!-- Status bar: always visible. Tap MORE for the full picture. -->
   <header id="topbar">
     <div class="tb-row">
-      <span id="tb-day">DAY 1 · MON</span>
+      <span class="tb-left">
+        <a id="tb-home" href="/arcade" aria-label="Back to the arcade">⌂ ARCADE</a>
+        <span id="tb-day">DAY 1 · MON</span>
+      </span>
       <span id="tb-cash">$1,500</span>
     </div>
     <button type="button" id="tb-more" onclick="openStuffSheet()">

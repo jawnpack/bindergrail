@@ -48,6 +48,19 @@ h2, h3 { margin: 0; font-weight: normal; }
   border-bottom: 3px solid var(--line);
 }
 .tb-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 11px; max-width: 720px; margin: 0 auto; }
+.tb-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
+#tb-home {
+  flex: none;
+  text-decoration: none;
+  color: var(--accent-ink);
+  border: 2px solid var(--accent-ink);
+  padding: 3px 6px;
+  font-size: 8px;
+  line-height: 1;
+  letter-spacing: 1px;
+}
+#tb-home:active { opacity: 0.55; }
+#tb-day { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #tb-cash { font-size: 13px; }
 #tb-more {
   display: flex; justify-content: space-between; align-items: center; gap: 8px;
