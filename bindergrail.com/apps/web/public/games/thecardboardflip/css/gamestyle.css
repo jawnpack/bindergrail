@@ -51,6 +51,9 @@ h2, h3 { margin: 0; font-weight: normal; }
 .tb-left { display: flex; align-items: center; gap: 8px; min-width: 0; }
 #tb-home {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   text-decoration: none;
   color: var(--accent-ink);
   border: 2px solid var(--accent-ink);
@@ -59,7 +62,13 @@ h2, h3 { margin: 0; font-weight: normal; }
   line-height: 1;
   letter-spacing: 1px;
 }
+.tb-home-icon { font-size: 12px; line-height: 1; }
+.tb-home-label { display: none; }
 #tb-home:active { opacity: 0.55; }
+/* Desktop: show the word; mobile keeps just the house icon. */
+@media (min-width: 700px) {
+  .tb-home-label { display: inline; }
+}
 #tb-day { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 #tb-cash { font-size: 13px; }
 #tb-more {
