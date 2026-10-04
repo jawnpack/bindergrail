@@ -1,9 +1,7 @@
 import { createServerClient as createSupabaseServerClient, type CookieOptions } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { Database } from "@bindergrail/database";
-
-const cookieDomain =
-  process.env.NODE_ENV === "production" ? ".bindergrail.com" : undefined;
+import { AUTH_COOKIE_NAME } from "./cookie-name";
 
 export async function createServerClient() {
   const cookieStore = await cookies();
@@ -11,6 +9,8 @@ export async function createServerClient() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      // Host-only cookie with an app-specific name — see cookie-name.ts.
+      cookieOptions: { name: AUTH_COOKIE_NAME },
       cookies: {
         getAll() {
           return cookieStore.getAll();
@@ -20,10 +20,7 @@ export async function createServerClient() {
         ) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, {
-                ...options,
-                domain: cookieDomain,
-              })
+              cookieStore.set(name, value, options)
             );
           } catch {}
         },

@@ -1,12 +1,6 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-
-// Scope auth cookies to .bindergrail.com in production, matching the browser
-// and server clients. If the proxy wrote host-only cookies instead, token
-// rotation could leave two same-named cookies at different scopes and the
-// server could read the stale one — a Safari-specific login loop.
-const cookieDomain =
-  process.env.NODE_ENV === "production" ? ".bindergrail.com" : undefined;
+import { AUTH_COOKIE_NAME } from "@/lib/supabase/cookie-name";
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -15,6 +9,9 @@ export async function proxy(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      // Host-only cookie with an app-specific name, matching the browser and
+      // server clients. See lib/supabase/cookie-name.ts.
+      cookieOptions: { name: AUTH_COOKIE_NAME },
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -27,7 +24,7 @@ export async function proxy(request: NextRequest) {
           );
           response = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, { ...options, domain: cookieDomain })
+            response.cookies.set(name, value, options)
           );
         },
       },
