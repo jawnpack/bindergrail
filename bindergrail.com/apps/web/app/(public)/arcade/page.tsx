@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Press_Start_2P } from "next/font/google";
+import { Press_Start_2P, Pacifico } from "next/font/google";
 import ArcadeAccount from "./ArcadeAccount";
 import styles from "./arcade.module.css";
 
@@ -11,18 +11,26 @@ const pressStart = Press_Start_2P({
   variable: "--font-press",
 });
 
+// Neon-sign typeface for the title.
+const neon = Pacifico({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-neon",
+});
+
 export const metadata: Metadata = {
-  title: "Binder Grail Arcade",
+  title: "Arcade",
   description:
-    "Step into the Binder Grail Arcade — retro cabinets for every Binder Grail game. Now playing: The Cardboard Flip. One account across the arcade and Pocket Money.",
-  alternates: { canonical: "https://bindergrail.com/games" },
+    "Step into the arcade — retro cabinets for every Binder Grail game. Now playing: The Cardboard Flip. One account across the arcade and Pocket Money.",
+  alternates: { canonical: "https://bindergrail.com/arcade" },
   openGraph: {
     type: "website",
     siteName: "Binder Grail",
-    title: "Binder Grail Arcade",
+    title: "Arcade",
     description:
       "Retro cabinets for every Binder Grail game. Now playing: The Cardboard Flip.",
-    url: "https://bindergrail.com/games",
+    url: "https://bindergrail.com/arcade",
     images: [{ url: "/images/binder_grail_logo.png", width: 511, height: 234 }],
   },
   twitter: { card: "summary_large_image" },
@@ -50,15 +58,12 @@ const aisles = [
 
 export default function ArcadePage() {
   return (
-    <main className={`${styles.arcade} ${pressStart.variable}`}>
+    <main className={`${styles.arcade} ${pressStart.variable} ${neon.variable}`}>
       <div className={styles.inner}>
         {/* Title */}
         <div className={styles.titleWrap}>
           <span className={styles.kicker}>INSERT COIN</span>
-          <h1 className={styles.title}>
-            <span className={styles.titleBinder}>BINDER GRAIL</span>
-            <span className={styles.titleArcade}>ARCADE</span>
-          </h1>
+          <h1 className={styles.title}>arcade</h1>
           <p className={styles.subtitle}>
             A cabinet for every Binder Grail game. Pull up, read the marquee, and
             press start. More cabinets rolling onto the floor soon.

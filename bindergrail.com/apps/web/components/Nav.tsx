@@ -79,7 +79,7 @@ export default function Nav() {
             </span>
           </div>
           <div className="flex flex-col items-center">
-            <Link href="/games" className="text-[13px] leading-none text-dust transition-colors hover:text-cream">
+            <Link href="/arcade" className="text-[13px] leading-none text-dust transition-colors hover:text-cream">
               Arcade
             </Link>
             <span className="text-[9px] font-medium uppercase tracking-[0.1em] mt-[2px] text-amber">
@@ -169,7 +169,7 @@ export default function Nav() {
             Pocket Money{" "}
             <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42" }}>· Live</span>
           </a>
-          <Link href="/games" className="text-sm text-cream" onClick={() => setOpen(false)}>
+          <Link href="/arcade" className="text-sm text-cream" onClick={() => setOpen(false)}>
             Arcade{" "}
             <span className="text-[9px] font-medium uppercase tracking-[0.1em] text-amber">· Play free</span>
           </Link>

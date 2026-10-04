@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
         destination: "/games/thecardboardflip",
         permanent: false,
       },
+      // The arcade lobby moved from /games to /arcade.
+      {
+        source: "/games",
+        destination: "/arcade",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
