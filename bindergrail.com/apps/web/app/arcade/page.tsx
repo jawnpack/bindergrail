@@ -162,14 +162,23 @@ export default async function ArcadeLobby() {
             >
               HOW TOKENS WORK
             </h2>
+            <p className="m-0 font-body text-[17px] leading-[1.45] text-cream-100">
+              Play as much as you want — the arcade is free, forever. Tokens are{" "}
+              <span className="text-gold-400">earned by playing</span>, never for
+              sale.
+            </p>
             <ol className="m-0 flex list-decimal flex-col gap-2 pl-[22px] font-body text-[17px] leading-[1.45]">
-              <li>Play any cabinet in the arcade.</li>
+              <li>Play any cabinet — unlimited runs.</li>
               <li>
                 Earn tokens for clearing dailies, keeping streaks and posting high
                 scores.
               </li>
               <li>Spend them on card frames for your share cards and name.</li>
             </ol>
+            <p className="m-0 font-body text-[15px] leading-[1.45] text-cream-400">
+              Paid upgrades (coming soon): color themes and in-game enhancements —
+              cosmetic and optional. Never pay-to-play, never pay-to-win.
+            </p>
           </div>
           <div className="grid min-w-0 flex-1 basis-[520px] grid-cols-4 gap-4">
             {frameTiers.map((t) => (
