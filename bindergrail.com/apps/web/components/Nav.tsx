@@ -79,9 +79,9 @@ export default function Nav() {
             </span>
           </div>
           <div className="flex flex-col items-center">
-            <a href="/games/thecardboardflip" className="text-[13px] leading-none text-dust transition-colors hover:text-cream">
-              Cardboard Flip
-            </a>
+            <Link href="/games" className="text-[13px] leading-none text-dust transition-colors hover:text-cream">
+              Arcade
+            </Link>
             <span className="text-[9px] font-medium uppercase tracking-[0.1em] mt-[2px] text-amber">
               Play free
             </span>
@@ -169,10 +169,10 @@ export default function Nav() {
             Pocket Money{" "}
             <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42" }}>· Live</span>
           </a>
-          <a href="/games/thecardboardflip" className="text-sm text-cream" onClick={() => setOpen(false)}>
-            Cardboard Flip{" "}
+          <Link href="/games" className="text-sm text-cream" onClick={() => setOpen(false)}>
+            Arcade{" "}
             <span className="text-[9px] font-medium uppercase tracking-[0.1em] text-amber">· Play free</span>
-          </a>
+          </Link>
           <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             About
           </Link>
