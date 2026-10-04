@@ -4,6 +4,7 @@ import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
 import GrainOverlay from "@/components/GrainOverlay";
 import JsonLd from "@/components/JsonLd";
+import CardboardFlipBanner from "@/components/CardboardFlipBanner";
 
 
 export const metadata: Metadata = {
@@ -117,6 +118,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── The Cardboard Flip (game demo) ────────────────────────── */}
+      <CardboardFlipBanner variant="feature" />
 
       {/* ── Pocket Money feature ──────────────────────────────────── */}
       <section className="py-16 md:py-20 bg-parchment border-t border-border">

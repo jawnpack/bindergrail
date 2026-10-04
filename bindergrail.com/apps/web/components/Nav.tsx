@@ -30,7 +30,7 @@ export default function Nav() {
           />
         </Link>
 
-        {/* Desktop nav — order: Posts / CR Newsletter / Origins / Pocket Money / About / Sign up */}
+        {/* Desktop nav — order: Posts / CR Newsletter / Origins / Pocket Money / Cardboard Flip / About / Sign up */}
         <nav className="hidden md:flex items-center gap-7">
           <Link
             href="/blog"
@@ -78,6 +78,14 @@ export default function Nav() {
               Live
             </span>
           </div>
+          <div className="flex flex-col items-center">
+            <a href="/games/thecardboardflip" className="text-[13px] leading-none text-dust transition-colors hover:text-cream">
+              Cardboard Flip
+            </a>
+            <span className="text-[9px] font-medium uppercase tracking-[0.1em] mt-[2px] text-amber">
+              Play free
+            </span>
+          </div>
           <Link
             href="/about"
             className="text-sm transition-colors hover:text-white"
@@ -115,7 +123,7 @@ export default function Nav() {
         </button>
       </div>
 
-      {/* Mobile menu — order: Posts / CR Newsletter / Origins / Pocket Money / About / Sign up */}
+      {/* Mobile menu — order: Posts / CR Newsletter / Origins / Pocket Money / Cardboard Flip / About / Sign up */}
       {open && (
         <div
           className="md:hidden border-t px-6 py-5 flex flex-col gap-5"
@@ -160,6 +168,10 @@ export default function Nav() {
           >
             Pocket Money{" "}
             <span style={{ fontSize: "9px", fontWeight: 500, letterSpacing: "0.1em", textTransform: "uppercase", color: "#3D5C42" }}>· Live</span>
+          </a>
+          <a href="/games/thecardboardflip" className="text-sm text-cream" onClick={() => setOpen(false)}>
+            Cardboard Flip{" "}
+            <span className="text-[9px] font-medium uppercase tracking-[0.1em] text-amber">· Play free</span>
           </a>
           <Link href="/about" className="text-sm" style={{ color: "#F5F0E8" }} onClick={() => setOpen(false)}>
             About

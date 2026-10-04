@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/games/thecardboardflip/">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P03T25QFLT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-P03T25QFLT');
+  </script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>The Cardboard Flip</title>
+  <meta name="description" content="$1,500. 30 days. Flip sealed trading card product, read the rumors, and open your own card shop.">
+  <meta property="og:title" content="The Cardboard Flip">
+  <meta property="og:description" content="$1,500. 30 days. Read the rumors, flip the hype, open your own card shop. How fast can you do it?">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:url" content="https://bindergrail.com/games/thecardboardflip">
+  <link rel="canonical" href="https://bindergrail.com/games/thecardboardflip">
+  <script>window.GAME_HOME = { label: "More from Binder Grail", url: "https://bindergrail.com" };</script>
+  <link rel="stylesheet" href="css/gamestyle.css">
+  <link rel="stylesheet" href="css/intro.css">
+</head>
+<body data-place="lgs">
+
+  <!-- Status bar: always visible. Tap MORE for the full picture. -->
+  <header id="topbar">
+    <div class="tb-row">
+      <span id="tb-day">DAY 1 · MON</span>
+      <span id="tb-cash">$1,500</span>
+    </div>
+    <button type="button" id="tb-more" onclick="openStuffSheet()">
+      <span id="tb-summary">0 BOXES · RENT $450 D7 · GOAL $12K</span>
+      <span class="tb-more-label">MORE ▾</span>
+    </button>
+  </header>
+
+  <!-- Locations on the left, the counter for where you are on the right -->
+  <main id="board">
+    <nav id="places" aria-label="Locations"></nav>
+    <section id="counter" aria-live="polite">
+      <div id="counter-head">
+        <h2 id="here">Local Game Store</h2>
+        <p id="here-note"></p>
+      </div>
+      <div id="counter-body"></div>
+    </section>
+  </main>
+
+  <section id="feed" aria-label="The Feed">
+    <h3>THE FEED</h3>
+    <div id="rumor">No news yet...</div>
+  </section>
+
+  <footer id="actionbar">
+    <button type="button" id="next-day" onclick="nextDay()">NEXT DAY ▶</button>
+  </footer>
+
+  <!-- Bottom sheet overlay: YOUR STUFF, online listings, shop shelves, odds -->
+  <div id="sheet" class="overlay" hidden>
+    <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet-head">
+        <h2 id="sheet-title"></h2>
+        <button type="button" class="sheet-close" onclick="closeSheet()" aria-label="Close">✕</button>
+      </div>
+      <div id="sheet-body"></div>
+    </div>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <!-- End of run -->
+  <div id="leaderboard-modal" class="overlay" style="display: none;">
+    <div class="modal-content">
+      <h2>RUN OVER</h2>
+      <p id="final-reason"></p>
+      <p>RANK: <strong id="final-rank"></strong></p>
+      <div id="final-stats">
+        <p>Net worth: $<span id="final-money">0</span></p>
+        <p>Shop opened: <span id="final-shop">—</span></p>
+        <p>Grail: <span id="final-grail">—</span></p>
+        <p>Days played: <span id="final-days">0</span></p>
+        <p>Boxes bought: <span id="final-bought">0</span> · sold: <span id="final-sold">0</span></p>
+      </div>
+      <pre id="final-share" class="share-preview"></pre>
+      <div class="btn-row">
+        <button type="button" class="btn primary" onclick="shareRun('end')">SHARE</button>
+        <button type="button" class="btn" id="play-again" onclick="playAgain()">PLAY AGAIN</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/market.js"></script>
+  <script src="js/rules.js"></script>
+  <script src="js/intro.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/progress.js"></script>
+</body>
+</html>

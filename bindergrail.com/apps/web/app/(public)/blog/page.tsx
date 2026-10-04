@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllPosts } from "@/lib/posts";
 import BlogIndex from "./BlogIndex";
+import CardboardFlipBanner from "@/components/CardboardFlipBanner";
 
 export const metadata: Metadata = {
   title: "All Posts — Pokémon TCG Guides & Market Analysis",
@@ -27,5 +28,5 @@ export const metadata: Metadata = {
 
 export default function BlogPage() {
   const posts = getAllPosts();
-  return <BlogIndex posts={posts} />;
+  return <BlogIndex posts={posts} banner={<CardboardFlipBanner />} />;
 }

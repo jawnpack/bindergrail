@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, type ReactNode } from "react";
 import Link from "next/link";
 import type { PostMeta } from "@/lib/posts";
 
@@ -29,7 +29,7 @@ function PostTagPill({ tag }: { tag: string }) {
   );
 }
 
-export default function BlogIndex({ posts }: { posts: PostMeta[] }) {
+export default function BlogIndex({ posts, banner }: { posts: PostMeta[]; banner?: ReactNode }) {
   const [activeTag, setActiveTag] = useState("All");
 
   const filtered = useMemo(
@@ -63,6 +63,8 @@ export default function BlogIndex({ posts }: { posts: PostMeta[] }) {
             </button>
           ))}
         </div>
+
+        {banner && <div className="mb-8">{banner}</div>}
 
         {/* Post grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

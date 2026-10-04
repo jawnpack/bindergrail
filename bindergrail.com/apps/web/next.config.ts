@@ -16,6 +16,22 @@ const nextConfig: NextConfig = {
         destination: "/blog/best-sealed-pokemon-products-to-hold",
         permanent: true,
       },
+      // The Cardboard Flip: short link people may type or share.
+      {
+        source: "/thecardboardflipgame",
+        destination: "/games/thecardboardflip",
+        permanent: false,
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      // The Cardboard Flip is a static game in public/games/thecardboardflip.
+      // Serve its index.html at the clean URL (its <base> tag keeps assets resolving).
+      {
+        source: "/games/thecardboardflip",
+        destination: "/games/thecardboardflip/index.html",
+      },
     ];
   },
 };

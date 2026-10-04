@@ -6,6 +6,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { BLOG_IMAGE_DIMENSIONS } from "@/lib/blog-images";
 import GrainOverlay from "@/components/GrainOverlay";
 import SignUpForm from "@/components/SignUpForm";
+import CardboardFlipBanner from "@/components/CardboardFlipBanner";
 import ArticleHero from "@/components/ArticleHero";
 import JsonLd from "@/components/JsonLd";
 import type { Metadata } from "next";
@@ -249,6 +250,11 @@ export default async function BlogPostPage({
           <article>
             <MDXRemote source={content} components={mdxComponents} />
           </article>
+
+          {/* Game demo */}
+          <div className="mt-12">
+            <CardboardFlipBanner />
+          </div>
         </div>
       </main>
 
