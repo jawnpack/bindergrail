@@ -85,7 +85,7 @@ export default function GameShell({
           >
             {title} #001
           </div>
-          <div className="flex w-full grow flex-col bg-ink-900 lg:mx-auto lg:h-[586px] lg:w-[442px] lg:grow-0">
+          <div className="flex w-full grow flex-col bg-ink-900 lg:mx-auto lg:h-[586px] lg:w-[442px] lg:grow-0 lg:overflow-y-auto">
             {children}
           </div>
         </div>
