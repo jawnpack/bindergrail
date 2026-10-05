@@ -7,6 +7,7 @@
 // Export as PNG 2x transparent
 
 import type { Metadata } from "next";
+import Image from "next/image";
 import { existsSync } from "fs";
 import { join } from "path";
 import PocketMoneyScreenshotStrip from "@/components/PocketMoneyScreenshotStrip";
@@ -196,11 +197,17 @@ export default function PocketMoneyPage() {
           style={{
             position: "relative",
             zIndex: 1,
-            maxWidth: 600,
+            maxWidth: 1040,
             margin: "0 auto",
             padding: "80px 24px 96px",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 48,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
+          <div style={{ flex: "1 1 460px", minWidth: 0, maxWidth: 560 }}>
           <p
             style={{
               fontSize: 10,
@@ -289,6 +296,33 @@ export default function PocketMoneyPage() {
           <p style={{ marginTop: 12, fontSize: 11, color: "#4A7052" }}>
             Free to use. Your Binder Grail account works here too.
           </p>
+          </div>
+
+          {/* App screenshot */}
+          <div
+            style={{
+              flex: "0 1 300px",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              src="/images/pocket-money/pm-mobile-dashboard.png"
+              alt="The Pocket Money app on a phone — wallet stashes and the monthly budget"
+              width={1144}
+              height={1684}
+              priority
+              style={{
+                width: "100%",
+                maxWidth: 300,
+                height: "auto",
+                borderRadius: 24,
+                border: "1px solid rgba(245, 240, 232, 0.15)",
+                boxShadow: "0 24px 48px rgba(0, 0, 0, 0.35)",
+              }}
+            />
+          </div>
         </div>
       </section>
 
