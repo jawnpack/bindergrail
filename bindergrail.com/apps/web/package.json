@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:gutcheck": "node --test lib/arcade/gutcheck/grade.test.ts lib/arcade/gutcheck/daily.test.ts"
+    "test:gutcheck": "node --test lib/arcade/gutcheck/grade.test.ts lib/arcade/gutcheck/daily.test.ts",
+    "test:tabletalk": "node --test lib/arcade/tabletalk/engine.test.ts",
+    "test:arcade": "node --test lib/arcade/gutcheck/grade.test.ts lib/arcade/gutcheck/daily.test.ts lib/arcade/tabletalk/engine.test.ts"
   },
   "dependencies": {
     "@mdx-js/loader": "^3.1.1",
