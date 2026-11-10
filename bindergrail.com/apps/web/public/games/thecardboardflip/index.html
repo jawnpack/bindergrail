@@ -2,14 +2,6 @@
 <html lang="en">
 <head>
   <base href="/games/thecardboardflip/">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P03T25QFLT"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-P03T25QFLT');
-  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>The Cardboard Flip</title>
@@ -22,10 +14,27 @@
   <meta property="og:url" content="https://bindergrail.com/games/thecardboardflip">
   <link rel="canonical" href="https://bindergrail.com/games/thecardboardflip">
   <script>window.GAME_HOME = { label: "Back to the arcade", url: "https://bindergrail.com/arcade" };</script>
+  <link rel="preload" href="css/fonts/press-start-2p-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/gamestyle.css">
   <link rel="stylesheet" href="css/intro.css">
+  <!-- One deferred bundle (built by apps/web/scripts/bundle-cardboard-flip.mjs).
+       Deferred scripts run after parsing, in order, before DOMContentLoaded. -->
+  <script defer src="js/game.bundle.js"></script>
+  <!-- Analytics: the site-wide GTM container (which owns the site's GA4
+       property), loaded after the game is up so it never delays first paint. -->
+  <script>
+    window.addEventListener('load', function () {
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-WB2SCKMX');
+    });
+  </script>
 </head>
 <body data-place="lgs">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WB2SCKMX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- Status bar: always visible. Tap MORE for the full picture. -->
   <header id="topbar">
@@ -99,10 +108,5 @@
     </div>
   </div>
 
-  <script src="js/market.js"></script>
-  <script src="js/rules.js"></script>
-  <script src="js/intro.js"></script>
-  <script src="js/game.js"></script>
-  <script src="js/progress.js"></script>
 </body>
 </html>
