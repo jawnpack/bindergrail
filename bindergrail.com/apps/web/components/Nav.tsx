@@ -16,7 +16,7 @@ export default function Nav() {
             src="/images/binder_grail_logo.png"
             alt="Binder Grail"
             height={48}
-            width={210}
+            width={105}
             priority
             style={{
               objectFit: "contain",

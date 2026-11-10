@@ -8,12 +8,12 @@ export default function Footer() {
       style={{ borderColor: "#D8D0C0", backgroundColor: "#F5F0E8" }}
     >
       <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between gap-4">
-        <Link href="/" className="block shrink-0" aria-label="Binder Grail home">
+        <Link href="/" prefetch={false} className="block shrink-0" aria-label="Binder Grail home">
           <Image
             src="/images/binder_grail_logo.png"
             alt="Binder Grail"
             height={24}
-            width={110}
+            width={53}
             style={{ objectFit: "contain", objectPosition: "left", height: 24, width: "auto" }}
           />
         </Link>
@@ -27,6 +27,7 @@ export default function Footer() {
           </a>
           <Link
             href="/newsletter"
+            prefetch={false}
             className="text-xs hover:underline"
             style={{ color: "#7A7468" }}
           >
@@ -34,6 +35,7 @@ export default function Footer() {
           </Link>
           <Link
             href="/upgrade"
+            prefetch={false}
             className="text-xs hover:underline"
             style={{ color: "#7A7468" }}
           >

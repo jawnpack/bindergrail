@@ -1,7 +1,13 @@
 import { Press_Start_2P } from "next/font/google";
 
 // Pixel font to match the game's arcade look. Only loads on pages that show the banner.
-const pixel = Press_Start_2P({ subsets: ["latin"], weight: "400", display: "swap" });
+// Below the fold everywhere it appears, so it isn't preloaded.
+const pixel = Press_Start_2P({
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+  preload: false,
+});
 
 // The game is a static page served by a rewrite, so use a plain <a> (full page
 // load) rather than next/link client navigation.
@@ -93,7 +99,10 @@ function Strip() {
       className="group block rounded-sm bg-ink px-5 py-4 transition-opacity hover:opacity-95"
     >
       <span className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-5">
-        <span className={`${pixel.className} text-[11px] leading-[1.6] text-cream shrink-0`}>
+        {/* Press Start 2P is monospaced at 1em per glyph, so this title is
+            exactly 18em wide. Fixing the width keeps the row from reflowing
+            when the (non-preloaded) pixel font swaps in. */}
+        <span className={`${pixel.className} text-[11px] leading-[1.6] text-cream shrink-0 whitespace-nowrap sm:w-[18em]`}>
           The Cardboard Flip
         </span>
         <span className="text-[13px] leading-snug text-dust flex-1">

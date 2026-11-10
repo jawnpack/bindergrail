@@ -1,21 +1,26 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import JsonLd from "@/components/JsonLd";
 import "./globals.css";
 
+// Display face for headings, including the homepage H1 (which uses both the
+// normal and italic styles). Variable file, so one woff2 per style covers
+// every weight.
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-playfair",
   display: "swap",
-  weight: ["400", "700", "900"],
   style: ["normal", "italic"],
 });
 
+// Body text, also above the fold (nav + hero copy). Kept preloaded on purpose:
+// without it the nav visibly re-flows when DM Sans swaps in (measured CLS
+// 0.0002 vs 0 with it). Variable file, so one woff2 covers every weight.
 const dmSans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-dm-sans",
   display: "swap",
-  weight: ["300", "400", "500"],
 });
 
 export const metadata: Metadata = {
@@ -51,24 +56,6 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${dmSans.variable} h-full`}
     >
-      <head>
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WB2SCKMX');`,
-          }}
-        />
-        {/* End Google Tag Manager */}
-        <script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="D346lQG5GYH5qgTyOGDJ0g"
-          async
-        />
-      </head>
       <body className="min-h-full flex flex-col">
         {/* Google Tag Manager (noscript) */}
         <noscript>
@@ -102,6 +89,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           ]}
         />
         {children}
+        {/* Analytics load after the page is idle so they never compete with
+            first paint or hydration. */}
+        <Script id="gtm" strategy="lazyOnload">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WB2SCKMX');`}
+        </Script>
+        <Script
+          id="ahrefs"
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="D346lQG5GYH5qgTyOGDJ0g"
+          strategy="lazyOnload"
+        />
       </body>
     </html>
   );

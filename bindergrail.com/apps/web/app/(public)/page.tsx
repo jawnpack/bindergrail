@@ -193,7 +193,7 @@ export default function HomePage() {
                 >
                   Start tracking free
                 </a>
-                <Link
+                <Link prefetch={false}
                   href="/pocket-money"
                   className="text-[13px] hover:underline text-dust"
                 >
@@ -228,7 +228,7 @@ export default function HomePage() {
             >
               Latest
             </h2>
-            <Link
+            <Link prefetch={false}
               href="/blog"
               className="text-sm hover:underline"
               style={{ color: "#B07035" }}
@@ -239,7 +239,7 @@ export default function HomePage() {
 
           {/* Featured post card (dark) */}
           {featured && (
-            <Link href={`/blog/${featured.slug}`} className="block mb-8 group">
+            <Link prefetch={false} href={`/blog/${featured.slug}`} className="block mb-8 group">
               <div
                 className="relative overflow-hidden rounded-sm p-8 md:p-10"
                 style={{ backgroundColor: "#1A1814" }}
@@ -290,7 +290,7 @@ export default function HomePage() {
                       {formatDate(post.date)}
                     </time>
                   </div>
-                  <Link href={`/blog/${post.slug}`} className="group">
+                  <Link prefetch={false} href={`/blog/${post.slug}`} className="group">
                     <h3
                       className="text-[17px] font-bold leading-snug group-hover:underline"
                       style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
@@ -318,7 +318,7 @@ export default function HomePage() {
           </div>
           <div className="flex flex-col gap-4">
             {/* Origins card */}
-            <Link
+            <Link prefetch={false}
               href="/origins"
               className="block rounded-sm transition-shadow hover:shadow-sm"
               style={{
@@ -359,7 +359,7 @@ export default function HomePage() {
             </Link>
 
             {/* Pocket Money card */}
-            <Link
+            <Link prefetch={false}
               href="/pocket-money"
               className="block rounded-sm transition-shadow hover:shadow-sm"
               style={{
@@ -412,7 +412,7 @@ export default function HomePage() {
               src="/images/common_rare_logo-2-removebg-preview.png"
               alt="Common Rare"
               height={80}
-              width={240}
+              width={107}
               style={{ filter: "brightness(0) invert(1)", height: 80, width: "auto" }}
             />
           </div>
