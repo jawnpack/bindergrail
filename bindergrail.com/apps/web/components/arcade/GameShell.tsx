@@ -31,7 +31,6 @@ export default function GameShell({
   accent,
   howToPlay,
   keys,
-  tokens,
   stats,
   topScores,
   children,
@@ -41,7 +40,6 @@ export default function GameShell({
   accent: Accent;
   howToPlay: string[];
   keys: { key: string; action: string }[];
-  tokens?: number | null;
   stats?: ReactNode;
   topScores?: { name: string; score: string }[];
   children: ReactNode;
@@ -51,7 +49,7 @@ export default function GameShell({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <GameTopBar title={title} accent={accent} tokens={tokens} />
+      <GameTopBar title={title} accent={accent} />
       <GameKeys />
 
       <div className="flex grow items-start justify-center gap-0 lg:gap-9 lg:p-7">
@@ -112,18 +110,26 @@ export default function GameShell({
             </div>
           </Panel>
           <Panel label="MORE CABINETS">
-            {others.map((c) => (
-              <Link
-                key={c.id}
-                href={c.href}
-                className="flex min-h-[44px] items-center justify-between border-[3px] border-ink-600 bg-ink-800 px-3 font-display text-[9px] text-cream-100 no-underline"
-              >
-                <span>{c.title}</span>
-                <span className={accentText[c.accent]}>
-                  {c.type.toUpperCase()}
-                </span>
-              </Link>
-            ))}
+            {others.map((c) => {
+              const cls =
+                "flex min-h-[44px] items-center justify-between border-[3px] border-ink-600 bg-ink-800 px-3 font-display text-[9px] text-cream-100 no-underline";
+              const inner = (
+                <>
+                  <span>{c.title}</span>
+                  <span className={accentText[c.accent]}>{c.type.toUpperCase()}</span>
+                </>
+              );
+              // Static games (/games/*) are plain HTML, not app routes: normal link.
+              return c.href.startsWith("/games/") ? (
+                <a key={c.id} href={c.href} className={cls}>
+                  {inner}
+                </a>
+              ) : (
+                <Link key={c.id} href={c.href} className={cls}>
+                  {inner}
+                </Link>
+              );
+            })}
           </Panel>
         </aside>
       </div>

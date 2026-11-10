@@ -34,6 +34,7 @@ type Props = {
   type?: "button" | "submit";
   disabled?: boolean;
   ariaLabel?: string;
+  prefetch?: boolean;
 };
 
 export default function ArcadeButton({
@@ -46,12 +47,30 @@ export default function ArcadeButton({
   type = "button",
   disabled = false,
   ariaLabel,
+  prefetch,
 }: Props) {
   const cls = `${BASE} ${SIZE[size]} ${disabled ? DISABLED : VARIANT[variant]} ${className}`;
 
+  // Static games under /games/* are plain HTML served by a rewrite, not app
+  // routes, so they get a normal link (full page load, no router prefetch —
+  // prefetching them resolves to the 404 page and preloads its fonts).
+  if (href && !disabled && href.startsWith("/games/")) {
+    return (
+      <a href={href} className={cls} aria-label={ariaLabel} onClick={onClick}>
+        {children}
+      </a>
+    );
+  }
+
   if (href && !disabled) {
     return (
-      <Link href={href} className={cls} aria-label={ariaLabel} onClick={onClick}>
+      <Link
+        href={href}
+        prefetch={prefetch}
+        className={cls}
+        aria-label={ariaLabel}
+        onClick={onClick}
+      >
         {children}
       </Link>
     );

@@ -1,27 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Playfair_Display, DM_Sans } from "next/font/google";
 import JsonLd from "@/components/JsonLd";
 import "./globals.css";
-
-// Display face for headings, including the homepage H1 (which uses both the
-// normal and italic styles). Variable file, so one woff2 per style covers
-// every weight.
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-  display: "swap",
-  style: ["normal", "italic"],
-});
-
-// Body text, also above the fold (nav + hero copy). Kept preloaded on purpose:
-// without it the nav visibly re-flows when DM Sans swaps in (measured CLS
-// 0.0002 vs 0 with it). Variable file, so one woff2 covers every weight.
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  variable: "--font-dm-sans",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://bindergrail.com"),
@@ -54,7 +34,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${dmSans.variable} h-full`}
+      className="h-full"
     >
       <body className="min-h-full flex flex-col">
         {/* Google Tag Manager (noscript) */}

@@ -1,13 +1,4 @@
-import { Press_Start_2P } from "next/font/google";
-
-// Pixel font to match the game's arcade look. Only loads on pages that show the banner.
-// Below the fold everywhere it appears, so it isn't preloaded.
-const pixel = Press_Start_2P({
-  subsets: ["latin"],
-  weight: "400",
-  display: "swap",
-  preload: false,
-});
+import { flipPixel as pixel } from "./flip-font";
 
 // The game is a static page served by a rewrite, so use a plain <a> (full page
 // load) rather than next/link client navigation.

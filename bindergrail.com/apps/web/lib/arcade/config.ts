@@ -11,6 +11,9 @@ export type Accent = "gold" | "blue" | "cyan" | "magenta";
 
 export type Cabinet = {
   id: string;
+  // The one flag for whether a game is playable. Everything in the lobby —
+  // PLAY buttons, chips, the ticker, the dailies row — reads this.
+  launched: boolean;
   title: string;
   type: CabinetType;
   status: CabinetStatus;
@@ -23,6 +26,7 @@ export type Cabinet = {
 export const CABINETS: Cabinet[] = [
   {
     id: "cardboard-flip",
+    launched: true,
     title: "THE CARDBOARD FLIP",
     type: "story",
     status: "live",
@@ -34,6 +38,7 @@ export const CABINETS: Cabinet[] = [
   },
   {
     id: "gut-check",
+    launched: false,
     title: "GUT CHECK",
     type: "daily",
     status: "new",
@@ -45,6 +50,7 @@ export const CABINETS: Cabinet[] = [
   },
   {
     id: "comp-check",
+    launched: false,
     title: "COMP CHECK",
     type: "daily",
     status: "new",
@@ -55,6 +61,7 @@ export const CABINETS: Cabinet[] = [
   },
   {
     id: "table-talk",
+    launched: true,
     title: "TABLE TALK",
     type: "arcade",
     status: "new",
@@ -64,6 +71,10 @@ export const CABINETS: Cabinet[] = [
     playsLabel: "ENDLESS VENDORS",
   },
 ];
+
+export function isLaunched(id: string): boolean {
+  return CABINETS.find((c) => c.id === id)?.launched ?? false;
+}
 
 export function getCabinet(id: string): Cabinet | undefined {
   return CABINETS.find((c) => c.id === id);

@@ -70,7 +70,7 @@ export default function CabinetCard({ cabinet }: { cabinet: Cabinet }) {
       <div className="flex grow flex-col gap-3 p-[18px]">
         <div className="flex flex-wrap gap-2">
           <Chip tone={cabinet.type} />
-          <Chip tone={CHIP_STATUS[cabinet.status]} />
+          <Chip tone={cabinet.launched ? CHIP_STATUS[cabinet.status] : "soon"} />
         </div>
         <h3 className="m-0 font-display text-[14px] leading-[1.4] text-cream-100">
           {cabinet.title}
@@ -80,9 +80,15 @@ export default function CabinetCard({ cabinet }: { cabinet: Cabinet }) {
           <span className="font-display text-[8px] text-stone-400">
             {cabinet.playsLabel}
           </span>
-          <ArcadeButton href={cabinet.href} size="sm">
-            PLAY
-          </ArcadeButton>
+          {cabinet.launched ? (
+            <ArcadeButton href={cabinet.href} size="sm">
+              PLAY
+            </ArcadeButton>
+          ) : (
+            <ArcadeButton disabled size="sm">
+              SOON
+            </ArcadeButton>
+          )}
         </div>
       </div>
     </article>

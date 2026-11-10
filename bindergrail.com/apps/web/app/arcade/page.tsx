@@ -1,18 +1,14 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
 import { dailySeed, puzzleLabel } from "@/lib/arcade/dailySeed";
-import { getTokenBalance } from "@/lib/arcade/tokens";
-import { getDailyStreak } from "@/lib/arcade/streak";
-import { getUserBest } from "@/lib/arcade/leaderboard";
-import { getCabinet } from "@/lib/arcade/config";
+import { getCabinet, isLaunched } from "@/lib/arcade/config";
 import PixelSprite from "@/components/arcade/PixelSprite";
-import HudPill from "@/components/arcade/HudPill";
 import ArcadeButton from "@/components/arcade/ArcadeButton";
 import MarqueeTicker from "@/components/arcade/MarqueeTicker";
 import FeaturedCabinet from "@/components/arcade/FeaturedCabinet";
 import DailyTile from "@/components/arcade/DailyTile";
-import StreakStrip from "@/components/arcade/StreakStrip";
 import SelectGame from "@/components/arcade/SelectGame";
+import PlayerHud from "@/components/arcade/PlayerHud";
+import PlayerStreak from "@/components/arcade/PlayerStreak";
 
 function dateLabel(dateET: string): string {
   return new Intl.DateTimeFormat("en-US", {
@@ -23,30 +19,23 @@ function dateLabel(dateET: string): string {
   }).format(new Date(dateET + "T12:00:00Z"));
 }
 
-export default async function ArcadeLobby() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const signedIn = !!user;
+// Static, regenerated every 5 minutes so the date-driven parts (daily number,
+// date label) roll over shortly after midnight ET. Everything personal — sign
+// in, tokens, streak, best run — is a client island fed by /api/arcade/me.
+export const revalidate = 300;
 
-  const [tokens, streak, flipBest] = user
-    ? await Promise.all([
-        getTokenBalance(user.id),
-        getDailyStreak(user.id),
-        getUserBest("cardboard-flip"),
-      ])
-    : [null, 0, null];
-
+export default function ArcadeLobby() {
   const { number, dateET } = dailySeed();
   const n = puzzleLabel(number);
   const flip = getCabinet("cardboard-flip")!;
 
   const ticker = [
     "INSERT COIN",
-    "NEW DAILIES AT MIDNIGHT ET",
-    `GUT CHECK ${n} IS LIVE`,
-    `COMP CHECK ${n} IS LIVE`,
+    ...(isLaunched("gut-check") || isLaunched("comp-check")
+      ? ["NEW DAILIES AT MIDNIGHT ET"]
+      : ["DAILY GAMES COMING SOON"]),
+    ...(isLaunched("gut-check") ? [`GUT CHECK ${n} IS LIVE`] : []),
+    ...(isLaunched("comp-check") ? [`COMP CHECK ${n} IS LIVE`] : []),
     "CAN YOU OPEN YOUR SHOP BY DAY 30?",
   ];
 
@@ -85,34 +74,14 @@ export default async function ArcadeLobby() {
               BINDER GRAIL ARCADE
             </h1>
           </div>
-          <div className="flex flex-wrap items-center gap-3">
-            {signedIn ? (
-              <>
-                <HudPill sprite="coin" value={tokens ?? 0} label="TOKENS" />
-                <HudPill
-                  sprite="flame"
-                  value={streak}
-                  label="DAY STREAK"
-                  valueClassName="text-cream-100"
-                />
-              </>
-            ) : (
-              <ArcadeButton href="/login" variant="outline" size="sm">
-                SIGN IN
-              </ArcadeButton>
-            )}
-          </div>
+          <PlayerHud />
         </div>
       </header>
 
       <MarqueeTicker items={ticker} />
 
       <main className="mx-auto flex max-w-[1200px] flex-col gap-14 px-6 py-11">
-        <FeaturedCabinet
-          cabinet={flip}
-          signedIn={signedIn}
-          best={flipBest != null ? String(flipBest) : null}
-        />
+        <FeaturedCabinet cabinet={flip} />
 
         {/* Today's dailies */}
         <section aria-labelledby="dailies-title" className="flex flex-col gap-5">
@@ -135,6 +104,7 @@ export default async function ArcadeLobby() {
               href="/arcade/gut-check"
               accent="gold"
               stateLabel="NOT PLAYED"
+              launched={isLaunched("gut-check")}
             />
             <DailyTile
               numberLabel={n}
@@ -143,8 +113,11 @@ export default async function ArcadeLobby() {
               href="/arcade/comp-check"
               accent="blue"
               stateLabel="NOT PLAYED"
+              launched={isLaunched("comp-check")}
             />
-            {signedIn ? <StreakStrip streak={streak} /> : null}
+            {isLaunched("gut-check") || isLaunched("comp-check") ? (
+              <PlayerStreak />
+            ) : null}
           </div>
         </section>
 

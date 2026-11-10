@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
-import { getTokenBalance } from "@/lib/arcade/tokens";
 import { dailySeed, puzzleLabel } from "@/lib/arcade/dailySeed";
 import { getTodayPlay } from "@/lib/arcade/gutcheck/queries";
 import GameShell from "@/components/arcade/GameShell";
@@ -36,12 +34,11 @@ const KEYS = [
   { key: "ESC", action: "Back to lobby" },
 ];
 
+// ISR: today's frozen daily is public data; regenerate every 5 minutes so the
+// day rolls over shortly after midnight ET. Gameplay is unchanged.
+export const revalidate = 300;
+
 export default async function GutCheckPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const tokens = user ? await getTokenBalance(user.id) : null;
   const { number } = dailySeed();
   const play = await getTodayPlay();
 
@@ -53,7 +50,6 @@ export default async function GutCheckPage() {
         accent="gold"
         howToPlay={HOW_TO_PLAY}
         keys={KEYS}
-        tokens={tokens}
       >
         {play ? (
           <GutCheckGame

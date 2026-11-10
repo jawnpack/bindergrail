@@ -1,20 +1,14 @@
 import ArcadeButton from "./ArcadeButton";
 import Chip from "./Chip";
 import PixelSprite from "./PixelSprite";
+import FeaturedBest from "./FeaturedBest";
 import { RIM } from "./ui";
 import type { Cabinet } from "@/lib/arcade/config";
 
-// The hero slot. Personal stats (your best) only render when signed in, so we
-// never show a fake balance.
-export default function FeaturedCabinet({
-  cabinet,
-  signedIn,
-  best,
-}: {
-  cabinet: Cabinet;
-  signedIn: boolean;
-  best?: string | null;
-}) {
+// The hero slot. The personal stat (your best run) is a client island that only
+// renders when signed in, so we never show a fake balance and the page stays
+// static.
+export default function FeaturedCabinet({ cabinet }: { cabinet: Cabinet }) {
   return (
     <section
       aria-labelledby="featured-title"
@@ -54,16 +48,7 @@ export default function FeaturedCabinet({
           Buy low, sell high and make rent every week. Flip your way from a single
           binder to your own card shop in 30 days.
         </p>
-        {signedIn ? (
-          <div className="border-[3px] border-ink-600 bg-ink-800 p-[14px]">
-            <div className="font-display text-[9px] text-cream-400">
-              YOUR BEST RUN
-            </div>
-            <div className="font-num text-[30px] leading-[1.1] text-cream-100">
-              {best ?? "NO RUNS YET"}
-            </div>
-          </div>
-        ) : null}
+        <FeaturedBest />
         <div className="flex flex-wrap gap-[14px] pt-1">
           <ArcadeButton href={cabinet.href}>
             <PixelSprite name="arrow-up" height={14} />

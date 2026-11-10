@@ -56,6 +56,12 @@ body {
   color: #1A1814;
 }
 
+/* Marketing layouts set the font variables on their wrapper (app/fonts.ts),
+   so the body face is applied there rather than on <body>. */
+.site-fonts {
+  font-family: var(--font-dm-sans), Arial, sans-serif;
+}
+
 /* ─── Prose overrides for article pages ──────────────────────────── */
 .prose {
   --tw-prose-body:          #1A1814;

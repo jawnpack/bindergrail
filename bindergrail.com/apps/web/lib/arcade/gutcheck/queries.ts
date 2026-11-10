@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 import { dailySeed } from "@/lib/arcade/dailySeed";
 import { seededShuffle } from "./daily";
 import { DAILY_SIZE } from "./config";
@@ -23,7 +24,9 @@ export async function getDailyChallenge(
   date: string
 ): Promise<DailyChallenge | null> {
   try {
-    const supabase = await createClient();
+    // Public card data: cookie-less so the page can be static/ISR.
+    const supabase = createPublicClient();
+    if (!supabase) return null;
     const { data, error } = await supabase
       .from("gut_check_daily_challenges")
       .select("challenge_date, seed, card_ids, challenge_version")
@@ -39,7 +42,9 @@ export async function getDailyChallenge(
 export async function getPlayCards(ids: string[]): Promise<PlayCard[]> {
   if (ids.length === 0) return [];
   try {
-    const supabase = await createClient();
+    // Public card data: cookie-less so the page can be static/ISR.
+    const supabase = createPublicClient();
+    if (!supabase) return [];
     const { data, error } = await supabase
       .from("gut_check_cards")
       .select(PLAY_COLUMNS)
@@ -71,7 +76,9 @@ export async function getTodayPlay(): Promise<{
 // of the daily. Pulls a page of ids then shuffles in-process.
 export async function getPracticeCards(n: number = DAILY_SIZE): Promise<PlayCard[]> {
   try {
-    const supabase = await createClient();
+    // Public card data: cookie-less so the page can be static/ISR.
+    const supabase = createPublicClient();
+    if (!supabase) return [];
     const { data, error } = await supabase
       .from("gut_check_cards")
       .select(PLAY_COLUMNS)

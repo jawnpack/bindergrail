@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
-import { getTokenBalance } from "@/lib/arcade/tokens";
 import GameShell from "@/components/arcade/GameShell";
 import TableTalkGame from "@/components/arcade/tabletalk/TableTalkGame";
 import JsonLd from "@/components/JsonLd";
@@ -32,12 +30,7 @@ const KEYS = [
   { key: "ESC", action: "Back to lobby" },
 ];
 
-export default async function TableTalkPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const tokens = user ? await getTokenBalance(user.id) : null;
+export default function TableTalkPage() {
 
   return (
     <>
@@ -47,7 +40,6 @@ export default async function TableTalkPage() {
         accent="cyan"
         howToPlay={HOW_TO_PLAY}
         keys={KEYS}
-        tokens={tokens}
       >
         <TableTalkGame />
       </GameShell>

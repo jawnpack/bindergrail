@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
-import { getTokenBalance } from "@/lib/arcade/tokens";
 import { dailySeed } from "@/lib/arcade/dailySeed";
 import { getPracticeCards } from "@/lib/arcade/gutcheck/queries";
 import { DAILY_SIZE } from "@/lib/arcade/gutcheck/config";
@@ -32,11 +30,6 @@ const KEYS = [
 ];
 
 export default async function GutCheckPracticePage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const tokens = user ? await getTokenBalance(user.id) : null;
   const { number } = dailySeed();
   const cards = await getPracticeCards(DAILY_SIZE);
 
@@ -47,7 +40,6 @@ export default async function GutCheckPracticePage() {
       accent="gold"
       howToPlay={HOW_TO_PLAY}
       keys={KEYS}
-      tokens={tokens}
     >
       {cards.length > 0 ? (
         <GutCheckGame

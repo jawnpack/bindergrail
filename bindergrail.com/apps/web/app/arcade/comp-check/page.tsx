@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import { createClient } from "@/lib/supabase/server";
-import { getTokenBalance } from "@/lib/arcade/tokens";
 import { dailySeed, puzzleLabel } from "@/lib/arcade/dailySeed";
 import GameShell from "@/components/arcade/GameShell";
 import ComingSoonScreen from "@/components/arcade/ComingSoonScreen";
@@ -25,12 +23,11 @@ const KEYS = [
   { key: "ESC", action: "Back to lobby" },
 ];
 
-export default async function CompCheckPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const tokens = user ? await getTokenBalance(user.id) : null;
+// Static, regenerated every 5 minutes so the daily number rolls over shortly
+// after midnight ET.
+export const revalidate = 300;
+
+export default function CompCheckPage() {
   const { number } = dailySeed();
 
   return (
@@ -40,7 +37,6 @@ export default async function CompCheckPage() {
       accent="blue"
       howToPlay={HOW_TO_PLAY}
       keys={KEYS}
-      tokens={tokens}
     >
       <ComingSoonScreen
         title="COMP CHECK"

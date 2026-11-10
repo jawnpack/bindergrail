@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { siteFontClass } from "../fonts";
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: "#F5F0E8" }}>
+    <div className={`${siteFontClass} min-h-screen flex flex-col`} style={{ backgroundColor: "#F5F0E8" }}>
       <header className="px-6 py-5">
         <Link
           href="/"
