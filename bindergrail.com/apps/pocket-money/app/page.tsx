@@ -1,17 +1,7 @@
 import { redirect } from "next/navigation";
-import { createServerClient } from "@/lib/supabase/server";
 
-export const dynamic = "force-dynamic";
-
-export default async function RootPage() {
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (user) {
-    redirect("/dashboard");
-  } else {
-    redirect("/login");
-  }
+// proxy.ts routes "/" on cookie presence before this ever renders; this is only
+// a static fallback so the route never does a Supabase round trip.
+export default function RootPage() {
+  redirect("/login");
 }

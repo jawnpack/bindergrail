@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import {
   getUserProfile,
@@ -15,7 +16,7 @@ export default async function AccountPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return null;
+  if (!user) redirect("/login");
 
   const now = new Date();
   const year = now.getFullYear();

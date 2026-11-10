@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
+import { signInAction } from "../actions";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -24,33 +24,38 @@ const labelStyle: React.CSSProperties = {
   marginBottom: 6,
 };
 
-function LoginForm() {
+// Auth callback redirects here with ?error=auth when a confirmation or magic
+// link fails. Reading the query string is the only request-specific part of the
+// page, so it lives in this small Suspense island — the form itself stays in the
+// prerendered HTML instead of waiting for JavaScript.
+function AuthLinkError() {
   const searchParams = useSearchParams();
-  const supabase = createClient();
+  if (searchParams.get("error") !== "auth") return null;
+  return (
+    <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>
+      That sign-in link didn&apos;t work. Try signing in with your password.
+    </p>
+  );
+}
 
+function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // Auth callback redirects here with ?error=auth when a confirmation
-  // or magic link fails — surface it instead of a blank form.
-  const [error, setError] = useState(
-    searchParams.get("error") === "auth"
-      ? "That sign-in link didn't work. Try signing in with your password."
-      : ""
-  );
+  const [error, setError] = useState("");
+  // Once the user submits, the link-error notice is replaced by live results.
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+    setSubmitted(true);
     setLoading(true);
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    const { error: authError } = await signInAction(email, password);
 
     if (authError) {
-      setError(authError.message);
+      setError(authError);
       setLoading(false);
       return;
     }
@@ -135,9 +140,13 @@ function LoginForm() {
             />
           </div>
 
-          {error && (
+          {error ? (
             <p style={{ fontSize: 13, color: "var(--pm-red-mid)" }}>{error}</p>
-          )}
+          ) : !submitted ? (
+            <Suspense fallback={null}>
+              <AuthLinkError />
+            </Suspense>
+          ) : null}
 
           <button
             type="submit"
@@ -183,9 +192,5 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
-  return (
-    <Suspense fallback={null}>
-      <LoginForm />
-    </Suspense>
-  );
+  return <LoginForm />;
 }

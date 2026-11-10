@@ -188,7 +188,7 @@ export default function HomePage() {
 
               <div className="flex flex-wrap items-center gap-4">
                 <a
-                  href="https://pocketmoney.bindergrail.com"
+                  href="https://pocketmoney.bindergrail.com/signup"
                   className="rounded-sm px-5 py-2.5 text-sm font-medium transition-opacity hover:opacity-80 bg-amber text-cream"
                 >
                   Start tracking free

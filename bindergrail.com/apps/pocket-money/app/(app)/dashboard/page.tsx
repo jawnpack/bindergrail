@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import {
   getUserProfile,
@@ -28,24 +29,19 @@ export default async function DashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return null;
+  if (!user) redirect("/login");
 
   const now = new Date();
   const initialYear = now.getFullYear();
   const initialMonth = now.getMonth() + 1;
 
-  // Ensure the current month has a budget row (carries forward the last
-  // month's amount) before fetching the full history.
-  const currentBudget = await getOrCreateMonthlyBudget(
-    supabase,
-    user.id,
-    initialYear,
-    initialMonth
-  );
-
+  // One parallel round trip. The current-month budget row is ensured (carrying
+  // forward last month's amount) alongside the history fetch; if it was just
+  // created, it won't be in the history yet, so it's merged in below.
   const [
+    currentBudget,
     profile,
-    allBudgets,
+    budgetHistory,
     allTransactions,
     holds,
     grail,
@@ -55,6 +51,7 @@ export default async function DashboardPage() {
     grailFunds,
     walletBuckets,
   ] = await Promise.all([
+    getOrCreateMonthlyBudget(supabase, user.id, initialYear, initialMonth),
     getUserProfile(supabase, user.id),
     getAllBudgets(supabase, user.id),
     getAllTransactions(supabase, user.id),
@@ -66,6 +63,20 @@ export default async function DashboardPage() {
     getGrailFunds(supabase, user.id),
     getWalletBuckets(supabase, user.id),
   ]);
+
+  const allBudgets = budgetHistory.some(
+    (b) => b.year === initialYear && b.month === initialMonth
+  )
+    ? budgetHistory
+    : [
+        ...budgetHistory,
+        {
+          year: initialYear,
+          month: initialMonth,
+          budget_amount: currentBudget.budget_amount,
+          currency: currentBudget.currency,
+        },
+      ];
 
   // Money committed to grails already caught has been SPENT — scope the
   // reserve to items still active so it can't linger in the wallet.

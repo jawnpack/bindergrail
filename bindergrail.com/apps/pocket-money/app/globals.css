@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -37,7 +36,7 @@ html, body {
 body {
   background-color: var(--pm-gray-bg);
   color: var(--pm-ink);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-inter), Arial, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   font-weight: 400;
@@ -50,4 +49,15 @@ button {
 
 input, select, textarea {
   font-family: inherit;
+}
+
+/* Loading skeletons (loading.tsx). Static under reduced motion. */
+@keyframes pm-pulse {
+  50% { opacity: 0.55; }
+}
+.pm-skeleton {
+  animation: pm-pulse 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pm-skeleton { animation: none; }
 }

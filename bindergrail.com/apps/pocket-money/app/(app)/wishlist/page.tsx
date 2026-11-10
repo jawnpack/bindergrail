@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import {
   getUserProfile,
@@ -23,7 +24,7 @@ export default async function WishlistPage({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) return null;
+  if (!user) redirect("/login");
 
   const [profile, items, customTags, grailFunds, settings] = await Promise.all([
     getUserProfile(supabase, user.id),

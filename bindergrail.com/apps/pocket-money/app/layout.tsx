@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
+import Script from "next/script";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+// Self-hosted, Latin only, and only the two weights the app uses.
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -16,20 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full">
-      <head>
-        {/* Google Tag Manager */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-WB2SCKMX');`,
-          }}
-        />
-        {/* End Google Tag Manager */}
-      </head>
+    <html lang="en" className={`${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col">
         {/* Google Tag Manager (noscript) */}
         <noscript>
@@ -42,6 +39,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         {children}
+        {/* Google Tag Manager — deferred until the page is idle so it never
+            competes with first paint or hydration. */}
+        <Script id="gtm" strategy="lazyOnload">
+          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WB2SCKMX');`}
+        </Script>
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { signUpAction, saveFirstBudgetAction } from "../actions";
 
 type Step = 1 | 2 | 3;
 
@@ -69,8 +69,6 @@ function StepDots({ current }: { current: Step }) {
 }
 
 export default function SignupPage() {
-  const supabase = createClient();
-
   const [step, setStep] = useState<Step>(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -88,17 +86,10 @@ export default function SignupPage() {
     setError("");
     setLoading(true);
 
-    const { data, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-        data: { display_name: displayName },
-      },
-    });
+    const result = await signUpAction({ email, password, displayName, currency });
 
-    if (signUpError) {
-      setError(signUpError.message);
+    if (result.error) {
+      setError(result.error);
       setLoading(false);
       return;
     }
@@ -114,22 +105,16 @@ export default function SignupPage() {
 
     // Email confirmation enabled: no session yet, so the profile/budget
     // writes would fail against RLS. Ask the user to confirm first.
-    if (!data.session) {
+    if (result.needsConfirmation) {
       setLoading(false);
       setConfirmEmailNotice(true);
       return;
     }
 
-    if (data.user) {
-      const { error: profileError } = await supabase
-        .from("users")
-        .upsert({ id: data.user.id, email, display_name: displayName, currency });
-
-      if (profileError) {
-        setError("Account created, but the profile didn't save. Try signing in.");
-        setLoading(false);
-        return;
-      }
+    if (result.profileError) {
+      setError(result.profileError);
+      setLoading(false);
+      return;
     }
 
     setLoading(false);
@@ -142,33 +127,25 @@ export default function SignupPage() {
     setError("");
     setLoading(true);
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      setError(
-        "Your session expired. Sign in and set your budget from the dashboard."
-      );
-      setLoading(false);
-      return;
-    }
-
     const now = new Date();
-    const { error: budgetError } = await supabase
-      .from("pm_monthly_budgets")
-      .insert({
-        user_id: user.id,
-        year: now.getFullYear(),
-        month: now.getMonth() + 1,
-        budget_amount: parseFloat(budget),
-        currency,
-      });
+    const result = await saveFirstBudgetAction({
+      budget: parseFloat(budget),
+      currency,
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+    });
 
     setLoading(false);
 
-    if (budgetError) {
-      setError("Couldn't save your budget. Try again.");
+    if (result.sessionExpired) {
+      setError(
+        "Your session expired. Sign in and set your budget from the dashboard."
+      );
+      return;
+    }
+
+    if (result.error) {
+      setError(result.error);
       return;
     }
 
