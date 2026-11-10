@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { existsSync } from "fs";
 import { join } from "path";
 
@@ -7,26 +8,42 @@ import { join } from "path";
 //   pm-add-transaction.png    — the "Log a transaction" modal, ~840×1500 portrait
 //   pm-wishlist-grail.png     — wishlist page with grail + reserved, ~1200×1000
 //   pm-mobile-dashboard.png   — narrow browser/phone view, ~750×1500 portrait
-const SCREENSHOTS: { file: string; caption: string; wide: boolean }[] = [
+// width/height are the files' intrinsic pixels (exported at ~2x the largest
+// slot they render in), so the browser reserves space before load.
+const SCREENSHOTS: {
+  file: string;
+  caption: string;
+  wide: boolean;
+  width: number;
+  height: number;
+}[] = [
   {
     file: "pm-dashboard-desktop.png",
     caption: "The dashboard: budget, wallet stashes, holds, and the full log",
     wide: true,
+    width: 1328,
+    height: 699,
   },
   {
     file: "pm-add-transaction.png",
     caption: "Log a spend, return, or sale in seconds",
     wide: false,
+    width: 568,
+    height: 1000,
   },
   {
     file: "pm-wishlist-grail.png",
     caption: "The wishlist, with funds reserved toward your grail",
     wide: true,
+    width: 1202,
+    height: 812,
   },
   {
     file: "pm-mobile-dashboard.png",
     caption: "Works great on your phone",
     wide: false,
+    width: 600,
+    height: 883,
   },
 ];
 
@@ -82,12 +99,19 @@ export default function PocketMoneyScreenshotStrip() {
                 border: "1px solid #4A7052",
               }}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={`/images/pocket-money/${shot.file}`}
                 alt={shot.caption}
+                width={shot.width}
+                height={shot.height}
                 loading="lazy"
-                decoding="async"
+                // Rendered width = figure width minus the 8px padding + 1px
+                // border on each side.
+                sizes={
+                  shot.wide
+                    ? "(max-width: 800px) calc(85vw - 18px), 662px"
+                    : "(max-width: 428px) calc(70vw - 18px), 282px"
+                }
                 style={{
                   width: "100%",
                   height: "auto",

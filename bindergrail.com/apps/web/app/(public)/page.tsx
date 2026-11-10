@@ -207,8 +207,8 @@ export default function HomePage() {
               <Image
                 src="/images/pocket-money/pm-dashboard-desktop.png"
                 alt="The Pocket Money dashboard showing a monthly budget, a wallet split into stashes, holds, an active grail, and a transaction log"
-                width={1900}
-                height={1000}
+                width={1328}
+                height={699}
                 sizes="(max-width: 768px) 100vw, 520px"
                 className="w-full h-auto"
               />

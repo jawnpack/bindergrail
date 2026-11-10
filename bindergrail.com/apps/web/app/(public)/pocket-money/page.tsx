@@ -310,9 +310,10 @@ export default function PocketMoneyPage() {
             <Image
               src="/images/pocket-money/pm-mobile-dashboard.png"
               alt="The Pocket Money app on a phone — wallet stashes and the monthly budget"
-              width={1144}
-              height={1684}
+              width={600}
+              height={883}
               priority
+              sizes="(max-width: 348px) calc(100vw - 48px), 300px"
               style={{
                 width: "100%",
                 maxWidth: 300,
