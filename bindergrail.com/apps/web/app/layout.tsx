@@ -32,10 +32,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className="h-full"
-    >
+    // suppressHydrationWarning: an inline pre-paint script (components/ui/
+    // RevealObserver.tsx) adds the `reveal-ready` class to <html> before React
+    // hydrates. Only <html>'s own attributes are exempted, not its children.
+    <html lang="en" className="h-full" suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         {/* Google Tag Manager (noscript) */}
         <noscript>

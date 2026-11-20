@@ -1,14 +1,177 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ─── Brand color palette ─────────────────────────────────────────── */
-@theme {
-  --color-ink:       #1A1814;
-  --color-cream:     #F5F0E8;
-  --color-amber:     #B07035;
-  --color-dust:      #7A7468;
-  --color-parchment: #E8E4DC;
-  --color-border:    #D8D0C0;
+/* ═══════════════════════════════════════════════════════════════════
+   THE COLLECTOR'S ALMANAC — design tokens
+   Every color, size, space and duration on the marketing site resolves
+   to one of these. Paper, not glass: hairlines over shadows, amber as
+   punctuation, Playfair at display sizes, DM Sans for everything else.
+   ═══════════════════════════════════════════════════════════════════ */
+@layer base {
+  :root {
+    /* ---- Surfaces ---- */
+    --ink:             #1A1814;  /* darkest surface */
+    --ink-raised:      #232019;  /* cards on ink */
+    --ink-hairline:    #332E25;  /* borders on ink */
+
+    --cream:           #F5F0E8;  /* default page surface */
+    --parchment:       #E8E0D0;  /* raised / blocked areas on cream */
+    --cream-hairline:  #D8D0C0;  /* borders on cream */
+
+    --forest:          #2E4633;  /* Pocket Money surface */
+    --forest-raised:   #38543E;
+    --forest-hairline: #466B4E;
+
+    /* ---- Text (ratios measured against their surface) ---- */
+    --text-on-cream:        #1A1814;  /* 15.6:1 on cream, 13.5:1 on parchment */
+    --text-on-cream-muted:  #5E564A;  /*  6.4:1 on cream,  5.5:1 on parchment */
+    --text-on-ink:          #F5F0E8;  /* 15.6:1 */
+    --text-on-ink-muted:    #A89C8A;  /*  6.6:1 on ink, 6.0:1 on ink-raised */
+    --text-on-forest:       #F5F0E8;  /*  9.1:1 on forest, 7.4:1 raised */
+    --text-on-forest-muted: #B0D4B8;  /*  6.4:1 on forest, 5.2:1 raised
+                                         (ink-muted fails on forest: 3.8) */
+
+    /* ---- Amber: three roles, never mixed ---- */
+    --amber:          #B07035;  /* decorative only: rules, ticks, display
+                                   accents >=24px. Never small text. */
+    --amber-bright:   #C98A45;  /* amber TEXT on dark (6.1:1 on ink) and the
+                                   primary button fill (ink text 6.1:1) */
+    --amber-deep:     #8F5620;  /* amber on LIGHT: text on cream (5.3:1) and
+                                   the button fill behind cream text (5.3:1) */
+    --amber-bright-hover: #D69A55;  /* primary hover: ink text 7.3:1 */
+    --amber-deep-hover:   #7A4718;  /* primary-on-light hover: cream 6.8:1 */
+
+    /* ---- Status ---- */
+    --live:           #6FA177;  /* 5.5:1 on ink-raised */
+    --soon:           #A89C8A;
+
+    /* ---- Measure ---- */
+    --measure:        34.5rem; /* article + long prose: ~72 characters of 17px DM Sans */
+    --measure-lead:   46ch;  /* hero and section lead paragraphs */
+    --measure-card:   58ch;  /* card body copy */
+
+    /* ---- Containers ---- */
+    --w-prose:   42rem;   /* 672px  — article column */
+    --w-content: 64rem;   /* 1024px — standard band content */
+    --w-wide:    78rem;   /* 1248px — hero, galleries, arcade grid */
+    --gutter:    clamp(1.25rem, 5vw, 3rem);
+
+    /* ---- Space (8pt) ---- */
+    --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;
+    --s-4: 1rem;     --s-5: 1.5rem;   --s-6: 2rem;
+    --s-7: 3rem;     --s-8: 4rem;     --s-9: 6rem;
+    --s-10: 8rem;
+
+    /* ---- Section rhythm ---- */
+    --band-y:       clamp(4rem, 2rem + 7vw, 8rem);
+    --band-y-tight: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+
+    /* ---- Radius: tight, this is print ---- */
+    --r-sm: 2px;  --r-md: 4px;  --r-lg: 8px;
+
+    /* ---- Motion ---- */
+    --ease:     cubic-bezier(0.2, 0, 0, 1);
+    --dur-fast: 140ms;
+    --dur:      220ms;
+
+    /* ---- Type scale ---- */
+    /* Display — Playfair Display */
+    --t-display-xl: clamp(2.75rem, 1.5rem + 4.6vw, 4.75rem);   /* hero h1 */
+    --t-display-l:  clamp(2rem, 1.4rem + 2.4vw, 3.25rem);      /* band h2 */
+    --t-display-m:  clamp(1.625rem, 1.3rem + 1.2vw, 2.125rem); /* article h2 */
+    --t-display-s:  1.3125rem;                                  /* h3, card title */
+    /* Text — DM Sans */
+    --t-lead:  clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);  /* hero / lead para */
+    --t-body:  1.0625rem;  /* 17px — article body */
+    --t-ui:    1rem;       /* 16px — interface default */
+    --t-meta:  0.875rem;   /* 14px — floor for sentences */
+    --t-label: 0.75rem;    /* 12px — absolute floor, caps only */
+  }
+}
+
+/* Tailwind utilities resolve to the tokens above (no duplicated values). */
+@theme inline {
+  /* Only the scale below exists for marketing text — the default
+     text-sm/text-lg/... steps are removed so nothing can drift off-scale. */
+  --text-*: initial;
+
+  --text-display-xl: var(--t-display-xl);
+  --text-display-xl--line-height: 1.02;
+  --text-display-xl--letter-spacing: -0.022em;
+  --text-display-xl--font-weight: 900;
+  --text-display-l: var(--t-display-l);
+  --text-display-l--line-height: 1.08;
+  --text-display-l--letter-spacing: -0.018em;
+  --text-display-l--font-weight: 800;
+  --text-display-m: var(--t-display-m);
+  --text-display-m--line-height: 1.18;
+  --text-display-m--letter-spacing: -0.012em;
+  --text-display-m--font-weight: 700;
+  --text-display-s: var(--t-display-s);
+  --text-display-s--line-height: 1.3;
+  --text-display-s--letter-spacing: -0.005em;
+  --text-display-s--font-weight: 700;
+  --text-lead: var(--t-lead);
+  --text-lead--line-height: 1.6;
+  --text-body: var(--t-body);
+  --text-body--line-height: 1.7;
+  --text-ui: var(--t-ui);
+  --text-ui--line-height: 1.5;
+  --text-meta: var(--t-meta);
+  --text-meta--line-height: 1.45;
+  --text-label: var(--t-label);
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.12em;
+  --text-label--font-weight: 600;
+
+  /* Oversized decorative numeral (the 404). */
+  --text-numeral: clamp(7.5rem, 4rem + 14vw, 11.25rem);
+  --text-numeral--line-height: 1;
+  --text-numeral--letter-spacing: -0.04em;
+  --text-numeral--font-weight: 900;
+
+  /* Pixel face (Press Start 2P) — the game's voice on marketing pages.
+     12px is its floor; the face is 1em-wide monospace, so it reads larger. */
+  --text-pixel: 0.75rem;
+  --text-pixel--line-height: 1.9;
+  --text-pixel-title: clamp(1.375rem, 1.1rem + 1vw, 1.75rem);
+  --text-pixel-title--line-height: 1.35;
+
+  --color-ink: var(--ink);
+  --color-ink-raised: var(--ink-raised);
+  --color-ink-hairline: var(--ink-hairline);
+  --color-cream: var(--cream);
+  --color-parchment: var(--parchment);
+  --color-cream-hairline: var(--cream-hairline);
+  --color-forest: var(--forest);
+  --color-forest-raised: var(--forest-raised);
+  --color-forest-hairline: var(--forest-hairline);
+  --color-amber: var(--amber);
+  --color-amber-bright: var(--amber-bright);
+  --color-amber-deep: var(--amber-deep);
+  --color-amber-bright-hover: var(--amber-bright-hover);
+  --color-amber-deep-hover: var(--amber-deep-hover);
+  --color-live: var(--live);
+  --color-soon: var(--soon);
+  --color-on-cream: var(--text-on-cream);
+  --color-on-cream-muted: var(--text-on-cream-muted);
+  --color-on-ink: var(--text-on-ink);
+  --color-on-ink-muted: var(--text-on-ink-muted);
+  --color-on-forest: var(--text-on-forest);
+  --color-on-forest-muted: var(--text-on-forest-muted);
+
+  --container-measure: var(--measure);
+  --container-measure-lead: var(--measure-lead);
+  --container-measure-card: var(--measure-card);
+  --container-prose: var(--w-prose);
+  --container-content: var(--w-content);
+  --container-wide: var(--w-wide);
+
+  --radius-sm: var(--r-sm);
+  --radius-md: var(--r-md);
+  --radius-lg: var(--r-lg);
+
+  --ease-almanac: var(--ease);
 }
 
 /* ─── Binder Grail Arcade palette (used only under /arcade) ───────── */
@@ -21,8 +184,20 @@
   --color-cream-100:   #F6EEDA; /* primary text, text box rims */
   --color-cream-400:   #B3A9CC; /* muted text, labels */
   --color-stone-400:   #8E87A6; /* common rarity, locked, disabled */
-  --color-gold-400:    #FFC94A; /* primary action, coins, grail */
-  --color-gold-700:    #B9781A; /* gold bevel and text shadow */
+  /* Primary action, coins and grail use the site's amber-bright, with
+     --amber as the bevel/text shadow — one amber across the whole site. */
+
+  /* Arcade type scale (Press Start 2P / Pixelify / VT323). 12px is the
+     floor: Press Start is a 1em-wide face, so 12px reads like ~15px. */
+  --text-arc-12: 0.75rem;
+  --text-arc-14: 0.875rem;
+  --text-arc-16: 1rem;
+  --text-arc-18: 1.125rem;
+  --text-arc-24: 1.5rem;
+  --text-arc-32: 2rem;
+  --text-arc-44: 2.75rem;
+  --text-arc-56: 3.5rem;
+  --text-arc-72: 4.5rem;
   --color-blue-400:    #5C8DFF; /* secondary action, close result */
   --color-blue-700:    #2E4CB3; /* blue bevel */
   --color-cyan-300:    #6FE6F2; /* rare, tells, info */
@@ -44,16 +219,17 @@
 
 /* ─── Base ────────────────────────────────────────────────────────── */
 html {
-  background-color: #F5F0E8;
-  color: #1A1814;
+  background-color: var(--cream);
+  color: var(--text-on-cream);
 }
 
 body {
   font-family: var(--font-dm-sans), Arial, sans-serif;
+  font-size: var(--t-ui);
   font-weight: 400;
-  line-height: 1.65;
-  background-color: #F5F0E8;
-  color: #1A1814;
+  line-height: 1.5;
+  background-color: var(--cream);
+  color: var(--text-on-cream);
 }
 
 /* Marketing layouts set the font variables on their wrapper (app/fonts.ts),
@@ -62,26 +238,135 @@ body {
   font-family: var(--font-dm-sans), Arial, sans-serif;
 }
 
-/* ─── Prose overrides for article pages ──────────────────────────── */
-.prose {
-  --tw-prose-body:          #1A1814;
-  --tw-prose-headings:      #1A1814;
-  --tw-prose-links:         #B07035;
-  --tw-prose-bold:          #1A1814;
-  --tw-prose-bullets:       #7A7468;
-  --tw-prose-counters:      #7A7468;
-  --tw-prose-quotes:        #7A7468;
-  --tw-prose-quote-borders: #B07035;
-  --tw-prose-hr:            #D8D0C0;
-  --tw-prose-captions:      #7A7468;
-  --tw-prose-code:          #1A1814;
-  --tw-prose-pre-bg:        #E8E4DC;
+/* Figures that line up: prices, dates, the numbered list. */
+.figures {
+  font-feature-settings: "lnum" 1, "tnum" 1;
 }
 
-.prose h2,
-.prose h3,
-.prose h4 {
+/* One focus treatment everywhere: a 2px amber ring that passes 3:1 against
+   the surface it's drawn on — amber-deep on cream/parchment (5.3:1),
+   amber-bright inside ink and forest (6.1:1 / 3.5:1). The variable is set on
+   a dark surface's descendants, not the surface itself, so a dark card's own
+   ring (drawn on the light page around it) stays amber-deep. */
+:root {
+  --focus-ring: var(--amber-deep);
+}
+.bg-ink *,
+.bg-ink-raised *,
+.bg-forest *,
+.bg-forest-raised *,
+.bg-ink-950 * {
+  --focus-ring: var(--amber-bright);
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Quiet links: underline grows from the left. */
+.link-grow {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size var(--dur-fast) var(--ease);
+}
+.link-grow:hover,
+.link-grow:focus-visible,
+.link-grow.is-current,
+:hover > .link-grow,
+:focus-visible > .link-grow {
+  background-size: 100% 1px;
+}
+
+/* ─── Rail ──────────────────────────────────────────────────────────
+   A horizontal scroller whose first item lines up with the content
+   column, while the scroll still runs to the viewport edge. */
+.rail {
+  padding-inline: max(var(--gutter), calc((100% - var(--w-content)) / 2 + var(--gutter)));
+}
+
+/* ─── Paper grain ────────────────────────────────────────────────────
+   One fixed layer over the whole viewport (not per element): a faint
+   fractal-noise print texture, multiplied so it only reads on paper.
+   Texture, never noise. Arcade pages don't render it. */
+.paper-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.028;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 220px 220px;
+}
+
+/* ─── Band entrances ─────────────────────────────────────────────────
+   A single 12px rise + fade, once, at 15% visibility (components/
+   Reveal.tsx). Only armed when JS has run (html.reveal-ready), so
+   content is never hidden if scripts fail. */
+html.reveal-ready [data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(12px);
+}
+[data-reveal] {
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+/* ─── Article prose ──────────────────────────────────────────────── */
+.prose {
+  --tw-prose-body:          var(--text-on-cream);
+  --tw-prose-headings:      var(--text-on-cream);
+  --tw-prose-links:         var(--amber-deep);
+  --tw-prose-bold:          var(--text-on-cream);
+  --tw-prose-bullets:       var(--amber);
+  --tw-prose-counters:      var(--text-on-cream-muted);
+  --tw-prose-quotes:        var(--text-on-cream);
+  --tw-prose-quote-borders: var(--amber);
+  --tw-prose-hr:            var(--cream-hairline);
+  --tw-prose-captions:      var(--text-on-cream-muted);
+  --tw-prose-code:          var(--text-on-cream);
+  --tw-prose-pre-bg:        var(--parchment);
+  font-size: var(--t-body);
+  line-height: 1.7;
+  max-width: var(--measure);
+}
+.prose :where(h2) {
   font-family: var(--font-playfair), Georgia, serif;
+  font-size: var(--t-display-m);
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+  font-weight: 700;
+  margin-top: var(--s-8);
+  margin-bottom: var(--s-4);
+}
+.prose :where(h3) {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-size: var(--t-display-s);
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+  font-weight: 700;
+  margin-top: var(--s-7);
+  margin-bottom: var(--s-3);
+}
+.prose :where(h4) {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+.prose :where(a) {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.prose :where(a):hover {
+  color: var(--text-on-cream);
 }
 
 /* ─── Arcade motion (used under /arcade; stopped by reduced-motion) ── */
@@ -91,4 +376,18 @@ body {
 @keyframes bgaMarquee {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+/* ─── Reduced motion: everything off ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html.reveal-ready [data-reveal]:not([data-revealed]) {
+    opacity: 1;
+    transform: none;
+  }
 }
