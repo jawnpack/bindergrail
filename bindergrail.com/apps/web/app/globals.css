@@ -285,6 +285,12 @@ summary:focus-visible,
   background-size: 100% 1px;
 }
 
+/* Teaser content behind a gate: fades to nothing instead of dimming, so the
+   colors stay at full contrast while the eye reads it as "more below". */
+.fade-out {
+  mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
+}
+
 /* ─── Rail ──────────────────────────────────────────────────────────
    A horizontal scroller whose first item lines up with the content
    column, while the scroll still runs to the viewport edge. */

@@ -51,7 +51,7 @@ function IssueCard({ issue, locked }: { issue: Issue; locked: boolean }) {
 
   if (locked) {
     return (
-      <div aria-hidden="true" className="flex overflow-hidden rounded-md border border-cream-hairline bg-parchment opacity-45 blur-[2px]">
+      <div aria-hidden="true" inert className="fade-out flex overflow-hidden rounded-md border border-cream-hairline bg-parchment blur-xs select-none">
         {inner}
       </div>
     );
