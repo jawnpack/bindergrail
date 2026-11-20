@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { getAllPosts } from "@/lib/posts";
-import GrainOverlay from "@/components/GrainOverlay";
 import JsonLd from "@/components/JsonLd";
 import CardboardFlipBanner from "@/components/CardboardFlipBanner";
-
+import Band from "@/components/ui/Band";
+import Container from "@/components/ui/Container";
+import Kicker from "@/components/ui/Kicker";
+import SectionHeader from "@/components/ui/SectionHeader";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import Chip from "@/components/ui/Chip";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export const metadata: Metadata = {
   title: "Binder Grail — Pokémon TCG Tools & Market Analysis for Frugal Collectors",
@@ -20,19 +26,16 @@ export const metadata: Metadata = {
   },
 };
 
-function TagPill({ tag }: { tag: string }) {
-  const isMarket = tag === "Market";
-  return (
-    <span
-      className="inline-block text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-sm"
-      style={{
-        backgroundColor: isMarket ? "rgba(176,112,53,0.12)" : "rgba(122,116,104,0.1)",
-        color: isMarket ? "#B07035" : "#7A7468",
-      }}
-    >
-      {tag}
-    </span>
-  );
+function Tag({ tag, surface = "cream" }: { tag: string; surface?: "cream" | "ink" }) {
+  const market = tag === "Market";
+  const tone = market
+    ? surface === "ink"
+      ? "text-amber-bright"
+      : "text-amber-deep"
+    : surface === "ink"
+      ? "text-on-ink-muted"
+      : "text-on-cream-muted";
+  return <span className={`text-label uppercase ${tone}`}>{tag}</span>;
 }
 
 function formatDate(d: string) {
@@ -42,6 +45,37 @@ function formatDate(d: string) {
     year: "numeric",
   });
 }
+
+// The three doors into Binder Grail, shown beside the hero headline.
+const ENTRIES = [
+  {
+    title: "Common Rare",
+    body: "The weekly newsletter: market moves, restocks, a plain verdict on every product.",
+    href: "https://commonrare.bindergrail.com",
+    badge: <StatusBadge status="live" label="Weekly" />,
+  },
+  {
+    title: "Pocket Money",
+    body: "A free Pokémon budget tracker. Set a monthly budget and log what you buy.",
+    href: "/pocket-money",
+    badge: <StatusBadge status="live" />,
+  },
+  {
+    title: "Arcade",
+    body: "Daily Pokémon TCG games, free to play. Start with The Cardboard Flip.",
+    href: "/arcade",
+    badge: <StatusBadge status="new" />,
+  },
+];
+
+const PM_FEATURES = [
+  "A monthly budget envelope, with every purchase logged against it",
+  "Holds for pre-orders and known costs, so nothing sneaks up on you",
+  "A wishlist with one active grail and a fund that fills as you save",
+  "Sale and return logging that flows the money back into your budget",
+  "Tags and category stashes, so you see where the money actually goes",
+  "Month-by-month history to spot the trend",
+];
 
 export default function HomePage() {
   const posts = getAllPosts();
@@ -71,381 +105,236 @@ export default function HomePage() {
         }}
       />
 
-      {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: "#1A1814" }}>
-        <GrainOverlay />
-        <div className="relative z-10 max-w-5xl mx-auto px-6 py-24 md:py-32">
-          <p
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-6"
-            style={{ color: "#B07035" }}
-          >
-            Pokémon TCG · For frugal collectors
-          </p>
-          <h1
-            className="text-[42px] md:text-[64px] font-black leading-[1.08] tracking-tight mb-6 max-w-2xl"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#F5F0E8" }}
-          >
-            Collect{" "}
-            <span style={{ fontStyle: "italic", color: "#B07035" }}>smarter.</span>
-            <br />
-            Spend less.
-            <br />
-            Chase your grail.
-          </h1>
-          <p
-            className="text-[15px] leading-relaxed max-w-[300px] mb-10"
-            style={{ color: "#7A7468" }}
-          >
-            Binder Grail is the home for budget-conscious Pokémon TCG collectors.
-            Market analysis, collecting tools, and a weekly newsletter — built to
-            help you collect consciously.
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <Link
-              href="/blog"
-              className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
-              style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-            >
-              Explore Binder Grail
-            </Link>
-            <a
-              href="https://commonrare.bindergrail.com"
-              className="text-[13px] hover:underline"
-              style={{ color: "#7A7468" }}
-            >
-              Read Common Rare, our newsletter →
-            </a>
+      {/* ── Hero: copy in cols 1–7, three entry cards in cols 9–12. No motion. */}
+      <Band surface="ink" rule={false} reveal={false} rhythm="none" className="py-(--band-y-tight) lg:py-(--band-y)">
+        <Container width="wide" className="grid gap-10 lg:grid-cols-12 lg:items-center">
+          <div className="lg:col-span-7">
+            <Kicker surface="ink" className="mb-5">
+              Pokémon TCG · For frugal collectors
+            </Kicker>
+            <h1 className="font-serif text-display-xl text-on-ink">
+              Collect <em className="text-amber-bright">smarter.</em>
+              <br />
+              Spend less.
+              <br />
+              Chase your grail.
+            </h1>
+            <p className="mt-6 max-w-measure-lead text-lead text-pretty text-on-ink-muted">
+              Binder Grail is the home for budget-conscious Pokémon TCG collectors. Market
+              analysis, collecting tools, and a weekly newsletter — built to help you collect
+              consciously.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Button href="/blog" variant="primary">
+                Explore Binder Grail
+              </Button>
+              <Button href="https://commonrare.bindergrail.com" variant="quiet" className="text-on-ink">
+                Read Common Rare, our newsletter
+              </Button>
+            </div>
           </div>
-        </div>
-      </section>
+
+          <ul className="grid gap-3 sm:grid-cols-3 lg:col-span-4 lg:col-start-9 lg:grid-cols-1">
+            {ENTRIES.map((e) => (
+              <li key={e.title}>
+                <Card
+                  surface="ink"
+                  href={e.href}
+                  prefetch={e.href === "/arcade" ? false : undefined}
+                  className="h-full p-5"
+                >
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="font-serif text-display-s text-on-ink">{e.title}</span>
+                    {e.badge}
+                  </span>
+                  <span className="mt-2 block text-meta text-on-ink-muted">{e.body}</span>
+                </Card>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </Band>
 
       {/* ── The Cardboard Flip (game demo) ────────────────────────── */}
       <CardboardFlipBanner variant="feature" />
 
-      {/* ── Pocket Money feature ──────────────────────────────────── */}
-      <section className="py-16 md:py-20 bg-parchment border-t border-border">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-10 md:gap-14 items-center">
-            {/* Copy */}
-            <div>
-              <p className="text-[10px] font-medium uppercase tracking-[0.18em] mb-4 text-amber">
-                Pocket Money · A Binder Grail app
-              </p>
-              <h2
-                className="text-[30px] md:text-[40px] font-black leading-[1.1] tracking-tight mb-4 text-ink"
-                style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
-              >
-                A Pokémon budget tracker that&apos;s actually free
-              </h2>
-              <p className="text-[15px] leading-relaxed mb-6 text-dust max-w-md">
-                Set a monthly budget, log what you buy, and always know where
-                you stand before the next drop. No account fees, no catch.
-              </p>
-
-              {/* Differentiator stack */}
-              <ul className="flex flex-wrap gap-2 mb-7">
-                {[
-                  "Free forever",
-                  "No bank linking, ever",
-                  "No ads",
-                  "Your data is yours",
-                ].map((label) => (
-                  <li
-                    key={label}
-                    className="text-[12px] font-medium px-2.5 py-1 rounded-sm border border-border text-ink bg-cream"
-                  >
-                    {label}
-                  </li>
-                ))}
-              </ul>
-
-              {/* What it does */}
-              <ul className="flex flex-col gap-2 mb-8">
-                {[
-                  "A monthly budget envelope, with every purchase logged against it",
-                  "Holds for pre-orders and known costs, so nothing sneaks up on you",
-                  "A wishlist with one active grail and a fund that fills as you save",
-                  "Sale and return logging that flows the money back into your budget",
-                  "Tags and category stashes, so you see where the money actually goes",
-                  "Month-by-month history to spot the trend",
-                ].map((feature) => (
-                  <li key={feature} className="flex gap-2.5 text-[14px] leading-snug text-ink">
-                    <span aria-hidden className="mt-[3px] text-amber shrink-0">
-                      <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
-                        <path
-                          d="M2.5 6.2l2.2 2.2 4.8-5"
-                          stroke="currentColor"
-                          strokeWidth="1.6"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
-                    <span>{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="flex flex-wrap items-center gap-4">
-                <a
-                  href="https://pocketmoney.bindergrail.com/signup"
-                  className="rounded-sm px-5 py-2.5 text-sm font-medium transition-opacity hover:opacity-80 bg-amber text-cream"
-                >
-                  Start tracking free
-                </a>
-                <Link prefetch={false}
-                  href="/pocket-money"
-                  className="text-[13px] hover:underline text-dust"
-                >
-                  See how it works →
-                </Link>
-              </div>
-            </div>
-
-            {/* Screenshot */}
-            <div className="rounded-lg overflow-hidden border border-border shadow-sm">
-              <Image
-                src="/images/pocket-money/pm-dashboard-desktop.png"
-                alt="The Pocket Money dashboard showing a monthly budget, a wallet split into stashes, holds, an active grail, and a transaction log"
-                width={1328}
-                height={699}
-                sizes="(max-width: 768px) 100vw, 520px"
-                className="w-full h-auto"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Latest Posts ──────────────────────────────────────────── */}
-      <section className="flex-1 py-16 md:py-20" style={{ backgroundColor: "#F5F0E8" }}>
-        <div className="max-w-5xl mx-auto px-6">
-          {/* Section header */}
-          <div className="flex items-baseline justify-between mb-10">
-            <h2
-              className="text-[22px] font-bold"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-            >
-              Latest
-            </h2>
-            <Link prefetch={false}
-              href="/blog"
-              className="text-sm hover:underline"
-              style={{ color: "#B07035" }}
-            >
-              All posts →
-            </Link>
+      {/* ── Pocket Money: visual left, copy right ─────────────────── */}
+      <Band surface="parchment" labelledBy="pm-title">
+        <Container width="wide" className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
+          <div className="overflow-hidden rounded-md border border-cream-hairline lg:col-span-6">
+            <Image
+              src="/images/pocket-money/pm-dashboard-desktop.png"
+              alt="The Pocket Money dashboard showing a monthly budget, a wallet split into stashes, holds, an active grail, and a transaction log"
+              width={1328}
+              height={699}
+              sizes="(max-width: 1024px) 100vw, 600px"
+              className="h-auto w-full"
+            />
           </div>
 
-          {/* Featured post card (dark) */}
+          <div className="lg:col-span-6 lg:col-start-7">
+            <SectionHeader
+              id="pm-title"
+              surface="parchment"
+              kicker="Pocket Money · A Binder Grail app"
+              title={<>A Pokémon budget tracker that&apos;s actually free</>}
+              lead="Set a monthly budget, log what you buy, and always know where you stand before the next drop. No account fees, no catch."
+            />
+
+            <ul className="mt-6 flex flex-wrap gap-2">
+              {["Free forever", "No bank linking, ever", "No ads", "Your data is yours"].map((label) => (
+                <li key={label}>
+                  <Chip surface="parchment">{label}</Chip>
+                </li>
+              ))}
+            </ul>
+
+            <ul className="mt-7 flex max-w-measure flex-col gap-2.5">
+              {PM_FEATURES.map((feature) => (
+                <li key={feature} className="flex gap-3 text-meta text-on-cream">
+                  <span aria-hidden="true" className="mt-1 shrink-0 text-amber-deep">
+                    <svg width="13" height="13" viewBox="0 0 12 12" fill="none">
+                      <path
+                        d="M2.5 6.2l2.2 2.2 4.8-5"
+                        stroke="currentColor"
+                        strokeWidth="1.6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <span>{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <Button href="https://pocketmoney.bindergrail.com/signup" variant="primary-light">
+                Start tracking free
+              </Button>
+              <Button href="/pocket-money" variant="quiet" prefetch={false} className="text-on-cream">
+                See how it works
+              </Button>
+            </div>
+          </div>
+        </Container>
+      </Band>
+
+      {/* ── Latest ────────────────────────────────────────────────── */}
+      <Band surface="cream" labelledBy="latest-title">
+        <Container width="content">
+          <div className="mb-10 flex items-end justify-between gap-6">
+            <SectionHeader id="latest-title" title="Latest" size="l" />
+            <Button href="/blog" variant="quiet" prefetch={false} className="shrink-0 text-amber-deep">
+              All posts
+            </Button>
+          </div>
+
           {featured && (
-            <Link prefetch={false} href={`/blog/${featured.slug}`} className="block mb-8 group">
-              <div
-                className="relative overflow-hidden rounded-sm p-8 md:p-10"
-                style={{ backgroundColor: "#1A1814" }}
-              >
-                <GrainOverlay />
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-4">
-                    <TagPill tag={featured.tag} />
-                    <span className="text-[11px]" style={{ color: "#7A7468" }}>
-                      {formatDate(featured.date)}
-                    </span>
-                  </div>
-                  <h3
-                    className="text-2xl md:text-3xl font-bold leading-snug mb-3 group-hover:underline"
-                    style={{
-                      fontFamily: "var(--font-playfair), Georgia, serif",
-                      color: "#F5F0E8",
-                    }}
-                  >
-                    {featured.title}
-                  </h3>
-                  <p className="text-[14px] leading-relaxed" style={{ color: "#7A7468" }}>
-                    {featured.description}
-                  </p>
-                </div>
-              </div>
-            </Link>
+            <Card surface="ink" href={`/blog/${featured.slug}`} prefetch={false} className="group mb-10 p-7 md:p-10">
+              <span className="mb-4 flex items-center gap-4">
+                <Tag tag={featured.tag} surface="ink" />
+                <time dateTime={featured.date} className="text-meta text-on-ink-muted figures">
+                  {formatDate(featured.date)}
+                </time>
+              </span>
+              <span className="block max-w-measure font-serif text-display-m text-balance text-on-ink">
+                {featured.title}
+              </span>
+              <span className="mt-3 block max-w-measure text-ui text-pretty text-on-ink-muted">
+                {featured.description}
+              </span>
+            </Card>
           )}
 
-          {/* Numbered post list */}
-          <div className="flex flex-col divide-y" style={{ borderColor: "#D8D0C0" }}>
+          <ol className="divide-y divide-cream-hairline border-y border-cream-hairline">
             {listed.map((post, i) => (
-              <article key={post.slug} className="py-5 first:pt-0 last:pb-0 flex gap-5 items-start">
-                <span
-                  className="text-[32px] font-black leading-none select-none hidden sm:block shrink-0 w-10 text-right"
-                  style={{
-                    fontFamily: "var(--font-playfair), Georgia, serif",
-                    color: "#D8D0C0",
-                    fontStyle: "italic",
-                  }}
+              <li key={post.slug}>
+                <Link
+                  prefetch={false}
+                  href={`/blog/${post.slug}`}
+                  className="group flex items-baseline gap-5 py-5 md:gap-8"
                 >
-                  0{i + 2}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-1.5">
-                    <TagPill tag={post.tag} />
-                    <time className="text-[11px]" style={{ color: "#7A7468" }}>
-                      {formatDate(post.date)}
-                    </time>
-                  </div>
-                  <Link prefetch={false} href={`/blog/${post.slug}`} className="group">
-                    <h3
-                      className="text-[17px] font-bold leading-snug group-hover:underline"
-                      style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-                    >
-                      {post.title}
-                    </h3>
-                  </Link>
-                </div>
-              </article>
+                  <span
+                    aria-hidden="true"
+                    className="figures w-12 shrink-0 text-right font-serif text-display-l italic text-on-cream-muted transition-colors duration-(--dur-fast) group-hover:text-amber-deep md:w-16"
+                  >
+                    0{i + 2}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="mb-1.5 flex items-center gap-4">
+                      <Tag tag={post.tag} />
+                      <time dateTime={post.date} className="figures text-meta text-on-cream-muted">
+                        {formatDate(post.date)}
+                      </time>
+                    </span>
+                    <span className="block font-serif text-display-s text-balance text-on-cream">
+                      <span className="link-grow">{post.title}</span>
+                    </span>
+                  </span>
+                </Link>
+              </li>
             ))}
-          </div>
-        </div>
-      </section>
+          </ol>
+        </Container>
+      </Band>
 
-      {/* ── Apps coming soon ─────────────────────────────────────── */}
-      <section className="py-14 md:py-16" style={{ backgroundColor: "#F5F0E8", borderTop: "1px solid #D8D0C0" }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="mb-8">
-            <h2
-              className="text-[22px] font-bold"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-            >
-              Tools
-            </h2>
-          </div>
-          <div className="flex flex-col gap-4">
-            {/* Origins card */}
-            <Link prefetch={false}
-              href="/origins"
-              className="block rounded-sm transition-shadow hover:shadow-sm"
-              style={{
-                backgroundColor: "#E8E4DC",
-                border: "1px solid #C8C0B0",
-                borderLeft: "4px solid #B07035",
-              }}
-            >
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-1">
-                  <span
-                    className="text-[20px] font-bold"
-                    style={{ fontFamily: "var(--font-playfair), Georgia, serif", fontStyle: "italic", color: "#2C2A22" }}
-                  >
-                    Origins
-                  </span>
-                  <span
-                    className="text-[9px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded-sm"
-                    style={{ backgroundColor: "#D8D0C0", color: "#7A6E5F" }}
-                  >
-                    Soon
-                  </span>
-                </div>
-                <p
-                  className="text-[11px] font-semibold uppercase tracking-widest mb-3"
-                  style={{ color: "#7A6E5F" }}
-                >
-                  a Binder Grail app
-                </p>
-                <div className="mb-3" style={{ borderTop: "1px solid #C8C0B0" }} />
-                <p className="text-[13px] leading-relaxed mb-3" style={{ color: "#2C2A22" }}>
-                  Track every card you own. Log condition, price paid, and grading status — so you always know what&apos;s in your binder and what it&apos;s worth.
-                </p>
-                <span className="text-[13px] font-semibold" style={{ color: "#B07035" }}>
-                  Learn more →
-                </span>
-              </div>
-            </Link>
-
-            {/* Pocket Money card */}
-            <Link prefetch={false}
-              href="/pocket-money"
-              className="block rounded-sm transition-shadow hover:shadow-sm"
-              style={{
-                backgroundColor: "#EAF0EB",
-                border: "1px solid #C8D8CA",
-                borderLeft: "4px solid #3D5C42",
-              }}
-            >
-              <div className="p-6">
-                <div className="flex items-center gap-2 mb-1">
-                  <span
-                    className="text-[20px] font-bold"
-                    style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", color: "#2A4230" }}
-                  >
-                    Pocket Money
-                  </span>
-                  <span
-                    className="text-[9px] font-semibold uppercase tracking-widest px-1.5 py-0.5 rounded-sm"
-                    style={{ backgroundColor: "#3D5C42", color: "#EAF0EB" }}
-                  >
-                    Live
-                  </span>
-                </div>
-                <p
-                  className="text-[11px] font-semibold uppercase tracking-widest mb-3"
-                  style={{ color: "#6A9470" }}
-                >
-                  a Binder Grail app
-                </p>
-                <div className="mb-3" style={{ borderTop: "1px solid #C8D8CA" }} />
-                <p className="text-[13px] leading-relaxed mb-3" style={{ color: "#2A4230" }}>
-                  Set a monthly Pokémon budget, log every purchase, and track holds so you never blow past your limit. Built for collectors who take spending seriously.
-                </p>
-                <span className="text-[13px] font-semibold" style={{ color: "#3D5C42" }}>
-                  Learn more →
-                </span>
-              </div>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ── Tools (Pocket Money has its own band above) ───────────── */}
+      <Band surface="cream" rhythm="tight" labelledBy="tools-title">
+        <Container width="content" className="grid gap-8 md:grid-cols-12 md:items-start">
+          <SectionHeader id="tools-title" title="Tools" size="m" className="md:col-span-4" />
+          <Card surface="cream" href="/origins" prefetch={false} className="p-6 md:col-span-8">
+            <span className="flex items-center gap-3">
+              <span className="font-serif text-display-s italic text-on-cream">Origins</span>
+              <StatusBadge status="soon" surface="parchment" />
+            </span>
+            <span className="mt-1 block text-label uppercase text-on-cream-muted">a Binder Grail app</span>
+            <span className="mt-4 block max-w-measure border-t border-cream-hairline pt-4 text-meta text-on-cream">
+              Track every card you own. Log condition, price paid, and grading status — so you
+              always know what&apos;s in your binder and what it&apos;s worth.
+            </span>
+            <span className="mt-4 inline-flex items-center gap-2 text-meta font-medium text-amber-deep">
+              <span className="link-grow">Learn more</span> →
+            </span>
+          </Card>
+        </Container>
+      </Band>
 
       {/* ── Newsletter strip ──────────────────────────────────────── */}
-      <section id="newsletter" className="relative overflow-hidden" style={{ backgroundColor: "#1A1814" }}>
-        <GrainOverlay />
-        <div className="relative z-10 max-w-5xl mx-auto px-6 py-16 md:py-20">
-          {/* Common Rare logo */}
-          <div className="mb-5">
+      <Band surface="ink" id="newsletter" labelledBy="cr-title">
+        <Container width="content" className="grid gap-8 md:grid-cols-12 md:items-center">
+          <div className="md:col-span-3">
             <Image
               src="/images/common_rare_logo-2-removebg-preview.png"
               alt="Common Rare"
               height={80}
               width={107}
-              style={{ filter: "brightness(0) invert(1)", height: 80, width: "auto" }}
+              className="h-16 w-auto brightness-0 invert md:h-20"
+             
             />
           </div>
-
-          <p
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
-            style={{ color: "#B07035" }}
-          >
-            Common Rare · A Binder Grail newsletter
-          </p>
-          <h2
-            className="text-[28px] md:text-[36px] font-bold leading-tight mb-3 max-w-xl"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#F5F0E8" }}
-          >
-            The weekly read for{" "}
-            <span style={{ fontStyle: "italic", color: "#B07035" }}>frugal</span> collectors.
-          </h2>
-          <p className="text-[14px] max-w-md mb-7" style={{ color: "#7A7468" }}>
-            Market moves, restock alerts, and a plain verdict on every new
-            Pokémon TCG product. Free, every week.
-          </p>
-          <a
-            href="https://commonrare.bindergrail.com"
-            className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-          >
-            Subscribe to Common Rare
-          </a>
-          <p className="mt-4 text-[11px]" style={{ color: "#7A7468" }}>
-            Free, every week. Unsubscribe anytime.
-          </p>
-        </div>
-      </section>
+          <div className="md:col-span-9">
+            <SectionHeader
+              id="cr-title"
+              surface="ink"
+              size="m"
+              kicker="Common Rare · A Binder Grail newsletter"
+              title={
+                <>
+                  The weekly read for <em className="text-amber-bright">frugal</em> collectors.
+                </>
+              }
+              lead="Market moves, restock alerts, and a plain verdict on every new Pokémon TCG product. Free, every week."
+            />
+            <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <Button href="https://commonrare.bindergrail.com" variant="primary">
+                Subscribe to Common Rare
+              </Button>
+              <span className="text-meta text-on-ink-muted">Free, every week. Unsubscribe anytime.</span>
+            </div>
+          </div>
+        </Container>
+      </Band>
     </>
   );
 }
