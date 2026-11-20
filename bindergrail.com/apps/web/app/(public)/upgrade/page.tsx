@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import GrainOverlay from "@/components/GrainOverlay";
-
+import Band from "@/components/ui/Band";
+import Container from "@/components/ui/Container";
+import Kicker from "@/components/ui/Kicker";
+import Button from "@/components/ui/Button";
+import { inputClass, successClass, errorClass } from "@/components/ui/field";
 const FEATURES = [
   {
     title: "Full Sleeper List",
@@ -45,37 +48,32 @@ function WaitlistForm() {
 
   if (status === "success") {
     return (
-      <p className="text-sm font-medium" style={{ color: "#B07035" }}>
+      <p role="status" className={successClass("ink")}>
         You&apos;re on the list. We&apos;ll email you when premium launches.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:gap-2 max-w-md">
+    <form onSubmit={handleSubmit} className="flex max-w-measure-lead flex-col gap-3 sm:flex-row sm:gap-2">
+      <label htmlFor="premium-email" className="sr-only">
+        Email address
+      </label>
       <input
+        id="premium-email"
         type="email"
+        autoComplete="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="your@email.com"
         required
-        className="flex-1 rounded-sm px-4 py-2.5 text-sm outline-none"
-        style={{
-          backgroundColor: "#2C2920",
-          color: "#F5F0E8",
-          border: "1px solid rgba(255,255,255,0.1)",
-        }}
+        className={`${inputClass("ink")} sm:flex-1`}
       />
-      <button
-        type="submit"
-        disabled={status === "loading"}
-        className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-60 whitespace-nowrap"
-        style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-      >
+      <Button type="submit" variant="primary" disabled={status === "loading"} className="whitespace-nowrap">
         {status === "loading" ? "Joining…" : "Notify me"}
-      </button>
+      </Button>
       {status === "error" && (
-        <p className="text-xs w-full" style={{ color: "#B07035" }}>
+        <p role="alert" className={`${errorClass("ink")} w-full`}>
           Something went wrong. Please try again.
         </p>
       )}
@@ -86,83 +84,54 @@ function WaitlistForm() {
 export default function UpgradePage() {
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: "#1A1814" }}>
-        <GrainOverlay />
-        <div className="relative z-10 max-w-3xl mx-auto px-6 py-20 md:py-28">
-          <p
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
-            style={{ color: "#B07035" }}
-          >
+      <Band surface="ink" rule={false} reveal={false} rhythm="none" className="py-(--band-y-tight) lg:py-(--band-y)">
+        <Container width="content">
+          <Kicker surface="ink" className="mb-4">
             Common Rare · Premium
-          </p>
-          <h1
-            className="text-[36px] md:text-[52px] font-black leading-tight tracking-tight mb-4"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#F5F0E8" }}
-          >
-            Common Rare{" "}
-            <span style={{ fontStyle: "italic", color: "#B07035" }}>Premium</span>
+          </Kicker>
+          <h1 className="font-serif text-display-xl text-on-ink">
+            Common Rare <em className="text-amber-bright">Premium</em>
           </h1>
-          <p
-            className="text-[22px] font-bold mb-4"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#7A7468" }}
-          >
-            Coming soon
+          <p className="mt-4 font-serif text-display-s text-on-ink-muted">Coming soon</p>
+          <p className="mt-4 max-w-measure-lead text-lead text-pretty text-on-ink-muted">
+            Exclusive sleeper card coverage, key buying moments, and market alerts — delivered every
+            week.
           </p>
-          <p className="text-[15px] leading-relaxed max-w-lg mb-10" style={{ color: "#7A7468" }}>
-            Exclusive sleeper card coverage, key buying moments, and market alerts —
-            delivered every week.
-          </p>
+          <p className="mt-10 mb-4 text-ui font-medium text-on-ink">Get notified when premium launches</p>
+          <WaitlistForm />
+        </Container>
+      </Band>
 
-          <div className="mb-3">
-            <p className="text-[13px] font-semibold mb-4" style={{ color: "#F5F0E8" }}>
-              Get notified when premium launches
-            </p>
-            <WaitlistForm />
-          </div>
-        </div>
-      </section>
-
-      {/* ── Features ─────────────────────────────────────────── */}
-      <section className="flex-1 py-16" style={{ backgroundColor: "#F5F0E8" }}>
-        <div className="max-w-3xl mx-auto px-6">
-          <h2
-            className="text-[22px] font-bold mb-8"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-          >
+      <Band surface="cream" labelledBy="included" className="flex-1">
+        <Container width="content">
+          <h2 id="included" className="mb-8 font-serif text-display-m text-on-cream">
             What&apos;s included
           </h2>
-          <div className="flex flex-col gap-6">
-            {FEATURES.map((f) => (
-              <div
-                key={f.title}
-                className="flex gap-4 p-6 rounded-sm border"
-                style={{ borderColor: "#D8D0C0", backgroundColor: "#FDFAF5" }}
-              >
-                <span className="text-[18px] mt-0.5" style={{ color: "#B07035" }}>·</span>
+          <ol className="divide-y divide-cream-hairline border-y border-cream-hairline">
+            {FEATURES.map((f, i) => (
+              <li key={f.title} className="flex items-baseline gap-5 py-6 md:gap-8">
+                <span
+                  aria-hidden="true"
+                  className="figures w-10 shrink-0 text-right font-serif text-display-m italic text-on-cream-muted"
+                >
+                  0{i + 1}
+                </span>
                 <div>
-                  <p
-                    className="text-[15px] font-semibold mb-1"
-                    style={{ color: "#1A1814" }}
-                  >
-                    {f.title}
-                  </p>
-                  <p className="text-[13px] leading-relaxed" style={{ color: "#7A7468" }}>
-                    {f.desc}
-                  </p>
+                  <p className="text-ui font-semibold text-on-cream">{f.title}</p>
+                  <p className="mt-1 max-w-measure text-meta text-on-cream-muted">{f.desc}</p>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
 
-          <p className="mt-10 text-[13px]" style={{ color: "#7A7468" }}>
+          <p className="mt-10 text-meta text-on-cream-muted">
             Already have an account?{" "}
-            <Link href="/account" className="hover:underline" style={{ color: "#1A1814" }}>
+            <Link href="/account" className="text-on-cream underline underline-offset-3 hover:text-amber-deep">
               Go to your account
             </Link>
           </p>
-        </div>
-      </section>
+        </Container>
+      </Band>
     </>
   );
 }

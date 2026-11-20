@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Button from "@/components/ui/Button";
+import { inputClass, successClass, errorClass } from "@/components/ui/field";
+import type { Surface } from "@/components/ui/surface";
 
-export default function SignUpForm() {
+export default function SignUpForm({ surface = "ink" }: { surface?: Surface }) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
@@ -29,37 +32,37 @@ export default function SignUpForm() {
 
   if (status === "success") {
     return (
-      <p className="text-sm font-medium" style={{ color: "#B07035" }}>
+      <p role="status" className={successClass(surface)}>
         You&apos;re in. Check your inbox for a welcome email.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3 sm:flex-row sm:gap-2">
+    <form onSubmit={handleSubmit} className="flex max-w-measure-lead flex-col gap-3 sm:flex-row sm:gap-2">
+      <label htmlFor="signup-email" className="sr-only">
+        Email address
+      </label>
       <input
+        id="signup-email"
         type="email"
+        autoComplete="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="your@email.com"
         required
-        className="flex-1 rounded-sm px-4 py-2.5 text-sm outline-none focus:ring-2"
-        style={{
-          backgroundColor: "#F5F0E8",
-          color: "#1A1814",
-          border: "1px solid #D8D0C0",
-        }}
+        className={`${inputClass(surface)} sm:flex-1`}
       />
-      <button
+      <Button
         type="submit"
+        variant={surface === "ink" || surface === "forest" ? "primary" : "primary-light"}
         disabled={status === "loading"}
-        className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-60 whitespace-nowrap"
-        style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
+        className="whitespace-nowrap"
       >
         {status === "loading" ? "Signing up…" : "Sign up — it's free"}
-      </button>
+      </Button>
       {status === "error" && (
-        <p className="text-xs w-full" style={{ color: "#B07035" }}>
+        <p role="alert" className={`${errorClass(surface)} w-full`}>
           Something went wrong. Please try again.
         </p>
       )}

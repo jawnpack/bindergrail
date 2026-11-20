@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import GrainOverlay from "@/components/GrainOverlay";
+import Band from "@/components/ui/Band";
+import SectionHeader from "@/components/ui/SectionHeader";
+import Button from "@/components/ui/Button";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export const metadata: Metadata = {
   title: "About Binder Grail",
@@ -18,32 +21,39 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
+const HERE = [
+  {
+    name: "Common Rare — Free newsletter",
+    badge: <StatusBadge status="live" label="Weekly" />,
+    body: "Market analysis and collecting strategy delivered weekly-ish. No spam, no hype, just the thinking.",
+  },
+  {
+    name: "Pocket Money — Live now",
+    badge: <StatusBadge status="live" />,
+    body: "A simple tool for managing your monthly collecting budget. Set a limit, log your pickups, and save toward your grail.",
+  },
+  {
+    name: "Origins — Coming soon",
+    badge: <StatusBadge status="soon" surface="parchment" />,
+    body: "A collection tracker for every card you own. Log condition, price paid, and see what your binder is worth.",
+  },
+];
+
 export default function AboutPage() {
   return (
     <>
-      <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
-        <div className="max-w-[680px] mx-auto px-6">
-          {/* Header */}
-          <h1
-            className="text-[36px] md:text-[48px] font-black tracking-tight mb-3"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-          >
-            About Binder Grail
-          </h1>
-          <p className="text-[16px] leading-relaxed mb-12" style={{ color: "#7A7468" }}>
+      <main className="flex-1 bg-cream px-(--gutter) pt-(--band-y-tight) pb-(--band-y)">
+        <div className="mx-auto max-w-prose">
+          <h1 className="font-serif text-display-l text-on-cream">About Binder Grail</h1>
+          <p className="mt-4 max-w-measure-lead text-lead text-pretty text-on-cream-muted">
             A Pokémon TCG platform for collectors who have a life outside of buying and selling cards.
           </p>
 
-          {/* Author */}
-          <section className="mb-12">
-            <h2
-              className="text-[22px] font-bold mb-6"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-            >
+          <section aria-labelledby="author" className="mt-12 border-t border-cream-hairline pt-10">
+            <h2 id="author" className="mb-6 font-serif text-display-m text-on-cream">
               Jon Paek
             </h2>
-
-            <div className="space-y-5 text-[15px] leading-[1.75]" style={{ color: "#1A1814" }}>
+            <div className="max-w-measure space-y-5 text-body text-pretty text-on-cream">
               <p>
                 I spent over a decade working in supply chain and ERP — thinking about inventory cycles, demand signals, and the gap between what systems say and what markets do. That lens transfers surprisingly well to Pokémon TCG investing. Print cycles are supply chain problems. Secondary market pricing is demand signaling. Understanding when to hold and when to move is just applied logistics.
               </p>
@@ -59,80 +69,46 @@ export default function AboutPage() {
             </div>
           </section>
 
-          {/* Platform section */}
           <section
-            className="rounded-sm p-8 mb-12 border"
-            style={{ borderColor: "#D8D0C0", backgroundColor: "#FDFAF5" }}
+            aria-labelledby="whats-here"
+            className="mt-12 rounded-md border border-cream-hairline bg-parchment p-6 md:p-8"
           >
-            <h2
-              className="text-[20px] font-bold mb-5"
-              style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-            >
+            <h2 id="whats-here" className="mb-5 font-serif text-display-s text-on-cream">
               What&apos;s here
             </h2>
-            <dl className="space-y-4 text-[14px]">
-              <div>
-                <dt className="font-semibold mb-1" style={{ color: "#1A1814" }}>
-                  Common Rare — Free newsletter
-                </dt>
-                <dd style={{ color: "#7A7468" }}>
-                  Market analysis and collecting strategy delivered weekly-ish. No spam, no hype, just the thinking.
-                </dd>
-              </div>
-              <div>
-                <dt className="font-semibold mb-1" style={{ color: "#1A1814" }}>
-                  Pocket Money — Live now
-                </dt>
-                <dd style={{ color: "#7A7468" }}>
-                  A simple tool for managing your monthly collecting budget. Set a limit, log your pickups, and save toward your grail.
-                </dd>
-              </div>
-              <div>
-                <dt className="font-semibold mb-1" style={{ color: "#7A7468" }}>
-                  Origins — Coming soon
-                </dt>
-                <dd style={{ color: "#7A7468" }}>
-                  A collection tracker for every card you own. Log condition, price paid, and see what your binder is worth.
-                </dd>
-              </div>
+            <dl className="divide-y divide-cream-hairline">
+              {HERE.map((h) => (
+                <div key={h.name} className="py-4 first:pt-0 last:pb-0">
+                  <dt className="flex flex-wrap items-center gap-3 text-ui font-medium text-on-cream">
+                    {h.name}
+                    {h.badge}
+                  </dt>
+                  <dd className="mt-1 max-w-measure-card text-meta text-on-cream-muted">{h.body}</dd>
+                </div>
+              ))}
             </dl>
           </section>
 
-          <a
-            href="https://commonrare.bindergrail.com"
-            className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-          >
+          <Button href="https://commonrare.bindergrail.com" variant="primary-light" className="mt-10">
             Subscribe to Common Rare
-          </a>
+          </Button>
         </div>
       </main>
 
-      {/* Newsletter strip */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: "#1A1814" }}>
-        <GrainOverlay />
-        <div className="relative z-10 max-w-[680px] mx-auto px-6 py-14">
-          <p
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
-            style={{ color: "#B07035" }}
-          >
-            Common Rare · Free newsletter
-          </p>
-          <h2
-            className="text-[24px] font-bold mb-6"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#F5F0E8" }}
-          >
-            The weekly read for frugal collectors.
-          </h2>
-          <a
-            href="https://commonrare.bindergrail.com"
-            className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-          >
+      <Band surface="ink" rhythm="tight" labelledBy="about-cr">
+        <div className="mx-auto max-w-prose px-(--gutter) md:px-0">
+          <SectionHeader
+            id="about-cr"
+            surface="ink"
+            size="m"
+            kicker="Common Rare · Free newsletter"
+            title="The weekly read for frugal collectors."
+          />
+          <Button href="https://commonrare.bindergrail.com" variant="primary" className="mt-6">
             Subscribe to Common Rare
-          </a>
+          </Button>
         </div>
-      </section>
+      </Band>
     </>
   );
 }

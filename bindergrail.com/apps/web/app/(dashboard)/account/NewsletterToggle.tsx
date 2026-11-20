@@ -32,30 +32,34 @@ export default function NewsletterToggle({
   return (
     <div>
       <div className="flex items-center gap-3">
-        {/* Toggle track */}
+        {/* The 44px hit area wraps a 24px track. */}
         <button
+          type="button"
           role="switch"
           aria-checked={subscribed}
+          aria-labelledby="nl-toggle-label"
           onClick={toggle}
           disabled={status === "loading"}
-          className="relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors duration-200 focus:outline-none disabled:opacity-60"
-          style={{ backgroundColor: subscribed ? "#B07035" : "#D8D0C0" }}
+          className="group -m-2.5 inline-flex size-11 w-16 shrink-0 items-center justify-center rounded-full disabled:opacity-60"
         >
-          {/* Thumb */}
           <span
-            className="inline-block h-5 w-5 rounded-full shadow transition-transform duration-200 mt-0.5"
-            style={{
-              backgroundColor: "#F5F0E8",
-              transform: subscribed ? "translateX(22px)" : "translateX(2px)",
-            }}
-          />
+            className={`relative inline-flex h-6 w-11 items-center rounded-full border transition-colors duration-(--dur-fast) ${
+              subscribed ? "border-amber-deep bg-amber-deep" : "border-cream-hairline bg-cream-hairline"
+            }`}
+          >
+            <span
+              className={`inline-block size-5 rounded-full bg-cream transition-transform duration-(--dur-fast) ${
+                subscribed ? "translate-x-5" : "translate-x-0.5"
+              }`}
+            />
+          </span>
         </button>
-        <span className="text-[14px]" style={{ color: "#1A1814" }}>
+        <span id="nl-toggle-label" className="text-ui text-on-cream">
           {subscribed ? "Receiving weekly issues" : "Not subscribed"}
         </span>
       </div>
       {status === "error" && (
-        <p className="mt-2 text-[12px]" style={{ color: "#B07035" }}>
+        <p role="alert" className="mt-2 text-meta font-medium text-on-cream">
           Something went wrong. Please try again.
         </p>
       )}

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import NewsletterToggle from "./NewsletterToggle";
+import Button from "@/components/ui/Button";
 
 function formatMemberSince(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -30,125 +31,75 @@ export default async function AccountPage() {
 
   const newsletterSubscribed = profile?.newsletter_subscribed ?? false;
 
+  const card = "rounded-md border border-cream-hairline bg-parchment p-6 md:p-8";
+  const quietLink =
+    "inline-flex min-h-11 items-center text-meta text-on-cream-muted hover:text-on-cream";
+
   return (
-    <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
-      <div className="max-w-[680px] mx-auto px-6">
-        <h1
-          className="text-[28px] font-bold mb-8"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-        >
-          Account
-        </h1>
+    <main className="flex-1 bg-cream px-(--gutter) pt-(--band-y-tight) pb-(--band-y)">
+      <div className="mx-auto max-w-prose">
+        <h1 className="mb-8 font-serif text-display-l text-on-cream">Account</h1>
 
-        {/* ── Section 1: Account details ─────────────────────── */}
-        <div
-          className="rounded-sm p-8 mb-5 border"
-          style={{ borderColor: "#D8D0C0", backgroundColor: "#FDFAF5" }}
-        >
-          <p
-            className="text-[11px] font-semibold uppercase tracking-widest mb-4"
-            style={{ color: "#7A7468" }}
-          >
-            Your account
-          </p>
-          <p className="text-[15px] font-medium mb-1" style={{ color: "#1A1814" }}>
-            {user.email}
-          </p>
-          <div className="flex items-center gap-3 mt-2">
-            <span
-              className="inline-block text-[11px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-sm"
-              style={{ backgroundColor: "#E8E4DC", color: "#1A1814" }}
-            >
-              Free
-            </span>
-            {user.created_at && (
-              <span className="text-[12px]" style={{ color: "#7A7468" }}>
-                Member since {formatMemberSince(user.created_at)}
+        <div className="flex flex-col gap-5">
+          {/* ── Account details ─────────────────────── */}
+          <section aria-labelledby="acct-you" className={card}>
+            <h2 id="acct-you" className="mb-4 text-label uppercase text-on-cream-muted">
+              Your account
+            </h2>
+            <p className="text-ui font-medium break-all text-on-cream">{user.email}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-3">
+              <span className="inline-flex min-h-6 items-center rounded-sm border border-cream-hairline bg-cream px-2 text-label uppercase text-on-cream">
+                Free
               </span>
-            )}
-          </div>
+              {user.created_at && (
+                <span className="text-meta text-on-cream-muted">
+                  Member since {formatMemberSince(user.created_at)}
+                </span>
+              )}
+            </div>
+          </section>
+
+          {/* ── Newsletter preferences ─────────────── */}
+          <section aria-labelledby="acct-news" className={card}>
+            <h2 id="acct-news" className="mb-4 text-label uppercase text-on-cream-muted">
+              Newsletter preferences
+            </h2>
+            <p className="font-serif text-display-s text-on-cream">Common Rare newsletter</p>
+            <p className="mt-1 mb-5 text-meta text-on-cream-muted">
+              Our free weekly on Pokémon TCG markets and buying advice.
+            </p>
+            <NewsletterToggle initialSubscribed={newsletterSubscribed} />
+            <p className="mt-4 max-w-measure-card text-meta text-on-cream-muted">
+              Unsubscribing removes you from Common Rare emails but keeps your Binder Grail account
+              active.
+            </p>
+          </section>
+
+          {/* ── Plan ───────────────────────────────── */}
+          <section aria-labelledby="acct-plan" className="rounded-md border border-amber bg-parchment p-6 md:p-8">
+            <p className="mb-3 text-label uppercase text-amber-deep">Your plan</p>
+            <h2 id="acct-plan" className="mb-2 font-serif text-display-s text-on-cream">
+              Free
+            </h2>
+            <p className="mb-5 max-w-measure-card text-meta text-on-cream-muted">
+              Upgrade to Common Rare Premium for exclusive sleeper card coverage and market alerts.
+            </p>
+            <Button href="/upgrade" variant="primary-light">
+              Upgrade to premium
+            </Button>
+          </section>
         </div>
 
-        {/* ── Section 2: Newsletter preferences ─────────────── */}
-        <div
-          className="rounded-sm p-8 mb-5 border"
-          style={{ borderColor: "#D8D0C0", backgroundColor: "#FDFAF5" }}
-        >
-          <p
-            className="text-[11px] font-semibold uppercase tracking-widest mb-4"
-            style={{ color: "#7A7468" }}
-          >
-            Newsletter preferences
-          </p>
-          <p
-            className="text-[16px] font-bold mb-1"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-          >
-            Common Rare newsletter
-          </p>
-          <p className="text-[13px] mb-5" style={{ color: "#7A7468" }}>
-            Our free weekly on Pokémon TCG markets and buying advice.
-          </p>
-
-          <NewsletterToggle initialSubscribed={newsletterSubscribed} />
-
-          <p className="mt-4 text-[12px] leading-relaxed" style={{ color: "#7A7468" }}>
-            Unsubscribing removes you from Common Rare emails but keeps your
-            Binder Grail account active.
-          </p>
-        </div>
-
-        {/* ── Section 3: Plan ───────────────────────────────── */}
-        <div
-          className="rounded-sm p-8 mb-5 border"
-          style={{ borderColor: "#B07035", backgroundColor: "rgba(176,112,53,0.05)" }}
-        >
-          <p
-            className="text-[11px] font-semibold uppercase tracking-widest mb-3"
-            style={{ color: "#B07035" }}
-          >
-            Your plan
-          </p>
-          <h2
-            className="text-[20px] font-bold mb-2"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-          >
-            Free
-          </h2>
-          <p className="text-[14px] mb-5" style={{ color: "#7A7468" }}>
-            Upgrade to Common Rare Premium for exclusive sleeper card coverage
-            and market alerts.
-          </p>
-          <Link
-            href="/upgrade"
-            className="inline-block rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-          >
-            Upgrade to premium
+        <div className="mt-8 flex flex-col items-start">
+          <Link href="/account/delete" className={quietLink}>
+            <span className="link-grow">Delete account</span>
           </Link>
+          <form action="/auth/signout" method="POST">
+            <button type="submit" className={quietLink}>
+              <span className="link-grow">Sign out</span>
+            </button>
+          </form>
         </div>
-
-        {/* ── Section 4: Danger zone ────────────────────────── */}
-        <div className="mb-8">
-          <Link
-            href="/account/delete"
-            className="text-[13px] hover:underline"
-            style={{ color: "#7A7468" }}
-          >
-            Delete account
-          </Link>
-        </div>
-
-        {/* Sign out */}
-        <form action="/auth/signout" method="POST">
-          <button
-            type="submit"
-            className="text-[13px] hover:underline"
-            style={{ color: "#7A7468" }}
-          >
-            Sign out
-          </button>
-        </form>
       </div>
     </main>
   );

@@ -1,24 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
+import Button from "@/components/ui/Button";
+import { inputClass, noteClass, successClass, errorClass } from "@/components/ui/field";
+import type { Surface } from "@/components/ui/surface";
 
 type Props = {
   app: "origins" | "pocket-money";
-  buttonColor?: string;
-  inputBg?: string;
-  inputBorder?: string;
-  inputTextColor?: string;
-  labelColor?: string;
+  surface?: Surface;
 };
 
-export default function WaitlistForm({
-  app,
-  buttonColor = "#B07035",
-  inputBg = "#2C2920",
-  inputBorder = "rgba(255,255,255,0.1)",
-  inputTextColor = "#F5F0E8",
-  labelColor = "#7A7468",
-}: Props) {
+export default function WaitlistForm({ app, surface = "ink" }: Props) {
+  const id = useId();
   const [email, setEmail] = useState("");
   const [optIn, setOptIn] = useState(false);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -49,58 +42,55 @@ export default function WaitlistForm({
 
   if (status === "success") {
     return (
-      <p className="text-sm font-medium" style={{ color: "#B07035" }}>
+      <p role="status" className={successClass(surface)}>
         You&apos;re on the list. We&apos;ll email you at launch.
       </p>
     );
   }
 
+  const dark = surface === "ink" || surface === "forest";
   return (
     <div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+      <form onSubmit={handleSubmit} className="flex max-w-measure-lead flex-col gap-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-2">
+          <label htmlFor={`${id}-email`} className="sr-only">
+            Email address
+          </label>
           <input
+            id={`${id}-email`}
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
             required
-            className="flex-1 rounded-sm px-4 py-2.5 text-sm outline-none"
-            style={{
-              backgroundColor: inputBg,
-              color: inputTextColor,
-              border: `1px solid ${inputBorder}`,
-            }}
+            className={`${inputClass(surface)} sm:flex-1`}
           />
-          <button
+          <Button
             type="submit"
+            variant={dark ? "primary" : "primary-light"}
             disabled={status === "loading"}
-            className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80 disabled:opacity-60 whitespace-nowrap"
-            style={{ backgroundColor: buttonColor, color: "#F5F0E8" }}
+            className="whitespace-nowrap"
           >
             {status === "loading" ? "Joining…" : "Notify me"}
-          </button>
+          </Button>
         </div>
 
-        <label
-          className="flex items-start gap-2 text-xs cursor-pointer select-none"
-          style={{ color: labelColor }}
-        >
+        <label className={`flex min-h-11 cursor-pointer items-start gap-3 select-none ${noteClass(surface)}`}>
           <input
             type="checkbox"
             checked={optIn}
             onChange={(e) => setOptIn(e.target.checked)}
-            className="mt-0.5 cursor-pointer"
-            style={{ accentColor: buttonColor }}
+            className="mt-0.5 size-5 shrink-0 cursor-pointer accent-amber"
           />
           <span>
-            Also subscribe me to Common Rare, the free weekly Pok&eacute;mon TCG
-            newsletter. Optional, unsubscribe anytime.
+            Also subscribe me to Common Rare, the free weekly Pok&eacute;mon TCG newsletter.
+            Optional, unsubscribe anytime.
           </span>
         </label>
       </form>
       {status === "error" && (
-        <p className="mt-2 text-xs" style={{ color: "#B07035" }}>
+        <p role="alert" className={`mt-2 ${errorClass(surface)}`}>
           Something went wrong. Try again.
         </p>
       )}
