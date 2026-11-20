@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useMemo, type ReactNode } from "react";
-import Link from "next/link";
 import type { PostMeta } from "@/lib/posts";
+import Container from "@/components/ui/Container";
+import Card from "@/components/ui/Card";
+import FilterGroup from "@/components/ui/FilterGroup";
 
-const TAGS = ["All", "Market", "Advice"];
+const TAGS = ["All", "Market", "Advice"] as const;
 
 function formatDate(d: string) {
   return new Date(d).toLocaleDateString("en-US", {
@@ -14,23 +16,8 @@ function formatDate(d: string) {
   });
 }
 
-function PostTagPill({ tag }: { tag: string }) {
-  const isMarket = tag === "Market";
-  return (
-    <span
-      className="inline-block text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-sm"
-      style={{
-        backgroundColor: isMarket ? "rgba(176,112,53,0.12)" : "rgba(122,116,104,0.1)",
-        color: isMarket ? "#B07035" : "#7A7468",
-      }}
-    >
-      {tag}
-    </span>
-  );
-}
-
 export default function BlogIndex({ posts, banner }: { posts: PostMeta[]; banner?: ReactNode }) {
-  const [activeTag, setActiveTag] = useState("All");
+  const [activeTag, setActiveTag] = useState<(typeof TAGS)[number]>("All");
 
   const filtered = useMemo(
     () => (activeTag === "All" ? posts : posts.filter((p) => p.tag === activeTag)),
@@ -38,66 +25,45 @@ export default function BlogIndex({ posts, banner }: { posts: PostMeta[]; banner
   );
 
   return (
-    <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
-      <div className="max-w-5xl mx-auto px-6">
-        <h1
-          className="text-[36px] md:text-[48px] font-black tracking-tight mb-8"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-        >
-          All posts
-        </h1>
+    <main className="flex-1 bg-cream pt-(--band-y-tight) pb-(--band-y)">
+      <Container width="content">
+        <h1 className="mb-8 font-serif text-display-l text-on-cream">All posts</h1>
 
-        {/* Filter pills */}
-        <div className="flex gap-2 mb-10 flex-wrap">
-          {TAGS.map((t) => (
-            <button
-              key={t}
-              onClick={() => setActiveTag(t)}
-              className="text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors"
-              style={{
-                backgroundColor: activeTag === t ? "#1A1814" : "#E8E4DC",
-                color: activeTag === t ? "#F5F0E8" : "#7A7468",
-              }}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+        <FilterGroup
+          options={TAGS}
+          value={activeTag}
+          onChange={setActiveTag}
+          label="Filter posts by topic"
+          className="mb-10"
+        />
 
         {banner && <div className="mb-8">{banner}</div>}
 
-        {/* Post grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ul className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {filtered.map((post) => (
-            <article
-              key={post.slug}
-              className="rounded-sm p-6 border flex flex-col"
-              style={{ borderColor: "#D8D0C0", backgroundColor: "#FDFAF5" }}
-            >
-              <div className="flex items-center gap-3 mb-3">
-                <PostTagPill tag={post.tag} />
-                <time className="text-[11px]" style={{ color: "#7A7468" }}>
-                  {formatDate(post.date)}
-                </time>
-              </div>
-              <Link href={`/blog/${post.slug}`} className="group flex-1">
-                <h2
-                  className="text-[18px] font-bold leading-snug mb-2 group-hover:underline"
-                  style={{
-                    fontFamily: "var(--font-playfair), Georgia, serif",
-                    color: "#1A1814",
-                  }}
-                >
-                  {post.title}
+            <li key={post.slug}>
+              <Card href={`/blog/${post.slug}`} className="flex h-full flex-col p-6">
+                <span className="mb-3 flex items-center gap-4">
+                  <span
+                    className={`text-label uppercase ${post.tag === "Market" ? "text-amber-deep" : "text-on-cream-muted"}`}
+                  >
+                    {post.tag}
+                  </span>
+                  <time dateTime={post.date} className="figures text-meta text-on-cream-muted">
+                    {formatDate(post.date)}
+                  </time>
+                </span>
+                <h2 className="font-serif text-display-s text-balance text-on-cream">
+                  <span className="link-grow">{post.title}</span>
                 </h2>
-              </Link>
-              <p className="text-[13px] leading-relaxed mt-2" style={{ color: "#7A7468" }}>
-                {post.description}
-              </p>
-            </article>
+                <p className="mt-3 max-w-measure-card text-meta text-pretty text-on-cream-muted">
+                  {post.description}
+                </p>
+              </Card>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+      </Container>
     </main>
   );
 }

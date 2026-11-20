@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
+import Container from "@/components/ui/Container";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import FilterGroup from "@/components/ui/FilterGroup";
 import type { Issue } from "@/lib/beehiiv";
 
 const TAGS = ["All", "Market", "Advice", "News"] as const;
@@ -15,143 +18,75 @@ function formatDate(unix: number) {
   });
 }
 
-function TagPill({ tag }: { tag: Issue["tag"] }) {
-  const isMarket = tag === "Market";
-  const isAdvice = tag === "Advice";
-  const bg = isMarket
-    ? "rgba(176,112,53,0.12)"
-    : isAdvice
-    ? "rgba(122,116,104,0.1)"
-    : "rgba(90,120,90,0.1)";
-  const color = isMarket ? "#B07035" : isAdvice ? "#7A7468" : "#5A785A";
-  return (
-    <span
-      className="inline-block text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-sm"
-      style={{ backgroundColor: bg, color }}
-    >
-      {tag}
-    </span>
-  );
+function Tag({ tag }: { tag: Issue["tag"] }) {
+  const tone = tag === "Market" ? "text-amber-deep" : "text-on-cream-muted";
+  return <span className={`text-label uppercase ${tone}`}>{tag}</span>;
 }
 
 function IssueCard({ issue, locked }: { issue: Issue; locked: boolean }) {
-  const card = (
-    <div
-      className="flex gap-0 rounded-sm overflow-hidden border transition-shadow hover:shadow-sm"
-      style={{
-        borderColor: "#D8D0C0",
-        opacity: locked ? 0.45 : 1,
-        filter: locked ? "blur(2px)" : "none",
-      }}
-    >
-      {/* Issue number block */}
-      <div
-        className="flex items-center justify-center px-4 shrink-0 select-none"
-        style={{ backgroundColor: "#1A1814", minWidth: 64 }}
+  const inner = (
+    <>
+      <span
+        aria-hidden="true"
+        className="figures flex w-16 shrink-0 items-center justify-center bg-ink font-serif text-display-m italic text-on-ink-muted"
       >
-        <span
-          className="text-[28px] font-black leading-none"
-          style={{
-            fontFamily: "var(--font-playfair), Georgia, serif",
-            color: "#2C2920",
-            fontStyle: "italic",
-          }}
-        >
-          {issue.number < 10 ? `0${issue.number}` : issue.number}
+        {issue.number < 10 ? `0${issue.number}` : issue.number}
+      </span>
+      <span className="block flex-1 px-5 py-4">
+        <span className="mb-2 flex items-center gap-4">
+          <Tag tag={issue.tag} />
+          <time className="figures text-meta text-on-cream-muted">{formatDate(issue.date)}</time>
         </span>
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 px-5 py-4" style={{ backgroundColor: "#FDFAF5" }}>
-        <div className="flex items-center gap-3 mb-2">
-          <TagPill tag={issue.tag} />
-          <time className="text-[11px]" style={{ color: "#7A7468" }}>
-            {formatDate(issue.date)}
-          </time>
-        </div>
-        <p
-          className="text-[16px] font-bold leading-snug mb-1"
-          style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-        >
-          {issue.title}
-        </p>
+        <span className="block font-serif text-display-s text-balance text-on-cream">
+          <span className={locked ? "" : "link-grow"}>{issue.title}</span>
+        </span>
         {issue.subtitle && (
-          <p className="text-[12px] font-light leading-relaxed line-clamp-2" style={{ color: "#7A7468" }}>
+          <span className="mt-1 line-clamp-2 block max-w-measure-card text-meta text-on-cream-muted">
             {issue.subtitle}
-          </p>
+          </span>
         )}
-      </div>
-    </div>
+      </span>
+    </>
   );
 
-  if (locked) return <div aria-hidden>{card}</div>;
+  if (locked) {
+    return (
+      <div aria-hidden="true" className="flex overflow-hidden rounded-md border border-cream-hairline bg-parchment opacity-45 blur-[2px]">
+        {inner}
+      </div>
+    );
+  }
   return (
-    <Link href={`/newsletter/${issue.id}`} className="block group">
-      {card}
-    </Link>
+    <Card href={`/newsletter/${issue.id}`} className="flex overflow-hidden">
+      {inner}
+    </Card>
   );
 }
 
 function GateCard({ lockedCount }: { lockedCount: number }) {
   return (
-    <div
-      className="rounded-sm border p-8 text-center"
-      style={{
-        borderColor: "rgba(176,112,53,0.3)",
-        backgroundColor: "rgba(176,112,53,0.05)",
-      }}
-    >
-      {/* Lock icon */}
-      <div className="flex justify-center mb-5">
-        <div
-          className="w-10 h-10 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: "#1A1814" }}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect x="3" y="7" width="10" height="8" rx="1.5" fill="#F5F0E8" />
-            <path
-              d="M5 7V5a3 3 0 0 1 6 0v2"
-              stroke="#F5F0E8"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              fill="none"
-            />
-            <circle cx="8" cy="11" r="1" fill="#1A1814" />
+    <div className="rounded-md border border-amber bg-parchment p-8 text-center">
+      <div className="mb-5 flex justify-center">
+        <div className="flex size-10 items-center justify-center rounded-full bg-ink text-on-ink">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="3" y="7" width="10" height="8" rx="1.5" fill="currentColor" />
+            <path d="M5 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
           </svg>
         </div>
       </div>
-
-      <h3
-        className="text-[20px] font-bold mb-2"
-        style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-      >
+      <h3 className="mb-2 font-serif text-display-s text-on-cream">
         Issues 1–{lockedCount} are free to read
       </h3>
-      <p className="text-[14px] max-w-sm mx-auto mb-7" style={{ color: "#7A7468" }}>
+      <p className="mx-auto mb-7 max-w-measure-lead text-meta text-on-cream-muted">
         Create a free Binder Grail account to unlock the full archive — no payment needed.
       </p>
-
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-        <Link
-          href="/signup"
-          className="rounded-sm px-5 py-2.5 text-sm font-semibold transition-opacity hover:opacity-80"
-          style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-        >
+      <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <Button href="/signup" variant="primary-light">
           Create free account
-        </Link>
-        <Link
-          href="/login"
-          className="rounded-sm px-5 py-2.5 text-sm transition-colors"
-          style={{ color: "#7A7468" }}
-        >
+        </Button>
+        <Button href="/login" variant="quiet" className="text-on-cream">
           Already have an account? Sign in
-        </Link>
+        </Button>
       </div>
     </div>
   );
@@ -177,53 +112,35 @@ export default function NewsletterArchive({
 
   if (issues.length === 0) {
     return (
-      <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
-        <div className="max-w-5xl mx-auto px-6">
-          <p className="text-[15px]" style={{ color: "#7A7468" }}>
-            No issues published yet. Check back soon.
-          </p>
-        </div>
+      <main className="flex-1 bg-cream py-(--band-y-tight)">
+        <Container width="content">
+          <p className="text-ui text-on-cream-muted">No issues published yet. Check back soon.</p>
+        </Container>
       </main>
     );
   }
 
   return (
-    <main className="flex-1 py-12" style={{ backgroundColor: "#F5F0E8" }}>
-      <div className="max-w-5xl mx-auto px-6">
-        {/* Filter pills */}
-        <div className="flex gap-2 mb-8 flex-wrap">
-          {TAGS.map((t) => (
-            <button
-              key={t}
-              onClick={() => setActiveTag(t)}
-              className="text-xs font-semibold uppercase tracking-widest px-3 py-1.5 rounded-sm transition-colors"
-              style={{
-                backgroundColor: activeTag === t ? "#1A1814" : "#E8E4DC",
-                color: activeTag === t ? "#F5F0E8" : "#7A7468",
-              }}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
+    <main className="flex-1 bg-cream pt-10 pb-(--band-y)">
+      <Container width="content">
+        <FilterGroup
+          options={TAGS}
+          value={activeTag}
+          onChange={setActiveTag}
+          label="Filter issues by topic"
+          className="mb-8"
+        />
 
-        {/* Issue list */}
         <div className="flex flex-col gap-3">
-          {/* Free preview issues */}
           {visibleBeforeGate.map((issue) => (
             <IssueCard key={issue.id} issue={issue} locked={false} />
           ))}
-
-          {/* Gate card */}
           {showGate && <GateCard lockedCount={lockedIssues.length} />}
-
-          {/* Blurred locked issues (decorative, behind gate) */}
+          {/* Blurred locked issues (decorative, behind the gate) */}
           {showGate &&
-            lockedIssues.slice(0, 3).map((issue) => (
-              <IssueCard key={issue.id} issue={issue} locked />
-            ))}
+            lockedIssues.slice(0, 3).map((issue) => <IssueCard key={issue.id} issue={issue} locked />)}
         </div>
-      </div>
+      </Container>
     </main>
   );
 }

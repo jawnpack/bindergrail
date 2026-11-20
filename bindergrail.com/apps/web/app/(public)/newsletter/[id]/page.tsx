@@ -3,7 +3,9 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getIssue } from "@/lib/beehiiv";
-import GrainOverlay from "@/components/GrainOverlay";
+import Band from "@/components/ui/Band";
+import Kicker from "@/components/ui/Kicker";
+import Button from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
@@ -50,93 +52,45 @@ export default async function NewsletterIssuePage({
 
   return (
     <>
-      {/* ── Header ─────────────────────────────────────────────── */}
-      <section
-        className="relative overflow-hidden"
-        style={{ backgroundColor: "#1A1814" }}
-      >
-        <GrainOverlay />
-        <div className="relative z-10 max-w-3xl mx-auto px-6 py-14 md:py-18">
-          {/* Back link */}
+      <Band surface="ink" rule={false} reveal={false} rhythm="tight">
+        <div className="mx-auto max-w-prose px-(--gutter) md:px-0">
           <Link
             href="/newsletter"
-            className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest mb-8 transition-opacity hover:opacity-70"
-            style={{ color: "#7A7468" }}
+            className="mb-6 inline-flex min-h-11 items-center gap-2 text-meta text-on-ink-muted hover:text-on-ink"
           >
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M7.5 2L3.5 6l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            Archive
+            <span aria-hidden="true">←</span> <span className="link-grow">Archive</span>
           </Link>
-
-          <p
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-4"
-            style={{ color: "#B07035" }}
-          >
+          <Kicker surface="ink" className="mb-4">
             Common Rare
-          </p>
-
-          <h1
-            className="text-[32px] md:text-[44px] font-black leading-tight tracking-tight mb-4 max-w-2xl"
-            style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              color: "#F5F0E8",
-            }}
-          >
-            {issue.title}
-          </h1>
-
+          </Kicker>
+          <h1 className="font-serif text-display-l text-balance text-on-ink">{issue.title}</h1>
           <time
-            className="text-[12px]"
-            style={{ color: "#7A7468" }}
+            className="figures mt-5 block text-meta text-on-ink-muted"
             dateTime={new Date(issue.date * 1000).toISOString()}
           >
             {formatDate(issue.date)}
           </time>
         </div>
-      </section>
+      </Band>
 
-      {/* ── Issue body ──────────────────────────────────────────── */}
-      <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
-        <div className="max-w-3xl mx-auto px-6">
-          <article
-            className="prose prose-stone max-w-none"
-            dangerouslySetInnerHTML={{ __html: issue.content }}
-          />
-        </div>
+      <main className="flex-1 bg-cream px-(--gutter) py-(--band-y-tight)">
+        <article
+          className="prose mx-auto max-w-measure"
+          dangerouslySetInnerHTML={{ __html: issue.content }}
+        />
       </main>
 
-      {/* ── Footer strip ────────────────────────────────────────── */}
-      <section
-        className="relative overflow-hidden py-14"
-        style={{ backgroundColor: "#1A1814" }}
-      >
-        <GrainOverlay />
-        <div className="relative z-10 max-w-3xl mx-auto px-6 text-center">
-          <p
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
-            style={{ color: "#B07035" }}
-          >
+      <Band surface="ink" rhythm="tight">
+        <div className="mx-auto max-w-prose px-(--gutter) text-center md:px-0">
+          <Kicker surface="ink" className="mb-3">
             Common Rare
-          </p>
-          <p
-            className="text-[22px] md:text-[28px] font-black leading-tight mb-6"
-            style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              color: "#F5F0E8",
-            }}
-          >
-            Get every issue in your inbox.
-          </p>
-          <Link
-            href="/newsletter"
-            className="inline-block rounded-sm px-6 py-3 text-sm font-semibold transition-opacity hover:opacity-80"
-            style={{ backgroundColor: "#B07035", color: "#F5F0E8" }}
-          >
+          </Kicker>
+          <p className="mb-6 font-serif text-display-m text-on-ink">Get every issue in your inbox.</p>
+          <Button href="/newsletter" variant="primary">
             Browse the archive
-          </Link>
+          </Button>
         </div>
-      </section>
+      </Band>
     </>
   );
 }

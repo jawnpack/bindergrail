@@ -1,10 +1,13 @@
+import { Children, isValidElement } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllPosts, getPostBySlug } from "@/lib/posts";
 import { BLOG_IMAGE_DIMENSIONS } from "@/lib/blog-images";
-import GrainOverlay from "@/components/GrainOverlay";
+import Band from "@/components/ui/Band";
+import SectionHeader from "@/components/ui/SectionHeader";
+import PullQuote from "@/components/PullQuote";
 import SignUpForm from "@/components/SignUpForm";
 import CardboardFlipBanner from "@/components/CardboardFlipBanner";
 import ArticleHero from "@/components/ArticleHero";
@@ -45,107 +48,128 @@ export async function generateMetadata({
   };
 }
 
-function TagPill({ tag }: { tag: string }) {
-  const isMarket = tag === "Market";
+type Kids = { children?: React.ReactNode };
+
+// Plain text of a node, for spotting run-in heads.
+function textOf(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(textOf).join("");
+  if (isValidElement<Kids>(node)) return textOf(node.props.children);
+  return "";
+}
+
+// A run-in head is a paragraph that opens with a short bold phrase ending in
+// "." or ":" ("**Phase 1: Initial release.** The first wave…"). It's set as an amber
+// small-caps label over a hairline, so a run of them reads as a printed list.
+function RunInStrong({ children }: Kids) {
   return (
-    <span
-      className="inline-block text-[10px] font-semibold uppercase tracking-widest px-2 py-0.5 rounded-sm"
-      style={{
-        backgroundColor: isMarket ? "rgba(176,112,53,0.12)" : "rgba(122,116,104,0.1)",
-        color: isMarket ? "#B07035" : "#7A7468",
-      }}
-    >
-      {tag}
-    </span>
+    <strong className="mb-1 block text-label uppercase text-amber-deep">{children}</strong>
   );
 }
 
-// MDX component overrides for brand-consistent prose
+function Strong({ children }: Kids) {
+  return <strong className="font-semibold">{children}</strong>;
+}
+
+// Only short phrases qualify: a whole bold sentence set in caps would be hard
+// to read, so it stays ordinary bold.
+const RUN_IN_MAX = 56;
+
+function isRunIn(children: React.ReactNode) {
+  const first = Children.toArray(children)[0];
+  if (!isValidElement<Kids>(first) || first.type !== Strong) return false;
+  const text = textOf(first.props.children).trim();
+  return /[.:]$/.test(text) && text.length <= RUN_IN_MAX;
+}
+
+// Article body: 17px / 1.7 at a ≤68ch measure, H2s at display-m with s-8 above.
 const mdxComponents = {
-  h2: ({ children }: { children: React.ReactNode }) => (
-    <h2
-      className="text-[24px] font-bold leading-snug mt-10 mb-4"
-      style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-    >
+  h2: ({ children }: Kids) => (
+    <h2 className="mt-(--s-8) mb-(--s-4) font-serif text-display-m text-balance text-on-cream">
       {children}
     </h2>
   ),
-  h3: ({ children }: { children: React.ReactNode }) => (
-    <h3
-      className="text-[20px] font-bold leading-snug mt-8 mb-3"
-      style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#1A1814" }}
-    >
+  h3: ({ children }: Kids) => (
+    <h3 className="mt-(--s-7) mb-(--s-3) font-serif text-display-s text-balance text-on-cream">
       {children}
     </h3>
   ),
-  p: ({ children }: { children: React.ReactNode }) => (
-    <p className="text-[16px] leading-[1.75] mb-5" style={{ color: "#1A1814" }}>
-      {children}
-    </p>
-  ),
-  strong: ({ children }: { children: React.ReactNode }) => (
-    <strong className="font-semibold" style={{ color: "#1A1814" }}>
-      {children}
-    </strong>
-  ),
-  em: ({ children }: { children: React.ReactNode }) => (
-    <em style={{ color: "#1A1814" }}>{children}</em>
-  ),
-  a: ({ href, children }: { href?: string; children: React.ReactNode }) => (
-    <a href={href} className="hover:underline" style={{ color: "#B07035" }}>
+  p: ({ children }: Kids) => {
+    if (isRunIn(children)) {
+      const [first, ...rest] = Children.toArray(children);
+      return (
+        <p className="mb-6 border-t border-cream-hairline pt-4 text-body text-pretty text-on-cream">
+          {isValidElement<Kids>(first) ? (
+            <RunInStrong>{textOf(first.props.children).trim().replace(/[.:]$/, "")}</RunInStrong>
+          ) : null}
+          {rest}
+        </p>
+      );
+    }
+    return <p className="mb-6 text-body text-pretty text-on-cream">{children}</p>;
+  },
+  strong: Strong,
+  a: ({ href, children }: Kids & { href?: string }) => (
+    <a
+      href={href}
+      className="text-amber-deep underline decoration-1 underline-offset-3 hover:text-on-cream"
+    >
       {children}
     </a>
   ),
-  ul: ({ children }: { children: React.ReactNode }) => (
-    <ul className="my-5 ml-5 space-y-2 list-disc" style={{ color: "#1A1814" }}>
-      {children}
-    </ul>
+  ul: ({ children }: Kids) => (
+    <ul className="my-6 ml-5 list-disc space-y-2 text-body marker:text-amber">{children}</ul>
   ),
-  ol: ({ children }: { children: React.ReactNode }) => (
-    <ol className="my-5 ml-5 space-y-2 list-decimal" style={{ color: "#1A1814" }}>
+  ol: ({ children }: Kids) => (
+    <ol className="figures my-6 ml-5 list-decimal space-y-2 text-body marker:text-on-cream-muted">
       {children}
     </ol>
   ),
-  li: ({ children }: { children: React.ReactNode }) => (
-    <li className="text-[15px] leading-[1.7]" style={{ color: "#1A1814" }}>
-      {children}
-    </li>
-  ),
-  blockquote: ({ children }: { children: React.ReactNode }) => (
-    <blockquote
-      className="border-l-2 pl-5 my-6 italic"
-      style={{ borderColor: "#B07035", color: "#7A7468" }}
-    >
+  li: ({ children }: Kids) => <li className="pl-1 text-pretty">{children}</li>,
+  blockquote: ({ children }: Kids) => (
+    <blockquote className="my-8 border-l-2 border-amber pl-5 italic text-on-cream-muted">
       {children}
     </blockquote>
   ),
-  hr: () => <hr className="my-10" style={{ borderColor: "#D8D0C0" }} />,
+  hr: () => <hr className="my-(--s-7) border-cream-hairline" />,
   img: ({ src, alt }: { src?: string; alt?: string }) => {
     const dims = src ? BLOG_IMAGE_DIMENSIONS[src] : undefined;
     return (
-      <div style={{ margin: "2rem 0", borderRadius: "8px", overflow: "hidden", border: "1px solid #D8D0C0" }}>
+      <span className="my-8 block overflow-hidden rounded-md border border-cream-hairline">
         {src && dims ? (
           <Image
             src={src}
             alt={alt || "Pokémon TCG blog image"}
             width={dims.width}
             height={dims.height}
-            sizes="(max-width: 728px) 100vw, 680px"
-            style={{ width: "100%", height: "auto", display: "block" }}
+            sizes="(max-width: 720px) 100vw, 672px"
+            className="block h-auto w-full"
           />
         ) : (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={src}
             alt={alt || "Pokémon TCG blog image"}
             loading="lazy"
             decoding="async"
-            style={{ width: "100%", height: "auto", display: "block", objectFit: "contain", maxHeight: "none" }}
+            className="block h-auto w-full object-contain"
           />
         )}
-      </div>
+      </span>
     );
   },
+  PullQuote,
 };
+
+// ~230 words a minute, MDX/markdown syntax stripped first.
+function readingMinutes(source: string) {
+  const words = source
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[#*_>`\[\]()!-]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return Math.max(1, Math.round(words / 230));
+}
 
 export default async function BlogPostPage({
   params,
@@ -197,92 +221,72 @@ export default async function BlogPostPage({
     },
   ];
 
+  const longDate = (d: string, opts: Intl.DateTimeFormatOptions) =>
+    new Date(d).toLocaleDateString("en-US", opts);
+
   return (
     <>
       <JsonLd data={jsonLd} />
-      <main className="flex-1 py-14" style={{ backgroundColor: "#F5F0E8" }}>
-        <div className="max-w-[680px] mx-auto px-6">
-          {/* Back link */}
+      <main className="flex-1 bg-cream px-(--gutter) pt-8 pb-(--band-y-tight) md:pt-12">
+        <div className="mx-auto max-w-prose">
           <Link
             href="/blog"
-            className="inline-flex items-center gap-1.5 text-[13px] mb-10 hover:underline"
-            style={{ color: "#7A7468" }}
+            className="mb-8 inline-flex min-h-11 items-center gap-2 text-meta text-on-cream-muted hover:text-on-cream"
           >
-            ← All posts
+            <span aria-hidden="true">←</span> <span className="link-grow">All posts</span>
           </Link>
 
-          {/* Article hero — replaces plain title */}
           <ArticleHero
             title={meta.title}
-            tag={meta.tag as "Market" | "Advice" | "News"}
+            tag={meta.tag}
+            lede={meta.description}
+            dateTime={meta.date}
+            readingMinutes={readingMinutes(content)}
             date={
-              new Date(meta.date).toLocaleDateString("en-US", {
-                month: "long",
-                day: "numeric",
-                year: "numeric",
-              }) +
+              longDate(meta.date, { month: "long", day: "numeric", year: "numeric" }) +
               (meta.updated
-                ? ` · Updated ${new Date(meta.updated).toLocaleDateString("en-US", { month: "long", year: "numeric" })}`
+                ? ` · Updated ${longDate(meta.updated, { month: "long", year: "numeric" })}`
                 : "")
             }
           />
 
-          {/* Optional hero image from frontmatter */}
           {meta.image && (
-            <div
-              style={{
-                marginBottom: "2rem",
-                borderRadius: "8px",
-                overflow: "hidden",
-              }}
-            >
+            <div className="mb-10 overflow-hidden rounded-md border border-cream-hairline">
               <Image
                 src={meta.image}
                 alt={meta.title}
                 width={680}
                 height={340}
-                style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                className="h-auto w-full object-cover"
               />
             </div>
           )}
 
-          {/* MDX body */}
-          <article>
+          <article className="max-w-measure [&>h2:first-child]:mt-0">
             <MDXRemote source={content} components={mdxComponents} />
           </article>
 
-          {/* Game demo */}
           <div className="mt-12">
             <CardboardFlipBanner />
           </div>
         </div>
       </main>
 
-      {/* CTA strip */}
-      <section
-        className="relative overflow-hidden"
-        style={{ backgroundColor: "#1A1814" }}
-      >
-        <GrainOverlay />
-        <div className="relative z-10 max-w-[680px] mx-auto px-6 py-14">
-          <p
-            className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-3"
-            style={{ color: "#B07035" }}
-          >
-            Binder Grail
-          </p>
-          <h2
-            className="text-[24px] font-bold mb-3"
-            style={{ fontFamily: "var(--font-playfair), Georgia, serif", color: "#F5F0E8" }}
-          >
-            Enjoyed this? Get the next one in your inbox.
-          </h2>
-          <p className="text-[14px] mb-6" style={{ color: "#7A7468" }}>
-            Create a free account to unlock the full archive and stay in the loop.
-          </p>
-          <SignUpForm />
+      <Band surface="ink" rhythm="tight" labelledBy="cta-title">
+        <div className="mx-auto max-w-prose px-(--gutter) md:px-0">
+          <SectionHeader
+            id="cta-title"
+            surface="ink"
+            size="m"
+            kicker="Binder Grail"
+            title="Enjoyed this? Get the next one in your inbox."
+            lead="Create a free account to unlock the full archive and stay in the loop."
+          />
+          <div className="mt-6">
+            <SignUpForm />
+          </div>
         </div>
-      </section>
+      </Band>
     </>
   );
 }
