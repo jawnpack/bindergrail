@@ -8,7 +8,7 @@ const GEM: Record<Rarity, { fill: string; high: string }> = {
   common: { fill: "var(--color-stone-400)", high: "var(--color-cream-400)" },
   rare: { fill: "var(--color-cyan-300)", high: "var(--color-cream-100)" },
   holo: { fill: "var(--color-magenta-400)", high: "var(--color-cream-100)" },
-  grail: { fill: "var(--color-gold-400)", high: "var(--color-cream-100)" },
+  grail: { fill: "var(--color-amber-bright)", high: "var(--color-cream-100)" },
 };
 
 const DIM: Record<Size, { w: number; h: number; gemH: number }> = {
@@ -40,11 +40,11 @@ export default function CardFrame({
 
   return (
     <div
-      className={`relative rounded-[4px] border-2 border-ink-950 bg-gold-400 ${className}`}
+      className={`relative rounded-[4px] border-2 border-ink-950 bg-amber-bright ${className}`}
       style={{ width: d.w, height: d.h }}
     >
       <div
-        className="absolute flex items-center justify-center border border-gold-700 bg-ink-700"
+        className="absolute flex items-center justify-center border border-amber bg-ink-700"
         style={{ left: ins.l, right: ins.r, top: ins.t, bottom: ins.b }}
       >
         <PixelSprite name="gem" height={d.gemH} gemFill={g.fill} gemHigh={g.high} />

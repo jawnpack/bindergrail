@@ -52,8 +52,8 @@ export default function ArcadeLobby() {
       {
         label: "GRAIL",
         cost: "500 TOKENS",
-        border: "border-gold-400",
-        extra: "shadow-[inset_0_0_0_3px_var(--color-gold-700)]",
+        border: "border-amber-bright",
+        extra: "shadow-[inset_0_0_0_3px_var(--color-amber)]",
       },
     ];
 
@@ -62,15 +62,15 @@ export default function ArcadeLobby() {
       {/* Header */}
       <header className="border-b-[3px] border-ink-700 bg-ink-900">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-5 px-6 py-5">
-          <div className="flex flex-col gap-[10px]">
+          <div className="flex flex-col gap-1">
             <a
               href="https://bindergrail.com"
-              className="inline-flex items-center gap-2 font-display text-[10px] text-cream-400 no-underline"
+              className="inline-flex min-h-11 items-center gap-2 font-display text-arc-12 text-cream-400 no-underline hover:text-cream-100"
             >
               <PixelSprite name="back" height={11} />
               BINDERGRAIL.COM
             </a>
-            <h1 className="m-0 font-display text-[22px] leading-[1.25] text-gold-400 [text-shadow:4px_4px_0_var(--color-gold-700)] md:text-[26px]">
+            <h1 className="m-0 font-display text-arc-24 leading-[1.25] text-amber-bright [text-shadow:4px_4px_0_var(--color-amber)] md:text-arc-24">
               BINDER GRAIL ARCADE
             </h1>
           </div>
@@ -88,11 +88,11 @@ export default function ArcadeLobby() {
           <div className="flex flex-wrap items-baseline justify-between gap-[10px]">
             <h2
               id="dailies-title"
-              className="m-0 font-display text-[18px] text-cream-100"
+              className="m-0 font-display text-arc-18 text-cream-100"
             >
               TODAY&apos;S DAILIES
             </h2>
-            <span className="font-body text-[16px] text-cream-400">
+            <span className="font-body text-arc-16 text-cream-400">
               {dateLabel(dateET)} · resets at midnight ET
             </span>
           </div>
@@ -131,16 +131,16 @@ export default function ArcadeLobby() {
           <div className="flex min-w-0 flex-1 basis-[360px] flex-col gap-[14px] border-[3px] border-cream-100 bg-ink-800 p-6 shadow-[0_0_0_3px_var(--color-ink-950),6px_6px_0_3px_var(--color-ink-950)]">
             <h2
               id="tokens-title"
-              className="m-0 font-display text-[15px] text-gold-400"
+              className="m-0 font-display text-arc-16 text-amber-bright"
             >
               HOW TOKENS WORK
             </h2>
-            <p className="m-0 font-body text-[17px] leading-[1.45] text-cream-100">
+            <p className="m-0 font-body text-arc-16 leading-[1.45] text-cream-100">
               Play as much as you want — the arcade is free, forever. Tokens are{" "}
-              <span className="text-gold-400">earned by playing</span>, never for
+              <span className="text-amber-bright">earned by playing</span>, never for
               sale.
             </p>
-            <ol className="m-0 flex list-decimal flex-col gap-2 pl-[22px] font-body text-[17px] leading-[1.45]">
+            <ol className="m-0 flex list-decimal flex-col gap-2 pl-[22px] font-body text-arc-16 leading-[1.45]">
               <li>Play any cabinet — unlimited runs.</li>
               <li>
                 Earn tokens for clearing dailies, keeping streaks and posting high
@@ -148,7 +148,7 @@ export default function ArcadeLobby() {
               </li>
               <li>Spend them on card frames for your share cards and name.</li>
             </ol>
-            <p className="m-0 font-body text-[15px] leading-[1.45] text-cream-400">
+            <p className="m-0 font-body text-arc-16 leading-[1.45] text-cream-400">
               Paid upgrades (coming soon): color themes and in-game enhancements —
               cosmetic and optional. Never pay-to-play, never pay-to-win.
             </p>
@@ -162,10 +162,10 @@ export default function ArcadeLobby() {
                 <div
                   className={`h-[88px] w-16 rounded-[4px] border-[6px] bg-ink-700 ${t.border} ${t.extra ?? ""}`}
                 />
-                <span className="font-display text-[9px] text-cream-100">
+                <span className="font-display text-arc-12 text-cream-100">
                   {t.label}
                 </span>
-                <span className="font-num text-[22px] leading-none text-gold-400">
+                <span className="font-num text-arc-24 leading-none text-amber-bright">
                   {t.cost}
                 </span>
               </div>
@@ -177,13 +177,13 @@ export default function ArcadeLobby() {
         <section
           id="newsletter"
           aria-labelledby="news-title"
-          className="flex flex-wrap items-center justify-between gap-5 border-[3px] border-gold-400 bg-ink-900 p-7 shadow-[6px_6px_0_var(--color-ink-950)]"
+          className="flex flex-wrap items-center justify-between gap-5 border-[3px] border-amber-bright bg-ink-900 p-7 shadow-[6px_6px_0_var(--color-ink-950)]"
         >
           <div className="flex min-w-0 flex-1 basis-[420px] flex-col gap-[10px]">
-            <h2 id="news-title" className="m-0 font-display text-[15px] text-gold-400">
+            <h2 id="news-title" className="m-0 font-display text-arc-16 text-amber-bright">
               MISSED A DAILY?
             </h2>
-            <p className="m-0 font-body text-[18px] text-cream-100">
+            <p className="m-0 font-body text-arc-18 text-cream-100">
               Every Friday, Common Rare recaps the week&apos;s answers, high scores
               and the cards that stumped everyone.
             </p>
@@ -200,17 +200,17 @@ export default function ArcadeLobby() {
         className="border-t-[3px] border-ink-700 bg-ink-900"
       >
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-6 py-6">
-          <span className="font-display text-[9px] text-stone-400">
+          <span className="font-display text-arc-12 text-stone-400">
             BINDER GRAIL ARCADE 2026
           </span>
-          <nav aria-label="Arcade" className="flex flex-wrap gap-[22px] font-display text-[9px]">
-            <a href="#scores" className="text-cream-400 no-underline">
+          <nav aria-label="Arcade" className="flex flex-wrap gap-x-6 font-display text-arc-12">
+            <a href="#scores" className="inline-flex min-h-11 items-center text-cream-400 no-underline hover:text-cream-100">
               HIGH SCORES
             </a>
-            <Link href="/arcade" className="text-cream-400 no-underline">
+            <Link href="/arcade" className="inline-flex min-h-11 items-center text-cream-400 no-underline hover:text-cream-100">
               HOW TO PLAY
             </Link>
-            <a href="https://bindergrail.com" className="text-cream-400 no-underline">
+            <a href="https://bindergrail.com" className="inline-flex min-h-11 items-center text-cream-400 no-underline hover:text-cream-100">
               BINDERGRAIL.COM
             </a>
           </nav>

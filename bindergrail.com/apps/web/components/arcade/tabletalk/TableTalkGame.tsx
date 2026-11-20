@@ -23,7 +23,7 @@ const ERA_FRAME: Record<EraId, "rare" | "holo" | "grail"> = {
 
 const TENSION = {
   calm: { label: "Relaxed", color: "bg-green-400", n: 1 },
-  wary: { label: "Getting impatient", color: "bg-gold-400", n: 2 },
+  wary: { label: "Getting impatient", color: "bg-amber-bright", n: 2 },
   edge: { label: "On edge", color: "bg-red-400", n: 3 },
 } as const;
 
@@ -144,23 +144,23 @@ export default function TableTalkGame() {
   if (phase === "title") {
     return (
       <div className="flex grow flex-col items-center gap-5 p-6 text-center">
-        <span className="font-body text-[15px] text-cream-400">
+        <span className="font-body text-arc-16 text-cream-400">
           Card-show haggling
         </span>
-        <h1 className="m-0 font-display text-[28px] leading-[1.3] text-cyan-300 [text-shadow:4px_4px_0_var(--color-ink-800)]">
+        <h1 className="m-0 font-display text-arc-24 leading-[1.3] text-cyan-300 [text-shadow:4px_4px_0_var(--color-ink-800)]">
           TABLE TALK
         </h1>
-        <p className="m-0 max-w-[360px] font-body text-[16px] leading-[1.4] text-cream-100">
+        <p className="m-0 max-w-[360px] font-body text-arc-16 leading-[1.4] text-cream-100">
           Work the table. Read the vendor. Talk the price down — and quit before
           someone gets annoyed enough to throw you out.
         </p>
         <div className="flex w-full flex-col gap-2 text-left">
           {(["friendly", "busy", "tough"] as VendorId[]).map((v) => (
             <div key={v} className="border-[3px] border-ink-600 bg-ink-900 p-3">
-              <span className="font-display text-[9px] text-gold-400">
+              <span className="font-display text-arc-12 text-amber-bright">
                 {VENDORS[v].label}
               </span>
-              <p className="m-0 mt-1 font-body text-[14px] text-cream-400">
+              <p className="m-0 mt-1 font-body text-arc-14 text-cream-400">
                 {VENDORS[v].blurb}
               </p>
             </div>
@@ -169,7 +169,7 @@ export default function TableTalkGame() {
         <ArcadeButton onClick={start} className="w-full">
           ▶ START HAGGLING
         </ArcadeButton>
-        <span className="font-body text-[13px] text-cream-400">
+        <span className="font-body text-arc-14 text-cream-400">
           Score = total money saved before you&apos;re thrown out.
         </span>
       </div>
@@ -180,16 +180,16 @@ export default function TableTalkGame() {
   if (phase === "deal" && lastDeal) {
     return (
       <div className="flex grow flex-col items-center gap-4 p-6 text-center">
-        <span className="font-display text-[20px] text-gold-400 [text-shadow:3px_3px_0_var(--color-ink-950)]">
+        <span className="font-display text-arc-18 text-amber-bright [text-shadow:3px_3px_0_var(--color-ink-950)]">
           DEAL!
         </span>
-        <span className="font-body text-[18px] text-cream-100">{lastDeal.name}</span>
+        <span className="font-body text-arc-18 text-cream-100">{lastDeal.name}</span>
         <div className="flex w-full flex-col gap-1">
           <Row label="Original ask" value={money(lastDeal.ask)} />
           <Row label="You paid" value={money(lastDeal.paid)} />
           <Row label="You saved" value={money(lastDeal.savings)} highlight />
         </div>
-        <span className="font-num text-[40px] leading-none text-gold-400">
+        <span className="font-num text-arc-44 leading-none text-amber-bright">
           {lastDeal.discountPct}% off
         </span>
         <div className="mt-2 flex w-full flex-col gap-1 border-t-[3px] border-ink-700 pt-3">
@@ -209,10 +209,10 @@ export default function TableTalkGame() {
       .sort((a, b) => b[1] - a[1])[0];
     return (
       <div className="flex grow flex-col items-center gap-4 p-6 text-center">
-        <span className="font-display text-[16px] text-red-400 [text-shadow:3px_3px_0_var(--color-ink-950)]">
+        <span className="font-display text-arc-16 text-red-400 [text-shadow:3px_3px_0_var(--color-ink-950)]">
           YOU&apos;RE DONE
         </span>
-        <p className="m-0 max-w-[340px] font-body text-[16px] leading-[1.4] text-cream-100">
+        <p className="m-0 max-w-[340px] font-body text-arc-16 leading-[1.4] text-cream-100">
           The vendor waves you off. &ldquo;Okay, that&apos;s enough.&rdquo; Security
           has already seen what happened — you&apos;ve been asked to leave the
           convention.
@@ -231,7 +231,7 @@ export default function TableTalkGame() {
             <Row label="Most seen" value={VENDORS[topVendor[0]].label} />
           ) : null}
         </div>
-        <span className="font-body text-[13px] text-cream-400">
+        <span className="font-body text-arc-14 text-cream-400">
           Signed in? Your run total is on the leaderboard.
         </span>
         <div className="grid w-full grid-cols-2 gap-3">
@@ -255,8 +255,8 @@ export default function TableTalkGame() {
   return (
     <div className="flex grow flex-col gap-3 p-4">
       {/* run HUD */}
-      <div className="flex items-center justify-between font-display text-[9px] text-cream-400">
-        <span>SAVED <span className="text-gold-400">{money(run.savings)}</span></span>
+      <div className="flex items-center justify-between font-display text-arc-12 text-cream-400">
+        <span>SAVED <span className="text-amber-bright">{money(run.savings)}</span></span>
         <span>CARDS {run.cards}</span>
         <span>VENDOR #{run.vendorsSeen}</span>
       </div>
@@ -264,13 +264,13 @@ export default function TableTalkGame() {
       {/* vendor */}
       <div className="flex items-center justify-between gap-2 border-[3px] border-ink-600 bg-ink-900 p-3">
         <div className="min-w-0">
-          <div className="font-display text-[10px] text-cyan-300">{vendor.label}</div>
-          <div className="mt-1 font-body text-[13px] text-cream-400">
+          <div className="font-display text-arc-12 text-cyan-300">{vendor.label}</div>
+          <div className="mt-1 font-body text-arc-14 text-cream-400">
             {distracted ? "Checking his phone…" : TENSION[vendorTension(enc)].label}
           </div>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <span className="font-display text-[7px] text-cream-400">MOOD</span>
+          <span className="font-display text-arc-12 text-cream-400">MOOD</span>
           <div className="flex gap-1" aria-label={`Vendor mood: ${tension.label}`}>
             {[0, 1, 2].map((i) => (
               <span
@@ -288,19 +288,19 @@ export default function TableTalkGame() {
           <CardFrame rarity={ERA_FRAME[enc.card.era_category]} size="md" />
         </div>
         <div className="flex min-w-0 grow flex-col gap-1">
-          <span className="font-body text-[17px] leading-[1.2] text-cream-100">
+          <span className="font-body text-arc-16 leading-[1.2] text-cream-100">
             {enc.card.display_name}
           </span>
-          <span className="font-body text-[13px] text-cream-400">
+          <span className="font-body text-arc-14 text-cream-400">
             {enc.card.set_name} · {enc.card.year}
           </span>
-          <span className="font-display text-[8px] text-cyan-300">
+          <span className="font-display text-arc-12 text-cyan-300">
             {enc.card.condition_type === "graded"
               ? `${enc.card.grading_company ?? "GRADED"} ${enc.card.grade ?? ""}`.trim()
               : "RAW"}
           </span>
-          <span className="mt-1 font-display text-[7px] text-cream-400">ASKING</span>
-          <span className="font-num text-[40px] leading-none text-gold-400">
+          <span className="mt-1 font-display text-arc-12 text-cream-400">ASKING</span>
+          <span className="font-num text-arc-44 leading-none text-amber-bright">
             {money(enc.currentPrice)}
           </span>
         </div>
@@ -322,10 +322,10 @@ export default function TableTalkGame() {
             onClick={() => doTactic(tid)}
             className="flex min-h-[52px] cursor-pointer flex-col items-start justify-center border-[3px] border-ink-600 bg-ink-800 px-3 py-1 text-left shadow-[3px_3px_0_var(--color-ink-950)] hover:border-cyan-300"
           >
-            <span className="font-display text-[9px] text-cream-100">
+            <span className="font-display text-arc-12 text-cream-100">
               {TACTICS[tid].label}
             </span>
-            <span className="font-body text-[12px] leading-[1.2] text-cream-400">
+            <span className="font-body text-arc-12 leading-[1.2] text-cream-400">
               {TACTICS[tid].hint}
             </span>
           </button>
@@ -354,9 +354,9 @@ function Row({
 }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="font-body text-[14px] text-cream-400">{label}</span>
+      <span className="font-body text-arc-14 text-cream-400">{label}</span>
       <span
-        className={`font-num text-[22px] leading-none ${highlight ? "text-gold-400" : "text-cream-100"}`}
+        className={`font-num text-arc-24 leading-none ${highlight ? "text-amber-bright" : "text-cream-100"}`}
       >
         {value}
       </span>

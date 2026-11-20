@@ -7,7 +7,7 @@ type Size = "md" | "sm";
 
 const VARIANT: Record<Variant, string> = {
   primary:
-    "bg-gold-400 text-ink-950 border-ink-950 shadow-[inset_-4px_-4px_0_var(--color-gold-700),4px_4px_0_var(--color-ink-950)]",
+    "bg-amber-bright text-ink-950 border-ink-950 shadow-[inset_-4px_-4px_0_var(--color-amber),4px_4px_0_var(--color-ink-950)]",
   blue: "bg-blue-400 text-ink-950 border-ink-950 shadow-[inset_-4px_-4px_0_var(--color-blue-700),4px_4px_0_var(--color-ink-950)]",
   outline: `bg-ink-800 text-cream-100 border-cream-100 ${DROP}`,
   danger: `bg-ink-800 text-red-400 border-red-400 ${DROP}`,
@@ -17,8 +17,8 @@ const DISABLED =
   "bg-ink-700 text-stone-400 border-ink-950 shadow-[4px_4px_0_var(--color-ink-950)] cursor-default";
 
 const SIZE: Record<Size, string> = {
-  md: "min-h-[56px] px-5 text-[13px]",
-  sm: "min-h-[50px] px-4 text-[10px]",
+  md: "min-h-[56px] px-5 text-arc-14",
+  sm: "min-h-[50px] px-4 text-arc-12",
 };
 
 const BASE =

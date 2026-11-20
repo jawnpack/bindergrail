@@ -3,7 +3,7 @@ type Tone = "daily" | "arcade" | "story" | "live" | "new" | "soon";
 // Background + text per tone. All tones use dark text on a bright fill except
 // "soon", which is a quiet ink chip.
 const TONE: Record<Tone, string> = {
-  daily: "bg-gold-400 text-ink-950",
+  daily: "bg-amber-bright text-ink-950",
   arcade: "bg-blue-400 text-ink-950",
   story: "bg-magenta-400 text-ink-950",
   live: "bg-green-400 text-ink-950",
@@ -29,7 +29,7 @@ export default function Chip({
 }) {
   return (
     <span
-      className={`inline-block px-[7px] py-[5px] font-display text-[8px] leading-none ${TONE[tone]}`}
+      className={`inline-block px-[7px] py-[5px] font-display text-arc-12 leading-none ${TONE[tone]}`}
     >
       {label ?? LABEL[tone]}
     </span>

@@ -9,8 +9,8 @@ export default function FeaturedBest() {
   if (!player || !player.signedIn) return null;
   return (
     <div className="border-[3px] border-ink-600 bg-ink-800 p-[14px]">
-      <div className="font-display text-[9px] text-cream-400">YOUR BEST RUN</div>
-      <div className="font-num text-[30px] leading-[1.1] text-cream-100">
+      <div className="font-display text-arc-12 text-cream-400">YOUR BEST RUN</div>
+      <div className="font-num text-arc-32 leading-[1.1] text-cream-100">
         {player.flipBest != null ? String(player.flipBest) : "NO RUNS YET"}
       </div>
     </div>

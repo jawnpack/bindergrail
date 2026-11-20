@@ -6,7 +6,7 @@ import { accentText } from "./ui";
 import { CABINETS, type Accent } from "@/lib/arcade/config";
 
 const marqueeBg: Record<Accent, string> = {
-  gold: "bg-gold-400",
+  gold: "bg-amber-bright",
   blue: "bg-blue-400",
   cyan: "bg-cyan-300",
   magenta: "bg-magenta-400",
@@ -15,7 +15,7 @@ const marqueeBg: Record<Accent, string> = {
 function Panel({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-3 border-[3px] border-ink-600 bg-ink-900 p-4 shadow-[4px_4px_0_var(--color-ink-950)]">
-      <span className="font-display text-[9px] text-gold-400">{label}</span>
+      <span className="font-display text-arc-12 text-amber-bright">{label}</span>
       {children}
     </div>
   );
@@ -56,7 +56,7 @@ export default function GameShell({
         {/* Left rail */}
         <aside className="hidden w-[290px] shrink-0 flex-col gap-[22px] lg:flex">
           <Panel label="HOW TO PLAY">
-            <ol className="m-0 flex list-decimal flex-col gap-[6px] pl-5 font-body text-[16px] leading-[1.35]">
+            <ol className="m-0 flex list-decimal flex-col gap-[6px] pl-5 font-body text-arc-16 leading-[1.35]">
               {howToPlay.map((step, i) => (
                 <li key={i}>{step}</li>
               ))}
@@ -66,10 +66,10 @@ export default function GameShell({
             <div className="flex flex-col gap-3">
               {keys.map((k) => (
                 <div key={k.key} className="flex items-center gap-3">
-                  <span className="flex min-h-[36px] min-w-[44px] items-center justify-center bg-ink-800 px-2 font-display text-[8px] text-cream-100 shadow-[0_3px_0_var(--color-ink-600)] [border:3px_solid_var(--color-cream-100)]">
+                  <span className="flex min-h-[36px] min-w-[44px] items-center justify-center bg-ink-800 px-2 font-display text-arc-12 text-cream-100 shadow-[0_3px_0_var(--color-ink-600)] [border:3px_solid_var(--color-cream-100)]">
                     {k.key}
                   </span>
-                  <span className="font-body text-[16px]">{k.action}</span>
+                  <span className="font-body text-arc-16">{k.action}</span>
                 </div>
               ))}
             </div>
@@ -79,7 +79,7 @@ export default function GameShell({
         {/* Center cabinet / screen */}
         <div className="flex w-full grow flex-col lg:w-auto lg:grow-0 lg:border-[3px] lg:border-ink-600 lg:bg-ink-700 lg:p-[14px] lg:shadow-[8px_8px_0_var(--color-ink-950)]">
           <div
-            className={`hidden h-10 items-center justify-center border-b-[3px] border-ink-950 font-display text-[13px] text-ink-950 lg:flex ${marqueeBg[accent]}`}
+            className={`hidden h-10 items-center justify-center border-b-[3px] border-ink-950 font-display text-arc-14 text-ink-950 lg:flex ${marqueeBg[accent]}`}
           >
             {title} #001
           </div>
@@ -98,12 +98,12 @@ export default function GameShell({
                 return (
                   <div
                     key={i}
-                    className="flex justify-between font-num text-[22px] leading-[1.1]"
+                    className="flex justify-between font-num text-arc-24 leading-[1.1]"
                   >
                     <span>
                       {i + 1} {row ? row.name : "[PLAYER]"}
                     </span>
-                    <span className="text-gold-400">{row ? row.score : "[--]"}</span>
+                    <span className="text-amber-bright">{row ? row.score : "[--]"}</span>
                   </div>
                 );
               })}
@@ -112,7 +112,7 @@ export default function GameShell({
           <Panel label="MORE CABINETS">
             {others.map((c) => {
               const cls =
-                "flex min-h-[44px] items-center justify-between border-[3px] border-ink-600 bg-ink-800 px-3 font-display text-[9px] text-cream-100 no-underline";
+                "flex min-h-[44px] items-center justify-between border-[3px] border-ink-600 bg-ink-800 px-3 font-display text-arc-12 text-cream-100 no-underline";
               const inner = (
                 <>
                   <span>{c.title}</span>

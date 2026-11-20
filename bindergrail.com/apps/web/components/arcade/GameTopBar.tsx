@@ -18,12 +18,12 @@ export default function GameTopBar({
     <div className="flex h-14 shrink-0 items-center justify-between gap-2 border-b-[3px] border-ink-700 bg-ink-950 px-3 lg:h-16 lg:px-7">
       <Link
         href="/arcade"
-        className="inline-flex min-h-[44px] items-center gap-2 font-display text-[9px] text-cream-400 no-underline lg:text-[10px]"
+        className="inline-flex min-h-[44px] items-center gap-2 font-display text-arc-12 text-cream-400 no-underline lg:text-arc-12"
       >
         <PixelSprite name="back" height={11} />
         LOBBY
       </Link>
-      <span className={`font-display text-[11px] lg:text-[15px] ${accentText[accent]}`}>
+      <span className={`font-display text-arc-12 lg:text-arc-16 ${accentText[accent]}`}>
         {title}
       </span>
       <TopBarTokens />

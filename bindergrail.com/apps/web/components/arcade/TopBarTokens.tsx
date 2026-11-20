@@ -15,12 +15,12 @@ export default function TopBarTokens() {
       {player === null ? null : player.signedIn ? (
         <>
           <PixelSprite name="coin" height={16} />
-          <span className="font-num text-[24px] leading-none text-gold-400">
+          <span className="font-num text-arc-24 leading-none text-amber-bright">
             {player.tokens}
           </span>
         </>
       ) : (
-        <Link href="/login" prefetch={false} className="font-display text-[9px] text-cream-400 no-underline">
+        <Link href="/login" prefetch={false} className="font-display text-arc-12 text-cream-400 no-underline">
           SIGN IN
         </Link>
       )}

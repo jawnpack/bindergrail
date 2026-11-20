@@ -71,18 +71,18 @@ export default async function GutCheckPage() {
 
       {/* Crawlable SEO content — real HTML, not canvas. */}
       <section className="mx-auto max-w-[760px] px-6 py-12">
-        <h1 className="m-0 font-display text-[18px] leading-[1.5] text-gold-400 [text-shadow:4px_4px_0_var(--color-gold-700)]">
+        <h1 className="m-0 font-display text-arc-18 leading-[1.5] text-amber-bright [text-shadow:4px_4px_0_var(--color-amber)]">
           Can You Guess the PSA Grade? | Gut Check
         </h1>
-        <p className="mt-5 font-body text-[18px] leading-[1.6] text-cream-100">
+        <p className="mt-5 font-body text-arc-18 leading-[1.6] text-cream-100">
           Gut Check is a daily game for Pokémon collectors who want to get better at
           reading card condition. Each day you get five real, already-graded cards.
           Study the photos and the condition notes, predict the PSA grade, then see
           the confirmed grade and a short explanation of the visible clues — centering,
           corners, edges, surface and whitening.
         </p>
-        <h2 className="mt-8 font-display text-[12px] text-cream-100">HOW IT WORKS</h2>
-        <ol className="mt-3 flex list-decimal flex-col gap-2 pl-6 font-body text-[17px] leading-[1.5]">
+        <h2 className="mt-8 font-display text-arc-12 text-cream-100">HOW IT WORKS</h2>
+        <ol className="mt-3 flex list-decimal flex-col gap-2 pl-6 font-body text-arc-16 leading-[1.5]">
           <li>Everyone gets the same five cards each day (resets at midnight ET).</li>
           <li>Call each grade from 1 to 10, with an optional confidence.</li>
           <li>
@@ -90,16 +90,16 @@ export default async function GutCheckPage() {
           </li>
           <li>Share your result as a grid: 🟩 exact, 🟨 within one, 🟥 further off.</li>
         </ol>
-        <h2 className="mt-8 font-display text-[12px] text-cream-100">
+        <h2 className="mt-8 font-display text-arc-12 text-cream-100">
           WHAT MOVES A GRADE
         </h2>
-        <p className="mt-3 font-body text-[17px] leading-[1.6] text-cream-100">
+        <p className="mt-3 font-body text-arc-16 leading-[1.6] text-cream-100">
           Graders weigh centering, corner sharpness, edge wear, surface scratches and
           print lines together — no single flaw decides a grade on its own. Gut Check
           is a skill and education game built on known graded examples; it won&apos;t
           tell you what an ungraded card will grade.
         </p>
-        <p className="mt-6 font-body text-[14px] leading-[1.6] text-cream-400">
+        <p className="mt-6 font-body text-arc-14 leading-[1.6] text-cream-400">
           Binder Grail is not affiliated with, endorsed by, or a partner of PSA.
           &ldquo;PSA grade&rdquo; refers to the grade PSA already assigned to the real
           example shown.

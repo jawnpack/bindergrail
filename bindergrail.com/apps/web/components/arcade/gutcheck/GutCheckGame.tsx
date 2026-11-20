@@ -169,21 +169,21 @@ export default function GutCheckGame({
   if (phase === "results") {
     return (
       <div className="flex grow flex-col items-center gap-5 p-6 text-center">
-        <span className="font-display text-[10px] text-cream-400">
+        <span className="font-display text-arc-12 text-cream-400">
           GUT CHECK {mode === "daily" ? `#${String(puzzleNumber).padStart(3, "0")}` : "PRACTICE"}
         </span>
         <div className="flex items-baseline gap-2">
-          <span className="font-num text-[72px] leading-[0.9] text-gold-400">
+          <span className="font-num text-arc-72 leading-[0.9] text-amber-bright">
             {exactCount}
           </span>
-          <span className="font-num text-[36px] text-cream-400">
+          <span className="font-num text-arc-32 text-cream-400">
             /{cards.length} exact
           </span>
         </div>
-        <div className="text-[28px] tracking-[0.2em]">{buildShareGrid(results)}</div>
+        <div className="text-arc-24 tracking-[0.2em]">{buildShareGrid(results)}</div>
         {streak != null ? (
-          <span className="font-body text-[16px] text-cream-100">
-            Daily streak: <span className="text-gold-400">{streak}</span>
+          <span className="font-body text-arc-16 text-cream-100">
+            Daily streak: <span className="text-amber-bright">{streak}</span>
           </span>
         ) : null}
         <ArcadeButton onClick={share} className="w-full">
@@ -197,7 +197,7 @@ export default function GutCheckGame({
             LOBBY
           </ArcadeButton>
         </div>
-        <span className="font-body text-[14px] text-cream-400">
+        <span className="font-body text-arc-14 text-cream-400">
           {mode === "daily"
             ? "Next Gut Check drops at midnight ET."
             : "Practice is unlimited — play as much as you want."}
@@ -211,7 +211,7 @@ export default function GutCheckGame({
     <div className="flex grow flex-col gap-3 p-4">
       {/* progress */}
       <div className="flex items-center justify-between">
-        <span className="font-display text-[10px] text-cream-100">
+        <span className="font-display text-arc-12 text-cream-100">
           CARD {index + 1}/{cards.length}
         </span>
         <div className="flex gap-[6px]">
@@ -229,7 +229,7 @@ export default function GutCheckGame({
             />
           ))}
         </div>
-        <span className="font-num text-[24px] leading-none text-gold-400">
+        <span className="font-num text-arc-24 leading-none text-amber-bright">
           {exactCount} EXACT
         </span>
       </div>
@@ -246,7 +246,7 @@ export default function GutCheckGame({
             onClick={() => setZoom(true)}
           />
         ) : (
-          <span className="py-16 font-display text-[9px] text-stone-400">
+          <span className="py-16 font-display text-arc-12 text-stone-400">
             IMAGE PENDING
           </span>
         )}
@@ -258,7 +258,7 @@ export default function GutCheckGame({
           type="button"
           onClick={() => setSide("front")}
           aria-pressed={side === "front"}
-          className={`min-h-[36px] cursor-pointer border-[3px] px-3 font-display text-[8px] ${side === "front" ? "border-ink-950 bg-gold-400 text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
+          className={`min-h-[36px] cursor-pointer border-[3px] px-3 font-display text-arc-12 ${side === "front" ? "border-ink-950 bg-amber-bright text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
         >
           FRONT
         </button>
@@ -267,7 +267,7 @@ export default function GutCheckGame({
           onClick={() => backSrc && setSide("back")}
           aria-pressed={side === "back"}
           disabled={!backSrc}
-          className={`min-h-[36px] cursor-pointer border-[3px] px-3 font-display text-[8px] disabled:opacity-40 ${side === "back" ? "border-ink-950 bg-gold-400 text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
+          className={`min-h-[36px] cursor-pointer border-[3px] px-3 font-display text-arc-12 disabled:opacity-40 ${side === "back" ? "border-ink-950 bg-amber-bright text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
         >
           BACK
         </button>
@@ -275,7 +275,7 @@ export default function GutCheckGame({
           <button
             type="button"
             onClick={() => setZoom(true)}
-            className="min-h-[36px] cursor-pointer border-[3px] border-ink-600 bg-ink-800 px-3 font-display text-[8px] text-cream-100"
+            className="min-h-[36px] cursor-pointer border-[3px] border-ink-600 bg-ink-800 px-3 font-display text-arc-12 text-cream-100"
           >
             ZOOM
           </button>
@@ -285,8 +285,8 @@ export default function GutCheckGame({
       {/* inspector / clues */}
       {clues.length > 0 ? (
         <div className="border-[3px] border-cream-100 bg-ink-800 p-3 shadow-[0_0_0_3px_var(--color-ink-950)]">
-          <span className="font-display text-[9px] text-gold-400">INSPECTOR</span>
-          <ul className="m-0 mt-1 flex list-disc flex-col gap-1 pl-5 font-body text-[15px] leading-[1.3]">
+          <span className="font-display text-arc-12 text-amber-bright">INSPECTOR</span>
+          <ul className="m-0 mt-1 flex list-disc flex-col gap-1 pl-5 font-body text-arc-16 leading-[1.3]">
             {clues.map((c, i) => (
               <li key={i}>{c}</li>
             ))}
@@ -298,7 +298,7 @@ export default function GutCheckGame({
         <>
           {/* grade selector */}
           <div className="flex flex-col gap-2">
-            <span id="grade-label" className="font-display text-[9px] text-cream-400">
+            <span id="grade-label" className="font-display text-arc-12 text-cream-400">
               CALL THE GRADE
             </span>
             <div
@@ -312,7 +312,7 @@ export default function GutCheckGame({
                   type="button"
                   aria-pressed={guess === g}
                   onClick={() => setGuess(g)}
-                  className={`h-[46px] cursor-pointer border-[3px] font-display text-[14px] shadow-[3px_3px_0_var(--color-ink-950)] ${guess === g ? "border-ink-950 bg-gold-400 text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
+                  className={`h-[46px] cursor-pointer border-[3px] font-display text-arc-14 shadow-[3px_3px_0_var(--color-ink-950)] ${guess === g ? "border-ink-950 bg-amber-bright text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
                 >
                   {g}
                 </button>
@@ -322,14 +322,14 @@ export default function GutCheckGame({
 
           {/* confidence */}
           <div className="flex items-center gap-2">
-            <span className="font-display text-[8px] text-cream-400">CONFIDENCE</span>
+            <span className="font-display text-arc-12 text-cream-400">CONFIDENCE</span>
             {CONFIDENCES.map((c) => (
               <button
                 key={c}
                 type="button"
                 aria-pressed={confidence === c}
                 onClick={() => setConfidence(c)}
-                className={`min-h-[36px] grow cursor-pointer border-[3px] px-2 font-display text-[8px] ${confidence === c ? "border-ink-950 bg-blue-400 text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
+                className={`min-h-[36px] grow cursor-pointer border-[3px] px-2 font-display text-arc-12 ${confidence === c ? "border-ink-950 bg-blue-400 text-ink-950" : "border-ink-600 bg-ink-800 text-cream-100"}`}
               >
                 {c.toUpperCase()}
               </button>
@@ -340,7 +340,7 @@ export default function GutCheckGame({
             {submitting ? "···" : "LOCK IN"}
           </ArcadeButton>
           {error ? (
-            <span className="font-body text-[14px] text-red-400">{error}</span>
+            <span className="font-body text-arc-14 text-red-400">{error}</span>
           ) : null}
         </>
       ) : (
@@ -381,7 +381,7 @@ function RevealPanel({
   const total = dist.reduce((s, d) => s + d.n, 0);
   const resultColor =
     reveal.result === "exact"
-      ? "text-gold-400"
+      ? "text-amber-bright"
       : reveal.result === "close"
         ? "text-blue-400"
         : "text-red-400";
@@ -389,24 +389,24 @@ function RevealPanel({
   return (
     <div className="flex flex-col gap-3">
       <div className="border-[3px] border-cream-100 bg-ink-800 p-3 shadow-[0_0_0_3px_var(--color-ink-950)]">
-        <span className="font-display text-[9px] text-gold-400">GRADER</span>
-        <p className="m-0 mt-1 font-body text-[18px] leading-[1.3]">
+        <span className="font-display text-arc-12 text-amber-bright">GRADER</span>
+        <p className="m-0 mt-1 font-body text-arc-18 leading-[1.3]">
           Graded {reveal.confirmed_grade}. You called {guess}.
         </p>
         <div className="mt-2 flex items-center gap-3">
-          <span className={`font-display text-[10px] ${resultColor}`}>
+          <span className={`font-display text-arc-12 ${resultColor}`}>
             {verdictLabel(reveal.result, reveal.distance)} {RESULT_EMOJI[reveal.result]}
           </span>
         </div>
         {reveal.card_name ? (
-          <p className="m-0 mt-2 font-body text-[14px] text-cream-400">
+          <p className="m-0 mt-2 font-body text-arc-14 text-cream-400">
             {reveal.card_name}
             {reveal.set_name ? ` · ${reveal.set_name}` : ""}
             {reveal.collector_number ? ` · ${reveal.collector_number}` : ""}
           </p>
         ) : null}
         {reveal.teaching_points ? (
-          <p className="m-0 mt-2 font-body text-[15px] leading-[1.35] text-cream-100">
+          <p className="m-0 mt-2 font-body text-arc-16 leading-[1.35] text-cream-100">
             {reveal.teaching_points}
           </p>
         ) : null}
@@ -414,7 +414,7 @@ function RevealPanel({
 
       {total > 0 ? (
         <div className="border-[3px] border-ink-600 bg-ink-900 p-3">
-          <span className="font-display text-[9px] text-cream-400">
+          <span className="font-display text-arc-12 text-cream-400">
             HOW EVERYONE GUESSED
           </span>
           <div className="mt-2 flex flex-col gap-1">
@@ -422,16 +422,16 @@ function RevealPanel({
               const pct = Math.round((d.n / total) * 100);
               return (
                 <div key={d.guessed_grade} className="flex items-center gap-2">
-                  <span className="w-8 font-num text-[20px] leading-none text-gold-400">
+                  <span className="w-8 font-num text-arc-18 leading-none text-amber-bright">
                     {d.guessed_grade}
                   </span>
                   <div className="h-3 grow bg-ink-800">
                     <div
-                      className="h-full bg-gold-400"
+                      className="h-full bg-amber-bright"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <span className="w-10 text-right font-num text-[18px] leading-none text-cream-400">
+                  <span className="w-10 text-right font-num text-arc-18 leading-none text-cream-400">
                     {pct}%
                   </span>
                 </div>

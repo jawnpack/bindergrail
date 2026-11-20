@@ -33,8 +33,8 @@ export default function StreakStrip({ streak }: { streak: number }) {
   return (
     <div className="flex flex-col gap-3 border-[3px] border-ink-600 bg-ink-900 p-4 shadow-[4px_4px_0_var(--color-ink-950)]">
       <div className="flex items-center justify-between gap-2">
-        <span className="font-display text-[11px] text-cream-100">DAILY STREAK</span>
-        <span className="font-num text-[26px] leading-none text-gold-400">
+        <span className="font-display text-arc-12 text-cream-100">DAILY STREAK</span>
+        <span className="font-num text-arc-24 leading-none text-amber-bright">
           {streak} {streak === 1 ? "DAY" : "DAYS"}
         </span>
       </div>
@@ -43,21 +43,21 @@ export default function StreakStrip({ streak }: { streak: number }) {
           const isToday = i === today;
           const isKept = kept.has(i);
           const cls = isToday
-            ? "border-dashed border-gold-400 text-gold-400 bg-ink-950 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]"
+            ? "border-dashed border-amber-bright text-amber-bright bg-ink-950 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]"
             : isKept
-              ? "border-ink-950 bg-gold-400 text-ink-950"
+              ? "border-ink-950 bg-amber-bright text-ink-950"
               : "border-ink-600 bg-ink-800 text-stone-400";
           return (
             <div
               key={i}
-              className={`flex h-[30px] items-center justify-center border-2 font-display text-[9px] ${cls}`}
+              className={`flex h-[30px] items-center justify-center border-2 font-display text-arc-12 ${cls}`}
             >
               {label}
             </div>
           );
         })}
       </div>
-      <span className="font-body text-[14px] text-cream-400">
+      <span className="font-body text-arc-14 text-cream-400">
         Play both dailies today to keep it alive.
       </span>
     </div>

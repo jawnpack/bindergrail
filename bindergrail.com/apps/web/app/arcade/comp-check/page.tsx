@@ -45,14 +45,14 @@ export default function CompCheckPage() {
         howToPlay={HOW_TO_PLAY}
         hero={
           <div className="flex flex-col items-center gap-2">
-            <span className="font-num text-[46px] leading-none text-cream-100">
+            <span className="font-num text-arc-44 leading-none text-cream-100">
               $42.00
             </span>
             <div className="flex gap-4">
-              <PixelSprite name="arrow-up" height={16} className="text-gold-400" />
+              <PixelSprite name="arrow-up" height={16} className="text-amber-bright" />
               <PixelSprite name="arrow-down" height={16} className="text-blue-400" />
             </div>
-            <span className="font-num text-[46px] leading-none text-cyan-300 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]">
+            <span className="font-num text-arc-44 leading-none text-cyan-300 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]">
               $??.??
             </span>
           </div>

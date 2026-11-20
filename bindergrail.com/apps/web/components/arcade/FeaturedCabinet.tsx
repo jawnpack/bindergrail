@@ -16,16 +16,16 @@ export default function FeaturedCabinet({ cabinet }: { cabinet: Cabinet }) {
     >
       {/* Attract screen */}
       <div className="flex min-h-[380px] flex-1 basis-[440px] flex-col items-center justify-center gap-6 bg-ink-950 p-9">
-        <span className="font-display text-[10px] text-cyan-300">NOW PLAYING</span>
-        <div className="flex flex-col items-center gap-1 font-display text-[28px] leading-[1.35] text-cream-100 [text-shadow:4px_4px_0_var(--color-blue-700)]">
+        <span className="font-display text-arc-12 text-cyan-300">NOW PLAYING</span>
+        <div className="flex flex-col items-center gap-1 font-display text-arc-24 leading-[1.35] text-cream-100 [text-shadow:4px_4px_0_var(--color-blue-700)]">
           <span>THE</span>
           <span>CARDBOARD</span>
           <span>FLIP</span>
         </div>
-        <span className="font-num text-[30px] leading-none text-gold-400">
+        <span className="font-num text-arc-32 leading-none text-amber-bright">
           DAY 01 / 30
         </span>
-        <span className="flex items-center gap-2 font-display text-[11px] text-cream-100 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]">
+        <span className="flex items-center gap-2 font-display text-arc-12 text-cream-100 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]">
           <PixelSprite name="arrow-up" height={12} />
           PRESS START
         </span>
@@ -40,11 +40,11 @@ export default function FeaturedCabinet({ cabinet }: { cabinet: Cabinet }) {
         </div>
         <h2
           id="featured-title"
-          className="m-0 font-display text-[22px] leading-[1.35] text-gold-400"
+          className="m-0 font-display text-arc-24 leading-[1.35] text-amber-bright"
         >
           {cabinet.title}
         </h2>
-        <p className="m-0 font-body text-[19px] leading-[1.5] text-cream-100">
+        <p className="m-0 font-body text-arc-18 leading-[1.5] text-cream-100">
           Buy low, sell high and make rent every week. Flip your way from a single
           binder to your own card shop in 30 days.
         </p>

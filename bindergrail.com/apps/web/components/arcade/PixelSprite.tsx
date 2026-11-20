@@ -27,8 +27,8 @@ const VB: Record<SpriteName, [number, number]> = {
 
 // Theme-variable colors (no raw hex).
 const C = {
-  gold: "var(--color-gold-400)",
-  goldDeep: "var(--color-gold-700)",
+  gold: "var(--color-amber-bright)",
+  goldDeep: "var(--color-amber)",
   cream: "var(--color-cream-100)",
   red: "var(--color-red-400)",
   stone: "var(--color-stone-400)",

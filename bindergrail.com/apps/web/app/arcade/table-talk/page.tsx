@@ -45,17 +45,17 @@ export default function TableTalkPage() {
       </GameShell>
 
       <section className="mx-auto max-w-[760px] px-6 py-12">
-        <h1 className="m-0 font-display text-[18px] leading-[1.5] text-cyan-300 [text-shadow:4px_4px_0_var(--color-ink-800)]">
+        <h1 className="m-0 font-display text-arc-18 leading-[1.5] text-cyan-300 [text-shadow:4px_4px_0_var(--color-ink-800)]">
           Table Talk — Haggle at the Card Show
         </h1>
-        <p className="mt-5 font-body text-[18px] leading-[1.6] text-cream-100">
+        <p className="mt-5 font-body text-arc-18 leading-[1.6] text-cream-100">
           Table Talk is a card-show bargaining game. Each vendor offers a card at a
           marked-up price, and it&apos;s on you to talk them down. Read their mood,
           pick the right tactic, and know when to buy or walk — but push too hard and
           they&apos;ll have you thrown out of the convention.
         </p>
-        <h2 className="mt-8 font-display text-[12px] text-cream-100">THE VENDORS</h2>
-        <ul className="mt-3 flex list-disc flex-col gap-2 pl-6 font-body text-[17px] leading-[1.5]">
+        <h2 className="mt-8 font-display text-arc-12 text-cream-100">THE VENDORS</h2>
+        <ul className="mt-3 flex list-disc flex-col gap-2 pl-6 font-body text-arc-16 leading-[1.5]">
           <li>
             <strong>The Friendly Collector</strong> — loves the hobby. Build rapport
             before you push.
@@ -69,8 +69,8 @@ export default function TableTalkPage() {
             bullying backfires.
           </li>
         </ul>
-        <h2 className="mt-8 font-display text-[12px] text-cream-100">SCORING</h2>
-        <p className="mt-3 font-body text-[17px] leading-[1.6] text-cream-100">
+        <h2 className="mt-8 font-display text-arc-12 text-cream-100">SCORING</h2>
+        <p className="mt-3 font-body text-arc-16 leading-[1.6] text-cream-100">
           Your score is the total money you save off asking price across every card
           you buy in a run. Modern cards are the safe warm-up, Vintage the big swings.
           Walking away is free — only an angry vendor ends the run.

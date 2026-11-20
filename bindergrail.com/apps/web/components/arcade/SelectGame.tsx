@@ -23,13 +23,13 @@ function LockedCard({ title, blurb }: { title: string; blurb: string }) {
     <article className="flex flex-col border-[3px] border-dashed border-ink-600 bg-ink-900">
       <div className="flex h-44 flex-col items-center justify-center gap-[14px] border-b-[3px] border-dashed border-ink-600 bg-ink-950">
         <PixelSprite name="lock" height={28} className="text-stone-400" />
-        <span className="font-display text-[10px] text-stone-400">COMING SOON</span>
+        <span className="font-display text-arc-12 text-stone-400">COMING SOON</span>
       </div>
       <div className="flex grow flex-col gap-3 p-[18px]">
-        <h3 className="m-0 font-display text-[14px] leading-[1.4] text-stone-400">
+        <h3 className="m-0 font-display text-arc-14 leading-[1.4] text-stone-400">
           {title}
         </h3>
-        <p className="m-0 font-body text-[16px] text-cream-400">{blurb}</p>
+        <p className="m-0 font-body text-arc-16 text-cream-400">{blurb}</p>
         <div className="mt-auto pt-[6px]">
           <ArcadeButton href="#newsletter" variant="outline" size="sm">
             CAST A VOTE
@@ -52,7 +52,7 @@ export default function SelectGame() {
       <div className="flex flex-wrap items-center justify-between gap-[14px]">
         <h2
           id="select-title"
-          className="m-0 font-display text-[18px] text-cream-100"
+          className="m-0 font-display text-arc-18 text-cream-100"
         >
           SELECT GAME
         </h2>
@@ -65,9 +65,9 @@ export default function SelectGame() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setFilter(f.id)}
-                className={`min-h-[44px] cursor-pointer border-[3px] px-[14px] font-display text-[10px] shadow-[3px_3px_0_var(--color-ink-950)] ${
+                className={`min-h-[44px] cursor-pointer border-[3px] px-[14px] font-display text-arc-12 shadow-[3px_3px_0_var(--color-ink-950)] ${
                   on
-                    ? "border-ink-950 bg-gold-400 text-ink-950"
+                    ? "border-ink-950 bg-amber-bright text-ink-950"
                     : "border-ink-600 bg-ink-800 text-cream-100"
                 }`}
               >
@@ -91,7 +91,7 @@ export default function SelectGame() {
             <article className="flex flex-col border-[3px] border-dashed border-ink-600 bg-ink-900">
               <div className="flex h-44 flex-col items-center justify-center gap-[14px] border-b-[3px] border-dashed border-ink-600 bg-ink-950">
                 <PixelSprite name="lock" height={28} className="text-stone-400" />
-                <span className="font-display text-[10px] text-stone-400">
+                <span className="font-display text-arc-12 text-stone-400">
                   COMING SOON
                 </span>
               </div>
@@ -99,8 +99,8 @@ export default function SelectGame() {
                 <div className="flex gap-2">
                   <Chip tone="soon" />
                 </div>
-                <h3 className="m-0 font-display text-[14px] text-stone-400">???</h3>
-                <p className="m-0 font-body text-[16px] text-cream-400">
+                <h3 className="m-0 font-display text-arc-14 text-stone-400">???</h3>
+                <p className="m-0 font-body text-arc-16 text-cream-400">
                   This cabinet is still being wired up.
                 </p>
               </div>

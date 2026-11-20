@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Press_Start_2P, Pixelify_Sans, VT323 } from "next/font/google";
 import CrtOverlay from "@/components/arcade/CrtOverlay";
+import Nav from "@/components/Nav";
+import Footer from "@/components/Footer";
+import { siteFontClass } from "../fonts";
 
 const display = Press_Start_2P({
   weight: "400",
@@ -43,11 +46,20 @@ export default function ArcadeLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // The site's own header and footer frame the arcade like every other page
+  // (both ink); the marketing fonts are scoped to them so the pixel faces stay
+  // the arcade's own.
   return (
     <div
-      className={`${display.variable} ${body.variable} ${num.variable} min-h-screen bg-ink-950 bg-[radial-gradient(var(--color-ink-800)_1px,transparent_1px)] [background-size:16px_16px] font-body text-[16px] leading-[1.45] text-cream-100`}
+      className={`${display.variable} ${body.variable} ${num.variable} flex min-h-screen flex-col bg-ink-950 bg-[radial-gradient(var(--color-ink-800)_1px,transparent_1px)] [background-size:16px_16px] font-body text-arc-16 leading-[1.45] text-cream-100`}
     >
-      {children}
+      <div className={siteFontClass}>
+        <Nav />
+      </div>
+      <div className="flex flex-1 flex-col">{children}</div>
+      <div className={siteFontClass}>
+        <Footer />
+      </div>
       <CrtOverlay />
     </div>
   );

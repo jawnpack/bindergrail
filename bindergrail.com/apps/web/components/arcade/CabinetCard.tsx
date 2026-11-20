@@ -10,10 +10,10 @@ function CabinetArt({ id }: { id: string }) {
   if (id === "cardboard-flip") {
     return (
       <div className="flex flex-col items-center justify-center gap-3">
-        <span className="font-num text-[44px] leading-none text-cyan-300">
+        <span className="font-num text-arc-44 leading-none text-cyan-300">
           DAY 01/30
         </span>
-        <span className="font-display text-[10px] text-cream-100">
+        <span className="font-display text-arc-12 text-cream-100">
           OPEN YOUR OWN SHOP
         </span>
       </div>
@@ -24,8 +24,8 @@ function CabinetArt({ id }: { id: string }) {
       <div className="flex items-center justify-center gap-6">
         <CardFrame rarity="grail" size="md" insets={{ l: 12, r: 4, t: 7, b: 7 }} />
         <div className="flex flex-col gap-[6px]">
-          <span className="font-display text-[10px] text-cream-400">GRADE</span>
-          <span className="font-num text-[52px] leading-[0.9] text-gold-400">
+          <span className="font-display text-arc-12 text-cream-400">GRADE</span>
+          <span className="font-num text-arc-56 leading-[0.9] text-amber-bright">
             ?/10
           </span>
         </div>
@@ -35,14 +35,14 @@ function CabinetArt({ id }: { id: string }) {
   if (id === "comp-check") {
     return (
       <div className="flex flex-col items-center justify-center gap-2">
-        <span className="font-num text-[42px] leading-none text-cream-100">
+        <span className="font-num text-arc-44 leading-none text-cream-100">
           $42.00
         </span>
         <div className="flex gap-[14px]">
-          <PixelSprite name="arrow-up" height={12} className="text-gold-400" />
+          <PixelSprite name="arrow-up" height={12} className="text-amber-bright" />
           <PixelSprite name="arrow-down" height={12} className="text-blue-400" />
         </div>
-        <span className="font-num text-[42px] leading-none text-cyan-300 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]">
+        <span className="font-num text-arc-44 leading-none text-cyan-300 motion-safe:animate-[bgaBlink_1.2s_steps(1,end)_infinite]">
           $??.??
         </span>
       </div>
@@ -51,8 +51,8 @@ function CabinetArt({ id }: { id: string }) {
   // table-talk
   return (
     <div className="relative w-full max-w-[230px] border-[3px] border-cream-100 bg-ink-800 px-[14px] pb-[18px] pt-3 shadow-[0_0_0_3px_var(--color-ink-950)]">
-      <span className="font-display text-[9px] text-gold-400">SAL</span>
-      <p className="m-0 mt-[6px] font-body text-[16px] leading-[1.35] text-cream-100">
+      <span className="font-display text-arc-12 text-amber-bright">SAL</span>
+      <p className="m-0 mt-[6px] font-body text-arc-16 leading-[1.35] text-cream-100">
         Hundred eighty. Firm. ...Mostly firm.
       </p>
     </div>
@@ -72,12 +72,12 @@ export default function CabinetCard({ cabinet }: { cabinet: Cabinet }) {
           <Chip tone={cabinet.type} />
           <Chip tone={cabinet.launched ? CHIP_STATUS[cabinet.status] : "soon"} />
         </div>
-        <h3 className="m-0 font-display text-[14px] leading-[1.4] text-cream-100">
+        <h3 className="m-0 font-display text-arc-14 leading-[1.4] text-cream-100">
           {cabinet.title}
         </h3>
-        <p className="m-0 font-body text-[16px] text-cream-400">{cabinet.blurb}</p>
+        <p className="m-0 font-body text-arc-16 text-cream-400">{cabinet.blurb}</p>
         <div className="mt-auto flex items-center justify-between gap-[10px] pt-[6px]">
-          <span className="font-display text-[8px] text-stone-400">
+          <span className="font-display text-arc-12 text-stone-400">
             {cabinet.playsLabel}
           </span>
           {cabinet.launched ? (

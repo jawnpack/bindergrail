@@ -21,11 +21,11 @@ export default function TextBox({
   return (
     <div className={`relative bg-ink-800 px-[14px] pb-[18px] pt-3 ${RIM} ${className}`}>
       {speaker ? (
-        <span className="font-display text-[9px] text-gold-400">{speaker}</span>
+        <span className="font-display text-arc-12 text-amber-bright">{speaker}</span>
       ) : null}
-      <p className="m-0 mt-1 font-body text-[18px] leading-[1.3]">{line}</p>
+      <p className="m-0 mt-1 font-body text-arc-18 leading-[1.3]">{line}</p>
       {tell ? (
-        <p className="m-0 mt-1 font-body text-[15px] leading-[1.3] text-cyan-300">
+        <p className="m-0 mt-1 font-body text-arc-16 leading-[1.3] text-cyan-300">
           [{tell}]
         </p>
       ) : null}
