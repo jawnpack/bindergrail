@@ -10,6 +10,10 @@ import type { Metadata } from "next";
 import WaitlistForm from "@/components/WaitlistForm";
 import OriginsScreenshotStrip from "@/components/OriginsScreenshotStrip";
 import JsonLd from "@/components/JsonLd";
+import Band from "@/components/ui/Band";
+import Container from "@/components/ui/Container";
+import Kicker from "@/components/ui/Kicker";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 export const metadata: Metadata = {
   title: "Origins — Pokémon TCG Collection Tracker",
@@ -29,11 +33,9 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
-
 export default function OriginsPage() {
   return (
-    <div style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <>
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -48,202 +50,55 @@ export default function OriginsPage() {
           publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
         }}
       />
-      {/* ── Nav ────────────────────────────────────────────── */}
-      <header
-        style={{
-          backgroundColor: "#E8E4DC",
-          borderBottom: "1px solid #C8C0B0",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 960,
-            margin: "0 auto",
-            padding: "14px 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontFamily: "var(--font-playfair), Georgia, serif",
-                fontWeight: 700,
-                fontStyle: "italic",
-                fontSize: 18,
-                color: "#2C2A22",
-                lineHeight: 1.2,
-              }}
-            >
-              Origins
-            </div>
-            <div
-              style={{
-                fontSize: 9,
-                color: "#7A6E5F",
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                marginTop: 2,
-              }}
-            >
-              a Binder Grail app
-            </div>
-          </div>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              color: "#5F5E5A",
-              backgroundColor: "#D8D0C0",
-              borderRadius: 20,
-              padding: "4px 12px",
-            }}
-          >
-            Coming soon
-          </span>
-        </div>
-      </header>
 
-      {/* ── Hero + Sign up ─────────────────────────────────── */}
-      <section
-        style={{
-          backgroundColor: "#E8E4DC",
-          position: "relative",
-          overflow: "hidden",
-          flex: 1,
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: 0.06,
-            pointerEvents: "none",
-            backgroundImage: GRAIN,
-            backgroundSize: "180px",
-          }}
-        />
-        <div
-          style={{
-            position: "relative",
-            zIndex: 1,
-            maxWidth: 600,
-            margin: "0 auto",
-            padding: "80px 24px 96px",
-          }}
-        >
-          <p
-            style={{
-              fontSize: 10,
-              fontWeight: 600,
-              color: "#B07035",
-              textTransform: "uppercase",
-              letterSpacing: "0.18em",
-              marginBottom: 20,
-            }}
-          >
-            Pokémon TCG · Collection tracker
-          </p>
-          <h1
-            style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              fontWeight: 900,
-              fontSize: "clamp(40px, 7vw, 68px)",
-              lineHeight: 1.05,
-              color: "#2C2A22",
-              letterSpacing: "-0.02em",
-              marginBottom: 24,
-            }}
-          >
-            Your collection.
-            <br />
-            <span style={{ fontStyle: "italic", color: "#B07035" }}>Every card.</span>
-            <br />
-            One place.
-          </h1>
-          <p
-            style={{
-              fontSize: 15,
-              fontWeight: 300,
-              color: "#7A6E5F",
-              lineHeight: 1.7,
-              marginBottom: 16,
-              maxWidth: 460,
-            }}
-          >
-            Search the full card database. Log what you own, what you paid,
-            and what condition it&apos;s in.
-          </p>
-
-          {/* Feature bullets */}
-          <div style={{ marginBottom: 40 }}>
-            {[
-              "Search the TCGdex database — every set, every card",
-              "Log condition, price paid, and grading status per card",
-              "Collection value summary and graded card tracker",
-            ].map((f) => (
-              <div
-                key={f}
-                style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}
-              >
-                <span style={{ color: "#B07035", fontSize: 16, lineHeight: 1.5, flexShrink: 0 }}>·</span>
-                <span style={{ fontSize: 13, color: "#7A6E5F", lineHeight: 1.6 }}>{f}</span>
-              </div>
-            ))}
+      {/* ── Hero: the app's own header folded in as the top row ─────── */}
+      <Band surface="parchment" rule={false} reveal={false} rhythm="none" className="pt-6 pb-(--band-y)">
+        <Container width="content">
+          <div className="mb-(--band-y-tight) flex flex-wrap items-center justify-between gap-4 border-b border-cream-hairline pb-5">
+            <p className="leading-tight">
+              <span className="block font-serif text-display-s italic text-on-cream">Origins</span>
+              <span className="text-label uppercase text-on-cream-muted">a Binder Grail app</span>
+            </p>
+            <StatusBadge status="soon" surface="parchment" label="Coming soon" />
           </div>
 
-          {/* Sign-up form */}
-          <p
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#2C2A22",
-              marginBottom: 12,
-            }}
-          >
-            Get notified at launch
-          </p>
-          <WaitlistForm
-            app="origins"
-            inputBg="#FFFFFF"
-            inputBorder="#C8C0B0"
-            inputTextColor="#2C2A22"
-            buttonColor="#B07035"
-          />
-          <p style={{ marginTop: 10, fontSize: 11, color: "#B4B2A9" }}>
-            No spam. Just a launch notification.
-          </p>
-        </div>
-      </section>
+          <div className="max-w-prose">
+            <Kicker surface="parchment" className="mb-5">
+              Pokémon TCG · Collection tracker
+            </Kicker>
+            <h1 className="font-serif text-display-xl text-on-cream">
+              Your collection.
+              <br />
+              <em className="text-amber-deep">Every card.</em>
+              <br />
+              One place.
+            </h1>
+            <p className="mt-6 max-w-measure-lead text-lead text-pretty text-on-cream-muted">
+              Search the full card database. Log what you own, what you paid, and what condition
+              it&apos;s in.
+            </p>
+
+            <ul className="mt-7 flex flex-col gap-2">
+              {[
+                "Search the TCGdex database — every set, every card",
+                "Log condition, price paid, and grading status per card",
+                "Collection value summary and graded card tracker",
+              ].map((f) => (
+                <li key={f} className="flex gap-3 text-meta text-on-cream">
+                  <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rotate-45 bg-amber" />
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            <p className="mt-10 mb-3 text-ui font-medium text-on-cream">Get notified at launch</p>
+            <WaitlistForm app="origins" surface="parchment" />
+            <p className="mt-2 text-meta text-on-cream-muted">No spam. Just a launch notification.</p>
+          </div>
+        </Container>
+      </Band>
 
       <OriginsScreenshotStrip />
-
-      {/* ── Footer ─────────────────────────────────────────── */}
-      <footer
-        style={{
-          backgroundColor: "#E8E4DC",
-          borderTop: "1px solid #C8C0B0",
-          padding: "14px 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-playfair), Georgia, serif",
-            fontWeight: 700,
-            fontStyle: "italic",
-            fontSize: 13,
-            color: "#B07035",
-          }}
-        >
-          Origins
-        </span>
-        <span style={{ fontSize: 11, color: "#7A6E5F" }}>a Binder Grail app</span>
-      </footer>
-    </div>
+    </>
   );
 }

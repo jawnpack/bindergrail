@@ -12,6 +12,12 @@ import { existsSync } from "fs";
 import { join } from "path";
 import PocketMoneyScreenshotStrip from "@/components/PocketMoneyScreenshotStrip";
 import JsonLd from "@/components/JsonLd";
+import Band from "@/components/ui/Band";
+import Container from "@/components/ui/Container";
+import Kicker from "@/components/ui/Kicker";
+import SectionHeader from "@/components/ui/SectionHeader";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 
 // Real app screenshot once provided; dynamic card until then.
 const PM_OG_FILE = "/images/og/pocket-money-og.png";
@@ -80,411 +86,190 @@ const FAQS = [
   },
 ];
 
-const GRAIN = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
+const HERO_POINTS = [
+  "Monthly budget with month-by-month history",
+  "Wallet stashes: split cash into sneaker money, TCG money, whatever",
+  "Holds show pending spend before it leaves your wallet",
+  "Log spends, returns, and sales with up to 3 tags each",
+  "Reserve sale money for your grail and watch it fill up",
+];
+
+const FEATURES = [
+  {
+    title: "Wallet stashes",
+    body: "Split your cash into pots like a sneaker fund or TCG fund. Spending from a stash never touches your monthly budget, and the app rebalances everything automatically. Classic envelope budgeting.",
+  },
+  {
+    title: "Monthly budget",
+    body: "Set your envelope for the month, flip back through past months, and get honest red numbers when you blow past it. Returns refund the budget, sales never inflate it.",
+  },
+  {
+    title: "Holds and pending money",
+    body: "Preorders and IOUs sit as holds with a pending amount on the right stash, so you always know what is already spoken for before it leaves.",
+  },
+  {
+    title: "The grail fund",
+    body: "Pick one grail from your wishlist. Reserve sale money or wallet cash toward it, watch the bar fill, and get the gold screen when it is fully funded.",
+  },
+  {
+    title: "Tags and custom categories",
+    body: "Up to 3 tags per transaction from the built-in set plus 10 custom tags of your own. Every entry is editable after the fact.",
+  },
+  {
+    title: "Sales and returns",
+    body: "Money coming back in goes where you say: into your pocket, into a stash, or reserved for a wishlist item. Your budget stays honest either way.",
+  },
+];
 
 export default function PocketMoneyPage() {
   return (
-    <div style={{ fontFamily: "var(--font-dm-sans), Arial, sans-serif", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <>
       <JsonLd
         data={[
-            {
-              "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
-              name: "Pocket Money",
-              applicationCategory: "FinanceApplication",
-              operatingSystem: "Web",
-              url: "https://pocketmoney.bindergrail.com",
-              description:
-                "Free hobby budgeting app for collectors. Monthly budgets, envelope-style wallet stashes, pending holds, multi-tag transaction tracking, and a grail savings fund.",
-              featureList: [
-                "Monthly hobby budget with month-by-month history",
-                "Wallet stashes for envelope-style category spending",
-                "Pending holds that show money before it leaves",
-                "Spend, return, and sale logging with up to 3 tags each",
-                "Wishlist with reserved funds and one active grail",
-                "Sale proceeds routed to wallet, stash, or grail fund",
-                "Custom spending tags",
-              ],
-              offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-              publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
-            },
-            {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: FAQS.map((f) => ({
-                "@type": "Question",
-                name: f.q,
-                acceptedAnswer: { "@type": "Answer", text: f.a },
-              })),
-            },
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Pocket Money",
+            applicationCategory: "FinanceApplication",
+            operatingSystem: "Web",
+            url: "https://pocketmoney.bindergrail.com",
+            description:
+              "Free hobby budgeting app for collectors. Monthly budgets, envelope-style wallet stashes, pending holds, multi-tag transaction tracking, and a grail savings fund.",
+            featureList: [
+              "Monthly hobby budget with month-by-month history",
+              "Wallet stashes for envelope-style category spending",
+              "Pending holds that show money before it leaves",
+              "Spend, return, and sale logging with up to 3 tags each",
+              "Wishlist with reserved funds and one active grail",
+              "Sale proceeds routed to wallet, stash, or grail fund",
+              "Custom spending tags",
+            ],
+            offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+            publisher: { "@type": "Organization", name: "Binder Grail", url: "https://bindergrail.com" },
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          },
         ]}
       />
-      {/* ── Nav ────────────────────────────────────────────── */}
-      <header style={{ backgroundColor: "#3D5C42" }}>
-        <div
-          style={{
-            maxWidth: 960,
-            margin: "0 auto",
-            padding: "14px 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <div>
-            <div
-              style={{
-                fontFamily: "var(--font-playfair), Georgia, serif",
-                fontWeight: 700,
-                fontSize: 18,
-                color: "#F5F0E8",
-                lineHeight: 1.2,
-              }}
-            >
-              Pocket <span style={{ color: "#B0D4B8" }}>Money</span>
-            </div>
-            <div
-              style={{
-                fontSize: 9,
-                color: "#6A9470",
-                textTransform: "uppercase",
-                letterSpacing: "0.15em",
-                marginTop: 2,
-              }}
-            >
-              a Binder Grail app
-            </div>
+
+      {/* ── Hero: the app's own header is folded in as the top row ─────── */}
+      <Band surface="forest" rule={false} reveal={false} rhythm="none" className="pt-6 pb-(--band-y)">
+        <Container width="wide">
+          <div className="mb-(--band-y-tight) flex flex-wrap items-center justify-between gap-4 border-b border-forest-hairline pb-5">
+            <p className="leading-tight">
+              <span className="block font-serif text-display-s text-on-forest">
+                Pocket <span className="text-on-forest-muted">Money</span>
+              </span>
+              <span className="text-label uppercase text-on-forest-muted">a Binder Grail app</span>
+            </p>
+            <Button href="https://pocketmoney.bindergrail.com" variant="secondary" className="text-on-forest">
+              Open the app
+            </Button>
           </div>
-          <a
-            href="https://pocketmoney.bindergrail.com"
-            style={{
-              fontSize: 11,
-              fontWeight: 600,
-              color: "#2A4230",
-              backgroundColor: "#B0D4B8",
-              border: "1px solid #4A7052",
-              borderRadius: 20,
-              padding: "4px 12px",
-              textDecoration: "none",
-            }}
-          >
-            Open the app
-          </a>
-        </div>
-      </header>
 
-      {/* ── Hero + Sign up ─────────────────────────────────── */}
-      <section
-        style={{
-          backgroundColor: "#3D5C42",
-          position: "relative",
-          overflow: "hidden",
-          flex: 1,
-        }}
-      >
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: 0.04,
-            pointerEvents: "none",
-            backgroundImage: GRAIN,
-            backgroundSize: "180px",
-          }}
-        />
-        <div
-          style={{
-            position: "relative",
-            zIndex: 1,
-            maxWidth: 1040,
-            margin: "0 auto",
-            padding: "80px 24px 96px",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 48,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div style={{ flex: "1 1 460px", minWidth: 0, maxWidth: 560 }}>
-          <p
-            style={{
-              fontSize: 10,
-              fontWeight: 600,
-              color: "#B0D4B8",
-              textTransform: "uppercase",
-              letterSpacing: "0.18em",
-              marginBottom: 20,
-            }}
-          >
-            Pokémon TCG · Budget tracker
-          </p>
-          <h1
-            style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              fontWeight: 900,
-              fontSize: "clamp(40px, 7vw, 68px)",
-              lineHeight: 1.05,
-              color: "#F5F0E8",
-              letterSpacing: "-0.02em",
-              marginBottom: 24,
-            }}
-          >
-            Collect on a{" "}
-            <span style={{ fontStyle: "italic", color: "#D4E8D8" }}>budget.</span>
-            <br />
-            Not a prayer.
-          </h1>
-          <p
-            style={{
-              fontSize: 15,
-              fontWeight: 300,
-              color: "#6A9470",
-              lineHeight: 1.7,
-              marginBottom: 16,
-              maxWidth: 460,
-            }}
-          >
-            Set your monthly limit. Log every purchase. Know exactly where you
-            stand before you swipe.
-          </p>
+          <div className="grid items-center gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-6">
+              <Kicker surface="forest" className="mb-5">
+                Pokémon TCG · Budget tracker
+              </Kicker>
+              <h1 className="font-serif text-display-xl text-on-forest">
+                Collect on a <em className="text-on-forest-muted">budget.</em>
+                <br />
+                Not a prayer.
+              </h1>
+              <p className="mt-6 max-w-measure-lead text-lead text-pretty text-on-forest-muted">
+                Set your monthly limit. Log every purchase. Know exactly where you stand before you
+                swipe.
+              </p>
 
-          {/* Feature bullets */}
-          <div style={{ marginBottom: 40 }}>
-            {[
-              "Monthly budget with month-by-month history",
-              "Wallet stashes: split cash into sneaker money, TCG money, whatever",
-              "Holds show pending spend before it leaves your wallet",
-              "Log spends, returns, and sales with up to 3 tags each",
-              "Reserve sale money for your grail and watch it fill up",
-            ].map((f) => (
-              <div
-                key={f}
-                style={{ display: "flex", gap: 10, alignItems: "flex-start", marginBottom: 8 }}
-              >
-                <span style={{ color: "#B07035", fontSize: 16, lineHeight: 1.5, flexShrink: 0 }}>·</span>
-                <span style={{ fontSize: 13, color: "#6A9470", lineHeight: 1.6 }}>{f}</span>
+              <ul className="mt-7 flex max-w-measure flex-col gap-2">
+                {HERO_POINTS.map((f) => (
+                  <li key={f} className="flex gap-3 text-meta text-on-forest">
+                    <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rotate-45 bg-amber-bright" />
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
+                <Button href="https://pocketmoney.bindergrail.com/signup" variant="primary">
+                  Create your free account
+                </Button>
+                <Button href="https://pocketmoney.bindergrail.com/login" variant="quiet" className="text-on-forest">
+                  Already tracking? Sign in
+                </Button>
               </div>
-            ))}
-          </div>
+              <p className="mt-4 text-meta text-on-forest-muted">
+                Free to use. Your Binder Grail account works here too.
+              </p>
+            </div>
 
-          {/* CTA */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
-            <a
-              href="https://pocketmoney.bindergrail.com/signup"
-              style={{
-                display: "inline-block",
-                backgroundColor: "#B07035",
-                color: "#F5F0E8",
-                borderRadius: 4,
-                padding: "12px 24px",
-                fontSize: 14,
-                fontWeight: 500,
-                textDecoration: "none",
-              }}
-            >
-              Create your free account
-            </a>
-            <a
-              href="https://pocketmoney.bindergrail.com/login"
-              style={{ fontSize: 13, color: "#B0D4B8", textDecoration: "underline" }}
-            >
-              Already tracking? Sign in
-            </a>
+            {/* The budget envelope, cropped from the real dashboard and set large */}
+            <div className="lg:col-span-6">
+              <Image
+                src="/images/pocket-money/pm-budget-envelope.png"
+                alt="Pocket Money's monthly budget envelope: remaining and spent totals, the budget bar, and the wallet split into stashes"
+                width={559}
+                height={440}
+                priority
+                sizes="(max-width: 1024px) calc(100vw - 2.5rem), 600px"
+                className="h-auto w-full rounded-lg border border-forest-hairline"
+              />
+            </div>
           </div>
-          <p style={{ marginTop: 12, fontSize: 11, color: "#4A7052" }}>
-            Free to use. Your Binder Grail account works here too.
-          </p>
-          </div>
-
-          {/* App screenshot */}
-          <div
-            style={{
-              flex: "0 1 300px",
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Image
-              src="/images/pocket-money/pm-mobile-dashboard.png"
-              alt="The Pocket Money app on a phone — wallet stashes and the monthly budget"
-              width={600}
-              height={883}
-              priority
-              sizes="(max-width: 348px) calc(100vw - 48px), 300px"
-              style={{
-                width: "100%",
-                maxWidth: 300,
-                height: "auto",
-                borderRadius: 24,
-                border: "1px solid rgba(245, 240, 232, 0.15)",
-                boxShadow: "0 24px 48px rgba(0, 0, 0, 0.35)",
-              }}
-            />
-          </div>
-        </div>
-      </section>
+        </Container>
+      </Band>
 
       {/* ── Features (crawlable) ───────────────────────────── */}
-      <section style={{ backgroundColor: "#EAF0EB", padding: "56px 24px" }}>
-        <div style={{ maxWidth: 960, margin: "0 auto" }}>
-          <h2
-            style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              fontWeight: 700,
-              fontSize: 28,
-              color: "#2A4230",
-              marginBottom: 8,
-            }}
-          >
-            Budgeting built for hobby money
-          </h2>
-          <p style={{ fontSize: 14, color: "#3D5C42", maxWidth: 560, lineHeight: 1.6, marginBottom: 32 }}>
-            Most budget apps treat your hobby like a line item. Pocket Money
-            treats it like the main event: envelope-style stashes, pending
-            holds, and a fund for the one card you would trade the rest for.
-          </p>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-              gap: 16,
-            }}
-          >
-            {[
-              {
-                title: "Wallet stashes",
-                body: "Split your cash into pots like a sneaker fund or TCG fund. Spending from a stash never touches your monthly budget, and the app rebalances everything automatically. Classic envelope budgeting.",
-              },
-              {
-                title: "Monthly budget",
-                body: "Set your envelope for the month, flip back through past months, and get honest red numbers when you blow past it. Returns refund the budget, sales never inflate it.",
-              },
-              {
-                title: "Holds and pending money",
-                body: "Preorders and IOUs sit as holds with a pending amount on the right stash, so you always know what is already spoken for before it leaves.",
-              },
-              {
-                title: "The grail fund",
-                body: "Pick one grail from your wishlist. Reserve sale money or wallet cash toward it, watch the bar fill, and get the gold screen when it is fully funded.",
-              },
-              {
-                title: "Tags and custom categories",
-                body: "Up to 3 tags per transaction from the built-in set plus 10 custom tags of your own. Every entry is editable after the fact.",
-              },
-              {
-                title: "Sales and returns",
-                body: "Money coming back in goes where you say: into your pocket, into a stash, or reserved for a wishlist item. Your budget stays honest either way.",
-              },
-            ].map((f) => (
-              <div
-                key={f.title}
-                style={{
-                  backgroundColor: "#FFFFFF",
-                  border: "1px solid #C8D8CA",
-                  borderRadius: 8,
-                  padding: "18px 20px",
-                }}
-              >
-                <h3
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 500,
-                    color: "#2A4230",
-                    marginBottom: 6,
-                  }}
-                >
-                  {f.title}
-                </h3>
-                <p style={{ fontSize: 13, color: "#5F6E62", lineHeight: 1.6 }}>
-                  {f.body}
-                </p>
-              </div>
+      <Band surface="parchment" labelledBy="pm-features">
+        <Container width="content">
+          <SectionHeader
+            id="pm-features"
+            surface="parchment"
+            title="Budgeting built for hobby money"
+            lead="Most budget apps treat your hobby like a line item. Pocket Money treats it like the main event: envelope-style stashes, pending holds, and a fund for the one card you would trade the rest for."
+          />
+          <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((f) => (
+              <li key={f.title}>
+                <Card surface="parchment" className="h-full p-6">
+                  <h3 className="font-serif text-display-s text-on-cream">{f.title}</h3>
+                  <p className="mt-2 text-meta text-pretty text-on-cream-muted">{f.body}</p>
+                </Card>
+              </li>
             ))}
-          </div>
-        </div>
-      </section>
+          </ul>
+        </Container>
+      </Band>
 
       <PocketMoneyScreenshotStrip />
 
       {/* ── FAQ (crawlable) ────────────────────────────────── */}
-      <section style={{ backgroundColor: "#F5F0E8", padding: "56px 24px" }}>
-        <div style={{ maxWidth: 720, margin: "0 auto" }}>
-          <h2
-            style={{
-              fontFamily: "var(--font-playfair), Georgia, serif",
-              fontWeight: 700,
-              fontSize: 24,
-              color: "#1A1814",
-              marginBottom: 24,
-            }}
-          >
-            Questions collectors ask
-          </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <Band surface="cream" labelledBy="pm-faq">
+        <Container width="content" className="grid gap-10 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <SectionHeader id="pm-faq" title="Questions collectors ask" size="m" />
+            <Button href="https://pocketmoney.bindergrail.com/signup" variant="primary-light" className="mt-7">
+              Start budgeting free
+            </Button>
+          </div>
+          <dl className="divide-y divide-cream-hairline border-y border-cream-hairline lg:col-span-8">
             {FAQS.map((f) => (
-              <div key={f.q}>
-                <h3
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 500,
-                    color: "#1A1814",
-                    marginBottom: 4,
-                  }}
-                >
-                  {f.q}
-                </h3>
-                <p style={{ fontSize: 13, color: "#7A7468", lineHeight: 1.65 }}>
-                  {f.a}
-                </p>
+              <div key={f.q} className="py-5">
+                <dt className="text-ui font-medium text-on-cream">{f.q}</dt>
+                <dd className="mt-1.5 max-w-measure text-meta text-pretty text-on-cream-muted">{f.a}</dd>
               </div>
             ))}
-          </div>
-          <a
-            href="https://pocketmoney.bindergrail.com/signup"
-            style={{
-              display: "inline-block",
-              marginTop: 28,
-              backgroundColor: "#3D5C42",
-              color: "#F5F0E8",
-              borderRadius: 4,
-              padding: "12px 24px",
-              fontSize: 14,
-              fontWeight: 500,
-              textDecoration: "none",
-            }}
-          >
-            Start budgeting free
-          </a>
-        </div>
-      </section>
-
-      {/* ── Footer ─────────────────────────────────────────── */}
-      <footer
-        style={{
-          backgroundColor: "#2A4230",
-          borderTop: "1px solid #4A7052",
-          padding: "14px 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--font-playfair), Georgia, serif",
-            fontWeight: 700,
-            fontSize: 13,
-            color: "#6A9470",
-          }}
-        >
-          Pocket Money
-        </span>
-        <span style={{ fontSize: 11, color: "#4A7052" }}>by Binder Grail</span>
-      </footer>
-    </div>
+          </dl>
+        </Container>
+      </Band>
+    </>
   );
 }
